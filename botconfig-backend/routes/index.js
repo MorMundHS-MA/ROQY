@@ -1,5 +1,5 @@
 var express = require('express');
-var rp = require('request-promise');
+var requestPromise = require('request-promise');
 var router = express.Router();
 const LUISClient = require('luis-node-sdk');
 
@@ -11,8 +11,12 @@ const messages = {
     "agentNotFound":"The specified agent could not be found: ",
     "agentAlreadyExists":"An agent with that name already exists!",
     "agentDeleted":"The agent has been deleted successfully",
-    "agentHasBeenCreated":"The agent has been created successfully"
-}
+    "agentHasBeenCreated":"The agent has been created successfully",
+    "botsFound":"All bots has been returned."
+};
+
+const LUISKEY = "ed2ff1a97f924b8e8a1402e6700a8bf4";
+
 var responseMessage = {
     "status":"-1",
     "error":"false",
@@ -33,6 +37,15 @@ function responseToClient(res, status, error, message, add){
 
     res.send(JSON.stringify(responseMessage));
 }
+/**
+ *
+ * @param agentName Name of Bot
+ * @returns
+ *      {
+ *          "exists": true when a bot with this name exists,
+ *          "agentResponse": Response from Luis with Information about Agent
+ *      }
+ */
 var existAgent = function (agentName) {
     return new Promise(function (resolve) {
         var options = {
@@ -45,7 +58,7 @@ var existAgent = function (agentName) {
             body: {},
             json: true // Automatically parses the JSON string in the response
         };
-        rp(options).then(res => {
+        requestPromise(options).then(res => {
             let agentFound = false;
             let foundIndex = -1;
             for (let i = 0; i < res.length && !agentFound; i++) {
@@ -53,10 +66,9 @@ var existAgent = function (agentName) {
                 agentFound = res[i].name === agentName;
                 if(agentFound){
                     foundIndex = i;
-                    console.log(i);
                 }
             }
-            if(agentFound && foundIndex != -1){
+            if(agentFound){
 
                 resolve({
                     "exists":true,
@@ -107,6 +119,25 @@ function killPromise(val) {
 }
 
 
+router.get("/bot", function(req, clientResponse){
+        clientResponse.header("Access-Control-Allow-Origin", "*");
+        clientResponse.setHeader("Content-Type", "text/html; charset=utf-8");
+        let options = {
+            "uri":"https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/",
+            "method":"GET",
+            "headers":{
+                "Ocp-Apim-Subscription-Key": LUISKEY
+            }
+        };
+
+        requestPromise(options).then(res => {
+            responseToClient(clientResponse, 200, false, messages.botsFound, JSON.parse(res));
+        }).catch(err => {
+            responseToClient(clientResponse, 443, true, err.message);
+        });
+
+    });
+
 router.get("/delete", function (req, res) {
     res.header("Access-Control-Allow-Origin", "*");
     let agentName = req.param("agentName");
@@ -126,7 +157,7 @@ router.get("/delete", function (req, res) {
             console.log("pre");
             options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + exres.agentResponse.id;
             console.log("end");
-            rp(options)
+            requestPromise(options)
                 .then(() => responseToClient(res, 200, false, messages.agentDeleted));
 
         }else {
@@ -136,8 +167,8 @@ router.get("/delete", function (req, res) {
     })
 });
 
-router.post('/predict', function (req, res) {
-    res.header("Access-Control-Allow-Origin", "*");
+router.post('/predict', function (req, clientResponse) {
+    clientResponse.header("Access-Control-Allow-Origin", "*");
     let predict = req.body.prediction;
     let agentName = req.body.agentName;
     console.log(predict);
@@ -146,7 +177,7 @@ router.post('/predict', function (req, res) {
         agentExists = exres.exists;
         console.log(exres.agentResponse);
         if (!exres.exists) {
-            responseToClient(res, 404, true, messages.agentNotFound);
+            responseToClient(clientResponse, 404, true, messages.agentNotFound);
         } else {
             LUISclient = LUISClient({
                 appId: exres.agentResponse.id,
@@ -174,15 +205,15 @@ router.post('/predict', function (req, res) {
                     responseMessage.extra = {};
                     responseMessage.message = response.topScoringIntent.intent;
                     console.log(responseMessage)
-                    res.send(responseMessage);
+                    clientResponse.send(responseMessage);
                 } else {
-                    res.send("Sorry, i could not understand you.");
+                    clientResponse.send("Sorry, i could not understand you.");
                 }
             },
 
             //On failure of prediction
             onFailure: function (err) {
-                responseToClient(res, err.status, true, err.message);
+                responseToClient(clientResponse, err.status, true, err.message);
                 console.error(err);
             }
         });
@@ -190,57 +221,67 @@ router.post('/predict', function (req, res) {
 
 });
 
-router.post('/createAgent', function (req, responseClient) {
-    responseClient.header("Access-Control-Allow-Origin", "*");
-    let key = "";
-    console.log(JSON.stringify(req.body));
-    let err = false;
-    var pay = req.body;
-    var options = {
-        uri: 'https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/',
-        headers: {
-            "Content-Type": "application/json",
-            "Ocp-Apim-Subscription-Key": "ed2ff1a97f924b8e8a1402e6700a8bf4"
-        },
-        method: 'POST',
-        body: {
-            "name": pay.name,
-            "description": "",
-            "culture": "en-us",
-            "usageScenario": "IoT",
-            "domain": "Comics",
-            "initialVersionId": "1.0"
-        },
-        json: true // Automatically parses the JSON string in the response
-    };
-    existAgent(pay.name)
-        .then(exres => {
-            console.log(exres)
-            if (exres.exists) {
-                responseToClient(responseClient, 409, true, messages.agentAlreadyExists);
-            }
-        }).then(() =>
-        rp(options))
-        .then(response => {
-            key = response;
-            APPID = key;
+router.post('/bot', function (req, responseClient) {
+    let exampleJson = {
+        "name":"",
+        "Intents":[
+            {
+                "name":"",
+                "answer":"",
+                "questions":[
 
-            options.method = "POST";
-            for (let i = 0; i < pay.Intents.length; i++) {
-                let ci = pay.Intents[i];
-                options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + key + "/versions/1.0/intents";
-                options.body = {
-                    "name": ci.name
+                ]
+            }
+        ]
+    };
+
+
+    responseClient.header("Access-Control-Allow-Origin", "*");
+    let APPID = "";
+    let err = false;
+    let options = {};
+    let requestBody = req.body;
+    existAgent(requestBody.name)
+        .then(res => {
+            if (res.exists) {
+                responseToClient(responseClient, 409, true, messages.agentAlreadyExists);
+            }else{
+                options = {
+                    uri: 'https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/',
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Ocp-Apim-Subscription-Key": "ed2ff1a97f924b8e8a1402e6700a8bf4"
+                    },
+                    method: 'POST',
+                    body: {
+                        "name": requestBody.name,
+                        "description": "",
+                        "culture": "en-us",
+                        "usageScenario": "IoT",
+                        "domain": "Comics",
+                        "initialVersionId": "1.0"
+                    },
+                    json: true // Automatically parses the JSON string in the response
                 };
-                rp(options);
+            }
+
+        }).then(() => requestPromise(options))
+        .then(res => {
+            APPID = res;
+            options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + APPID + "/versions/1.0/intents";
+            for (let i = 0; i < requestBody.Intents.length; i++) {
+                let currentIntent = requestBody.Intents[i];
+                options.body = {
+                    "name": currentIntent.name
+                };
+                requestPromise(options);
             }
         }).then(() => {
-        options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + key + "/versions/1.0/examples";
-
-
-    }).then(() => delay(900)).then(() => {
-        for (let i = 0; i < pay.Intents.length; i++) {
-            let ci = pay.Intents[i];
+        options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + APPID + "/versions/1.0/examples";
+        delay(1300)
+    }).then(() => {
+        for (let i = 0; i < requestBody.Intents.length; i++) {
+            let ci = requestBody.Intents[i];
             options.body = [];
 
             for (let j = 0; j < ci.questions.length; j++) {
@@ -250,30 +291,27 @@ router.post('/createAgent', function (req, responseClient) {
                     "entityLabels": []
                 });
             }
-            rp(options)
+            requestPromise(options)
         }
-    }).then(() => delay(900)).then(res => {
-        rp(options)
-    })
+    }).then(() => delay(1300))
         .then(function (response) {
 
         }).then(function () {
-        options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + key + "/versions/1.0/train";
+        options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + APPID + "/versions/1.0/train";
         options.body = {};
 
-        rp(options).then(function (response) {
-
+        requestPromise(options).then(function (response) {
             let published = false;
             let inter = setInterval(function () {
                 options.method = "GET";
-                rp(options).then(res => {
+                requestPromise(options).then(res => {
                     let status = true;
                     for (let i = 0; i < res.length; i++) {
                         status = status && (res[i].details.statusId == 0)
                     }
                     if (status) {
                         clearInterval(inter);
-                        options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + key + "/publish";
+                        options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + APPID + "/publish";
                         options.body = {
                             "versionId": "1.0",
                             "isStaging": false,
@@ -284,9 +322,9 @@ router.post('/createAgent', function (req, responseClient) {
                         if (!published) {
                             console.log("published");
                             published = true;
-                            rp(options).then(function (response) {
+                            requestPromise(options).then(function (response) {
                                 responseToClient(responseClient, 200, false, messages.agentHasBeenCreated, {
-                                    "id":key
+                                    "id":APPID
                                 });
                             })
                         }
