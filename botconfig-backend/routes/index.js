@@ -138,32 +138,32 @@ router.get("/bot", function(req, clientResponse){
 
     });
 
-router.get("/delete", function (req, res) {
+router.delete("/bot/:id", function (req, clientResponse) {
+     // options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + exres.agentResponse.id;
     res.header("Access-Control-Allow-Origin", "*");
-    let agentName = req.param("agentName");
-
+    let id = req.params.id;
     let options = {
-        uri: "",
-        method: "DELETE",
-        headers: {
-            "Ocp-Apim-Subscription-Key": "ed2ff1a97f924b8e8a1402e6700a8bf4"
+        uri : "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + id,
+        method : 'GET',
+        headers : {
+            "Ocp-Apim-Subscription-Key":LUISKEY
         }
-    };
-    console.log(agentName);
-    existAgent(agentName).then(exres => {
-        console.log("exist done");
-        console.log(exres.agentResponse);
-        if(exres.exists){
-            console.log("pre");
-            options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + exres.agentResponse.id;
-            console.log("end");
-            requestPromise(options)
-                .then(() => responseToClient(res, 200, false, messages.agentDeleted));
-
-        }else {
-            responseToClient(res,  404, true, messages.agentNotFound + agentName);
+    }
+    requestPromise(options).then(res => {
+        if (res.statusCode === 400 ) {
+            responseToClient(clientResponse, 404, true, messages.agentNotFound);
         }
 
+        else {
+            options.method = 'DELETE';
+            requestPromise(options).then(res => {
+                responseToClient(clientResponse, 200, false, messages.agentDeleted);
+            }).catch(err => {
+                responseToClient(clientResponse, 400, true, err.message);
+            })
+        }
+    }).catch(err => {
+        responseToClient(clientResponse, 400, true, err.message);
     })
 });
 
