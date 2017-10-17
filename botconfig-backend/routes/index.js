@@ -130,18 +130,17 @@ router.delete("/bot/:id", function (req, clientResponse) {
     let id = req.params.id;
     let options = {
         uri : "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + id,
-        method : 'GET',
+        method : 'DELETE',
         headers : {
             "Ocp-Apim-Subscription-Key":LUISKEY
         }
     }
-    requestPromise(options).then(res => {
-        if (res.statusCode === 400 ) {
+    existsAgent(id).then(res => {
+        if (!res.exists ) {
             responseToClient(clientResponse, 404, true, messages.agentNotFound);
         }
 
         else {
-            options.method = 'DELETE';
             requestPromise(options).then(res => {
                 responseToClient(clientResponse, 200, false, messages.agentDeleted);
             }).catch(err => {
@@ -154,56 +153,6 @@ router.delete("/bot/:id", function (req, clientResponse) {
 });
 
 router.post('/predict', function (req, clientResponse) {
-    clientResponse.header("Access-Control-Allow-Origin", "*");
-    let predict = req.body.prediction;
-    let agentName = req.body.agentName;
-    console.log(predict);
-    let agentExists;
-    existAgent(agentName).then(exres => {
-        agentExists = exres.exists;
-        console.log(exres.agentResponse);
-        if (!exres.exists) {
-            responseToClient(clientResponse, 404, true, messages.agentNotFound);
-        } else {
-            LUISclient = LUISClient({
-                appId: exres.agentResponse.id,
-                appKey: APPKEY,
-                verbose: true
-            });
-        }
-    }).then(() => {
-        if (!agentExists)return;
-        LUISclient.predict(predict, {
-
-            //On success of prediction
-            onSuccess: function (response) {
-                let allGood = true;
-                console.log(response);
-                for (let i = 0; i < response.intents.length && allGood; i++) {
-                    console.log(Math.abs(response.topScoringIntent.score - response.intents[i].score));
-                    if (Math.abs(response.topScoringIntent.score - response.intents[i].score) < 0.1 && response.topScoringIntent.intent != response.intents[i].intent) {
-                        allGood = false;
-                    }
-                }
-                if (allGood) {
-                    responseMessage.error = false;
-                    responseMessage.status = 200;
-                    responseMessage.extra = {};
-                    responseMessage.message = response.topScoringIntent.intent;
-                    console.log(responseMessage)
-                    clientResponse.send(responseMessage);
-                } else {
-                    clientResponse.send("Sorry, i could not understand you.");
-                }
-            },
-
-            //On failure of prediction
-            onFailure: function (err) {
-                responseToClient(clientResponse, err.status, true, err.message);
-                console.error(err);
-            }
-        });
-    })
 
 });
 
@@ -300,7 +249,8 @@ router.post('/bot', function (req, responseClient) {
                         options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + APPID + "/publish";
                         options.body = {
                             "versionId": "1.0",
-                            "isStaging": false,
+             
+               "isStaging": false,
                             "region": "westus"
                         };
                         options.method = "POST";
