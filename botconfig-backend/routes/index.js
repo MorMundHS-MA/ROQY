@@ -39,50 +39,36 @@ function responseToClient(res, status, error, message, add){
 }
 /**
  *
- * @param agentName Name of Bot
+ * @param id Name of Bot
  * @returns
  *      {
  *          "exists": true when a bot with this name exists,
  *          "agentResponse": Response from Luis with Information about Agent
  *      }
  */
-var existAgent = function (agentName) {
+function existsAgent (id) {
     return new Promise(function (resolve) {
-        var options = {
-            uri: 'https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/',
-                headers: {
-                "Content-Type": "application/json",
-                "Ocp-Apim-Subscription-Key": "ed2ff1a97f924b8e8a1402e6700a8bf4"
-            },
-            method: 'GET',
-            body: {},
-            json: true // Automatically parses the JSON string in the response
+        let options = {
+            uri : "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + id,
+            method : 'GET',
+            headers : {
+                "Ocp-Apim-Subscription-Key":LUISKEY
+            }
         };
         requestPromise(options).then(res => {
-            let agentFound = false;
-            let foundIndex = -1;
-            for (let i = 0; i < res.length && !agentFound; i++) {
-
-                agentFound = res[i].name === agentName;
-                if(agentFound){
-                    foundIndex = i;
-                }
-            }
-            if(agentFound){
-
-                resolve({
-                    "exists":true,
-                    "agentResponse":res[foundIndex]
-                });
-            }
-            else
+            if (res.statusCode === 400) {
                 resolve({
                     "exists":false
                 });
-
-        })
+            }else {
+                resolve({
+                    "exists":true,
+                    res
+                });
+            }
+        });
     })
-}
+};
 
 var printOnSuccess = function (response) {
     console.log(response);
