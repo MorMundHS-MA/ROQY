@@ -4,7 +4,8 @@
     <span>Name:</span>
     <input v-model="botname" placeholder="Enter the bots name"></input>
     <br>
-    <button v-on:click="save()">Save</button>
+    <router-link to="/"><button> Cancel </button></router-link>
+    <router-link to="/"><button @click="create" @keyup.enter="create"> Create </button></router-link>
   </div>
 </template>
 
@@ -16,9 +17,17 @@ export default {
     }
   },
   methods: {
-    save: function () {
-      console.log('Saving bot ' + this.$data.botname)
+    create () {
+      console.log('Saving bot ' + this.botname)
       // this.$router.push('/')
+
+      var newbot = {
+        name: this.botname,
+        image: '../assets/bot.png',
+        state: 1,
+        description: ''
+      }
+      this.$store.commit('addNewbot', newbot)
     }
   }
 }

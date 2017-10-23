@@ -1,6 +1,6 @@
 <template>
   <div id="body-container">
-    <header>
+    <header>  
       <h1>Ravenclaw Bot Config UI</h1>
       <h2>Walking Skeleton</h2>
     </header>
@@ -20,12 +20,9 @@
 import botInfo from './BotInfo.vue'
 export default {
   name: '#body-container',
-  data () {
-    return {
-      bots: [
-        {name: 'Welcome-Bot', Status: 'Offline'},
-        {name: 'FAQ-Bot', Status: 'Online'}
-      ]
+  computed: {
+    bots () {
+      return this.$store.state.bots
     }
   },
   components: {
