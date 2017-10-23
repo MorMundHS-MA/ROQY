@@ -1,21 +1,25 @@
 <template>
-  <div class="hello">
-    <h1>Ravenclaw Bot Config UI</h1>
-    <h2>Walking Skeleton</h2>
-    <bot-info :botData="bot"></bot-info>
-    <ul>
-      <li v-for="item in bots">
-        <bot-info :botData="item"></bot-info>
-      </li>
-      <router-link to="/newbot">Create new Bot</router-link>
-    </ul>
+  <div id="body-container">
+    <header>
+      <h1>Ravenclaw Bot Config UI</h1>
+      <h2>Walking Skeleton</h2>
+    </header>
+    
+    <div class="container">
+      <ul>
+        <li v-for="item in bots">
+          <bot-info :botData="item"></bot-info>
+        </li>
+        <router-link to="/newbot"><button>Create new Bot</button></router-link>
+      </ul>
+    </div>
   </div>
 </template>
 
 <script>
 import botInfo from './BotInfo.vue'
 export default {
-  name: 'HelloWorld',
+  name: '#body-container',
   data () {
     return {
       bots: [
@@ -32,6 +36,11 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
+header{
+  background-color: #dce0e8;
+  margin: 10;
+}
 h1, h2 {
   font-weight: normal;
 }

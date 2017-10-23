@@ -17,5 +17,6 @@ export default new Router({
       name: 'newbot',
       component: creator
     }
-  ]
+  ],
+  mode: 'history'
 })
