@@ -41,7 +41,7 @@ export const store = new Vuex.Store({
     getName (state, payload) {
       return state.bots[payload].name
     },
-    getStatue (state, payload) {
+    getState (state, payload) {
       return state.bots[payload].state
     },
     getTemplates () {
@@ -50,24 +50,24 @@ export const store = new Vuex.Store({
   },
   mutations: {
     changeState (state, payload) {
-      if (state.bots[payload] === false) {
-        state.bots[payload] = true
+      if (state.bots[payload] === 1) {
+        state.bots[payload] = 0
       } else {
-        state.bots[payload] = false
+        state.bots[payload] = 1
       }
     },
     addNewbot (state, bot) {
       state.bots.push(bot)
     },
-    deleteBot (state, payload) {
-      state.bots.slice(payload, 1)
+    deleteBot (state, index) {
+      state.bots.splice(index, 1)
     }
   },
   actions: {
 
-    changeStateAsync ({ commit }, payload) {
+    changeStateAsync ({ commit }, index) {
       setTimeout(() => {
-        commit('changeState', payload)
+        commit('changeState', index)
       }, 1000)
     },
     addNewBotAsync ({ commit }, payload) {
@@ -75,9 +75,9 @@ export const store = new Vuex.Store({
         commit('addNewBot', payload)
       }, 1000)
     },
-    deleteBotAsync ({ commit }, payload) {
+    deleteBotAsync ({ commit }, index) {
       setTimeout(function () {
-        commit('deleteBot', payload)
+        commit('deleteBot', index)
       }, 1000)
     }
 

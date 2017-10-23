@@ -3,7 +3,7 @@
     <h1>Create new bot</h1>
     <span>Name:</span>
     <input v-model="botname" placeholder="Enter the bots name"></input>
-    <br>
+    <hr>
     <router-link to="/"><button> Cancel </button></router-link>
     <router-link to="/"><button @click="create" @keyup.enter="create"> Create </button></router-link>
   </div>
@@ -18,16 +18,16 @@ export default {
   },
   methods: {
     create () {
-      console.log('Saving bot ' + this.botname)
-      // this.$router.push('/')
-
-      var newbot = {
-        name: this.botname,
-        image: '../assets/bot.png',
-        state: 1,
-        description: ''
+      if (this.botname !== '') {
+        this.$store.commit('addNewbot', {
+          name: this.botname,
+          image: '../assets/bot.png',
+          state: 1,
+          description: ''
+        })
+      } else {
+        console.log('No name')
       }
-      this.$store.commit('addNewbot', newbot)
     }
   }
 }

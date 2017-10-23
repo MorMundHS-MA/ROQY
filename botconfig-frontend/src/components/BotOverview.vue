@@ -7,8 +7,8 @@
     
     <div class="container">
       <ul>
-        <li v-for="item in bots">
-          <bot-info :botData="item"></bot-info>
+        <li v-for="(item,index) in bots">
+          <bot-info :botData="item"></bot-info> 
         </li>
         <router-link to="/newbot"><button>Create new Bot</button></router-link>
       </ul>
@@ -45,11 +45,12 @@ h1, h2 {
 ul {
   list-style-type: none;
   padding: 0;
+ 
 }
 
 li {
   display: inline-block;
-  margin: 0 10px;
+  margin: 10px;
 }
 
 a {
