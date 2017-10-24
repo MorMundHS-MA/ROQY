@@ -1,13 +1,11 @@
 <template>
   <div class="bot">
-      <button  @click="changeBot(botData)">{{ botData.status }}</button>
-      
+      <button  v-on:click="changeBot(botData)">{{ botData.status }}</button>      
       <p>Bot</p>
       <img src="../assets/bot.png" width="100" height="100">
       <br>
       <span>{{ botData.name }}</span>
-      <button  @click="deleteItem(botData)">X</button>
-            
+      <button v-on:click="deleteItem(botData)">X</button>            
 </div>
       
   </div>

@@ -5,7 +5,7 @@
     <input v-model="botname" placeholder="Enter the bots name"></input>
     <hr>
     <router-link to="/"><button> Cancel </button></router-link>
-    <router-link to="/"><button @click="create"> Create </button></router-link>
+    <router-link to="/"><button v-on:click="create"> Create </button></router-link>
   </div>
 </template>
 
