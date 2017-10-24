@@ -6,6 +6,7 @@ import creator from '@/components/BotCreator'
 Vue.use(Router)
 
 export default new Router({
+  mode: 'history',
   routes: [
     {
       path: '/',
@@ -17,6 +18,5 @@ export default new Router({
       name: 'newbot',
       component: creator
     }
-  ],
-  mode: 'history'
+  ]
 })

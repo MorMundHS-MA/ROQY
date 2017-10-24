@@ -10,13 +10,13 @@ export const store = new Vuex.Store({
       {
         name: 'Welcome-Bot',
         image: '../assets/bot.png',
-        state: 0,
+        status: 'offline',
         description: ''
       },
       {
         name: 'FAQ-Bot',
         image: '../assets/bot.png',
-        state: 1,
+        status: 'online',
         description: ''
       }
     ],
@@ -38,29 +38,33 @@ export const store = new Vuex.Store({
     getbots () {
       return this.state.bots
     },
-    getName (state, payload) {
-      return state.bots[payload].name
+    getName (state, index) {
+      return state.bots[index].name
     },
-    getState (state, payload) {
-      return state.bots[payload].state
+    getState (state, index) {
+      return state.bots[index].status
     },
     getTemplates () {
       return this.state.templates
     }
   },
   mutations: {
-    changeState (state, payload) {
-      if (state.bots[payload] === 1) {
-        state.bots[payload] = 0
+    changeState (state, bot) {
+      var b = state.bots.indexOf(bot)
+      if (state.bots[b].status === 'online') {
+        state.bots[b].status = 'offline'
       } else {
-        state.bots[payload] = 1
+        state.bots[b].status = 'online'
       }
     },
     addNewbot (state, bot) {
       state.bots.push(bot)
     },
-    deleteBot (state, index) {
-      state.bots.splice(index, 1)
+    deleteBot (state, bot) {
+      state.bots.splice(state.bots.indexOf(bot), 1)
+    },
+    renameBot (state, bot) {
+      state.bots[state.bots.indexOf(bot[0])].name = bot[1].name
     }
   },
   actions: {
@@ -70,9 +74,9 @@ export const store = new Vuex.Store({
         commit('changeState', index)
       }, 1000)
     },
-    addNewBotAsync ({ commit }, payload) {
+    addNewBotAsync ({ commit }, bot) {
       setTimeout(() => {
-        commit('addNewBot', payload)
+        commit('addNewBot', bot)
       }, 1000)
     },
     deleteBotAsync ({ commit }, index) {

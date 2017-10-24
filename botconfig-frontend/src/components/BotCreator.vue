@@ -5,7 +5,7 @@
     <input v-model="botname" placeholder="Enter the bots name"></input>
     <hr>
     <router-link to="/"><button> Cancel </button></router-link>
-    <router-link to="/"><button @click="create" @keyup.enter="create"> Create </button></router-link>
+    <router-link to="/"><button @click="create"> Create </button></router-link>
   </div>
 </template>
 
@@ -22,7 +22,7 @@ export default {
         this.$store.commit('addNewbot', {
           name: this.botname,
           image: '../assets/bot.png',
-          state: 1,
+          status: 'offline',
           description: ''
         })
       } else {
