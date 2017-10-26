@@ -2,7 +2,7 @@ var express = require('express');
 var path = require('path');
 var bodyParser = require('body-parser');
 
-var botconfig = require('./routes/botconfig.js');
+var botconfig = require('./routes/botconfig');
 
 var app = express();
 app.use( bodyParser.json() );       // to support JSON-encoded bodies
