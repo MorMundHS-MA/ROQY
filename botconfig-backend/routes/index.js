@@ -102,7 +102,7 @@ function killPromise(val) {
             resolve();
         })
     }
-}
+}C
 
 
 router.get("/bot", function(req, clientResponse){
@@ -123,9 +123,8 @@ router.get("/bot", function(req, clientResponse){
         });
 
     });
-
+    C
 router.delete("/bot/:id", function (req, clientResponse) {
-     // options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + exres.agentResponse.id;
     res.header("Access-Control-Allow-Origin", "*");
     let id = req.params.id;
     let options = {
@@ -152,7 +151,27 @@ router.delete("/bot/:id", function (req, clientResponse) {
     })
 });
 
-router.post('/predict', function (req, clientResponse) {
+router.get('/bot/:id/query/:query', function (req, clientResponse) {
+    res.header("Access-Control-Allow-Origin", "*");    
+    const id = req.params.id;
+    const query = req.params.query;
+    
+    existsAgent(id).then(res => {
+        if(res.exists){
+            LUISclient = LUISClient({
+                appId:id,
+                appKey:APPKEY,
+                verbose:true
+            });
+            LUISclient.predict(query, {
+                onSuccess: function(response){
+                    responseToClient(clientResponse, 200, false, response.topScoringIntent.intent);
+                }
+            })
+        } else {
+            responseToClient(clientResponse, 404, true, messages.agentNotFound);
+        }
+    })
 
 });
 
