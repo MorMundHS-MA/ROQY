@@ -28,6 +28,7 @@ function responseToClient(res, status, error, message, add) {
     res.status(status).send(JSON.stringify(responseMessage));
 }
 /**
+
  *
  * @param id Name of Bot
  * @returns
@@ -105,7 +106,8 @@ router.delete("/bot/:id", function (req, clientResponse) {
         }
 
         else {
-            requestPromise(options).then(res => {
+            requestPromise(o
+                ptions).then(res => {
                 responseToClient(clientResponse, 200, false, messages.agentDeleted);
             }).catch(err => {
                 responseToClient(clientResponse, 400, true, err.message);
@@ -150,6 +152,7 @@ router.post('/bot', function (req, clientResponse) {
     let exampleJson = {
         "name": "",
         "Intents": [
+            
             {
                 "name": "",
                 "answer": "",

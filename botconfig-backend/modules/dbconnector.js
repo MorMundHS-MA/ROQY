@@ -1,17 +1,18 @@
 let MongoClient = require('mongodb').MongoClient;
 let url = 'mongodb://141.19.145.166:27017/mydb';
-let exports = {};
 
-let DBConnector = 
-    MongoClient.connect(url, function(err, db) {
+exports = module.exports = {};
+ 
+await MongoClient.connect(url, function(err, db) {
         if (err) throw err;
         db.createCollection('agent', function(err, res) {
             if(err) throw err;
+            agentCollection = res;
         });
         return true;
     });
 let Observer = [];
-let agentCollection = DBConnector.collection('agent');
+let agentCollection;
 
 /**
  * @param {*JSON-Object} data
@@ -19,7 +20,7 @@ let agentCollection = DBConnector.collection('agent');
  */
 exports.writeToDB = function (data ) {
     
-    //
+    //To create a new Bot
     if(data.botID === undefined) {
         if(data.key === "create"){
             agentCollection.insertOne(data);
