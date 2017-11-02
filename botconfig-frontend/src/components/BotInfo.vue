@@ -9,8 +9,7 @@
       <img src="../assets/bot.png" width="100" height="100">
       <br>
       <span>{{ botData.name }}</span>
-      <button v-on:click="deleteItem(botData)">X</button>        
-</div>
+      <button v-on:click="deleteItem(botData)">X</button>
       
   </div>
 </template>
@@ -31,8 +30,10 @@ export default {
       this.$store.commit('changeState', item)
     },
     renameItem (item) {
-      this.$store.commit('renameBot', [item, {
-        name: this.newName}])
+      if (this.newName !== '') {
+        this.$store.commit('renameBot', [item, {
+          name: this.newName}])
+      }
     }
   }
 }
