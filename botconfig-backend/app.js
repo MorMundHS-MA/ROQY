@@ -2,11 +2,7 @@ var express = require('express');
 var path = require('path');
 var bodyParser = require('body-parser');
 
-<<<<<<< HEAD
-var index = require('./routes/index.js');
-=======
 var botconfig = require('./routes/botconfig');
->>>>>>> 4edf56d92e302214744894dac5dca75866bc9dbb
 
 var app = express();
 app.use( bodyParser.json() );       // to support JSON-encoded bodies
