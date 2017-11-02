@@ -10,7 +10,7 @@ const APPKEY = "ed2ff1a97f924b8e8a1402e6700a8bf4";
 const messages = {
     "botNotFound": "The specified bot could not be found: ",
     "botAlreadyExists": "A bot with that name already exists!",
-    "botDeleted": "The bot has been deleted successfully",
+    "botDeleted": "The bot has been deleted successfully!",
     "botHasBeenCreated": "The bot has been created successfully.",
     "botsFound": "All bots has been returned.",
     "errorWhileCreating": "Error while creating the bot, please try again.",
@@ -81,10 +81,8 @@ router.get("/bot", function (req, clientResponse) {
     responseToClient(clientResponse, 200, false, messages.botsFound, bots);
 });
 
-router.get("/test", function(r, s){
-    s.send("Hallo Welt");
-})
 
+<<<<<<< HEAD
 router.delete("/bot/:id", function (req, clientResponse) {
     // options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + exres.agentResponse.id;
     clientResponse.header("Access-Control-Allow-Origin", "*");
@@ -143,6 +141,8 @@ router.get('/bot/:id/query/:query', function (req, clientResponse) {
     })
 
 });
+=======
+>>>>>>> 3ccd53246dcc49f114edb942bcc88d6faff076d0
 
 router.post('/bot', function (req, clientResponse) {
     let exampleJson = {
@@ -304,6 +304,34 @@ router.post('/bot', function (req, clientResponse) {
 });
 
 
+router.delete("/bot/:id", function (req, clientResponse) {
+    // options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + exres.agentResponse.id;
+    clientResponse.header("Access-Control-Allow-Origin", "*");
+    let id = req.params.id;
+    let options = {
+        uri: "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + id,
+        method: 'DELETE',
+        headers: {
+            "Ocp-Apim-Subscription-Key": APPKEY
+        },
+        json: true
+    }
+    existsAgent(id).then(res => {
+        if (!res.exists) {
+            responseToClient(clientResponse, 404, true, messages.botNotFound);
+        }
+
+        else {
+            requestPromise(options).then(res => {
+                responseToClient(clientResponse, 200, false, messages.botDeleted);
+            }).catch(err => {
+                responseToClient(clientResponse, 400, true, err.message);
+            })
+        }
+    }).catch(err => {
+        responseToClient(clientResponse, 400, true, err.message);
+    })
+});
 /*
 Update Bot
  */
@@ -357,6 +385,32 @@ router.put('/bot/:id/stop', function(req, clientResponse){
         console.log("hu");
         responseToClient(clientResponse, 404, true, messages.generalError);
     }
+});
+
+
+
+router.get('/bot/:id/query/:query', function (req, clientResponse) {
+    res.header("Access-Control-Allow-Origin", "*");
+    const id = req.params.id;
+    const query = req.params.query;
+
+    existsAgent(id).then(res => {
+        if(res.exists){
+            LUISClient = LUISClient({
+                appId:id,
+                appKey:APPKEY,
+                verbose:true
+            });
+            LUISClient.predict(query, {
+                onSuccess: function(response){
+                    responseToClient(clientResponse, 200, false, response.topScoringIntent.intent);
+                }
+            })
+        } else {
+            responseToClient(clientResponse, 404, true, messages.botNotFound);
+        }
+    })
+
 });
 
 module.exports = router;
