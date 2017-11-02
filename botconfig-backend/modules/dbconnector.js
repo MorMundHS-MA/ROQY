@@ -5,18 +5,14 @@ let url = 'mongodb://141.19.145.166:27017/mydb';
 cexports = {};
 
 let agentCollection = DBConnector.collection('agent');
- 
+
 /**
  * @param {*JSON-Object} data
  * @returns boolean if writing to the Database was sucessfull
  */
 
-cexports.writeToDB = function (data ) {
-    
-    //
-    if(data.botID === undefined) {
-        if(data.key === "create"){
-            agentCollection.insertOne(data);
+cexports.writeToDB = function (data) {
+
     MongoClient.connect(url, function (err, db) {
         //To create a new Bot
         if (data.botID === undefined) {
@@ -32,6 +28,7 @@ cexports.writeToDB = function (data ) {
             }
             // Look for entry with this id
         }
+
         else if (data.botID !== undefined) {
             /* The update value only can set on 'name' or 'intent' */
             if (data.update === 'name') {
@@ -62,13 +59,3 @@ cexports.writeToDB = function (data ) {
         }
     });
 }  
-  
-/**
- * @param {*String} id
- * @returns the deleted Bot as an JSON-Object
- */
-cexports.deletedFromDB = function(id) {
-    return;
-}
-
-module.exports = cexports;
