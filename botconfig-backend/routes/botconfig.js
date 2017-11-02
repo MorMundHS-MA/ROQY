@@ -2,22 +2,27 @@ const express = require('express');
 const requestPromise = require('request-promise');
 const router = express.Router();
 const ILuis = require('luis-node-sdk');
+const dbcon = require('../modules/dbconnector');
 
 var APPID = "4f51b70e-cc17-46b8-8009-801a34e28c90";
 const APPKEY = "ed2ff1a97f924b8e8a1402e6700a8bf4";
 
 const messages = {
-    "agentNotFound": "The specified agent could not be found: ",
-    "agentAlreadyExists": "An agent with that name already exists!",
-    "agentDeleted": "The agent has been deleted successfully",
-    "agentHasBeenCreated": "The agent has been created successfully",
+    "botNotFound": "The specified bot could not be found: ",
+    "botAlreadyExists": "A bot with that name already exists!",
+    "botDeleted": "The bot has been deleted successfully",
+    "botHasBeenCreated": "The bot has been created successfully.",
     "botsFound": "All bots has been returned.",
-    "errorWhileCreating": "Error while creating the bot, please try again."
+    "errorWhileCreating": "Error while creating the bot, please try again.",
+    "botHasBeenStarted":"The bot has been successfully started!",
+    "botHasBeenStopped":"The bot has been successfully stopped!",
+    "generalError":"An error occured."
 };
 
 const LUISKEY = "ed2ff1a97f924b8e8a1402e6700a8bf4";
 let LUISClient;
 function responseToClient(res, status, error, message, add) {
+    res.header("Content-Type", "application/json");
     let responseMessage = {
         "status": status,
         "error": error,
@@ -70,23 +75,15 @@ function delay(t) {
 router.get("/bot", function (req, clientResponse) {
     clientResponse.header("Access-Control-Allow-Origin", "*");
     clientResponse.setHeader("Content-Type", "text/html; charset=utf-8");
-    let options = {
-        "uri": "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/",
-        "method": "GET",
-        "headers": {
-            "Ocp-Apim-Subscription-Key": APPKEY
-        },
-        json: true
-    };
-
-    requestPromise(options).then(res => {
-        console.log(res);
-        responseToClient(clientResponse, 200, false, messages.botsFound, res);
-    }).catch(err => {
-        responseToClient(clientResponse, 443, true, err.message);
+    let bots = dbcon.readFromDB({
+        "key":"allBots"
     });
-
+    responseToClient(clientResponse, 200, false, messages.botsFound, bots);
 });
+
+router.get("/test", function(r, s){
+    s.send("Hallo Welt");
+})
 
 router.delete("/bot/:id", function (req, clientResponse) {
     // options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + exres.agentResponse.id;
@@ -102,13 +99,18 @@ router.delete("/bot/:id", function (req, clientResponse) {
     }
     existsAgent(id).then(res => {
         if (!res.exists) {
-            responseToClient(clientResponse, 404, true, messages.agentNotFound);
+            responseToClient(clientResponse, 404, true, messages.botNotFound);
         }
 
         else {
+<<<<<<< HEAD
             requestPromise(o
                 ptions).then(res => {
                 responseToClient(clientResponse, 200, false, messages.agentDeleted);
+=======
+            requestPromise(options).then(res => {
+                responseToClient(clientResponse, 200, false, messages.botDeleted);
+>>>>>>> 4edf56d92e302214744894dac5dca75866bc9dbb
             }).catch(err => {
                 responseToClient(clientResponse, 400, true, err.message);
             })
@@ -136,17 +138,11 @@ router.get('/bot/:id/query/:query', function (req, clientResponse) {
                 }
             })
         } else {
-            responseToClient(clientResponse, 404, true, messages.agentNotFound);
+            responseToClient(clientResponse, 404, true, messages.botNotFound);
         }
     })
 
 });
-
-// TEST DELETE
-router.get("/test", function (req, clientresponse) {
-    con.connect()
-});
-
 
 router.post('/bot', function (req, clientResponse) {
     let exampleJson = {
@@ -286,13 +282,13 @@ router.post('/bot', function (req, clientResponse) {
         })
         .then(() => requestPromise(options))
         .then(res => {
-            responseToClient(clientResponse, 201, false, messages.agentHasBeenCreated, res);
+            responseToClient(clientResponse, 201, false, messages.botHasBeenCreated, res);
         })
         .catch(err => {
                 console.log(err.statusCode);
                 console.log(err.message);
                 if (err.statusCode === 400) {
-                    responseToClient(clientResponse, 409, true, messages.agentAlreadyExists);
+                    responseToClient(clientResponse, 409, true, messages.botAlreadyExists);
                 } else if (err.statusCode === 409) {
                     responseToClient(clientResponse, 409, true, messages.errorWhileCreating);
                     options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + appId
@@ -305,6 +301,62 @@ router.post('/bot', function (req, clientResponse) {
         );
 
 
+});
+
+
+/*
+Update Bot
+ */
+router.put('/bot/:id', function(req, clientResponse){
+
+});
+
+/*
+get bot status
+ */
+router.get('/bot/:id/status', function(req, clientResponse){
+    let id = req.params.id;
+    dbcon.readFromDB({
+        "key":"",
+        "botID":""
+    });
+});
+
+/*
+start bot
+ */
+router.put('/bot/:id/start', function(req, clientResponse){
+    let id = req.params.id;
+    let params = {
+        "key":"state",
+        "newValue":"running",
+        "botID":id
+    };
+    if(dbcon.writeToDB(params)){
+        responseToClient(clientResponse, 200, false, messages.botHasBeenStarted);
+    }else{
+        responseToClient(clientResponse, 404, true, messages.generalError);
+    }
+});
+
+/*
+stop bot
+ */
+router.put('/bot/:id/stop', function(req, clientResponse){
+    let id = req.params.id;
+    let params = {
+        "key":"state",
+        "newValue":"stopped",
+        "botID":id
+    };
+    console.log("here");
+    if(dbcon.writeToDB(params)){
+        console.log("Wu");
+        responseToClient(clientResponse, 200, false, messages.botHasBeenStopped);
+    }else{
+        console.log("hu");
+        responseToClient(clientResponse, 404, true, messages.generalError);
+    }
 });
 
 module.exports = router;

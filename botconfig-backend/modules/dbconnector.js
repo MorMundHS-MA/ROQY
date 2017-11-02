@@ -1,69 +1,58 @@
 let MongoClient = require('mongodb').MongoClient;
-let url = 'mongodb://141.19.145.166:27017/mydb';
+let url = 'mongodb://141.19.145.166:27017/livePersonBots';
 
 exports = module.exports = {};
- 
-await MongoClient.connect(url, function(err, db) {
-        if (err) throw err;
-        db.createCollection('agent', function(err, res) {
-            if(err) throw err;
-            agentCollection = res;
-        });
-        return true;
-    });
-let Observer = [];
-let agentCollection;
 
 /**
  * @param {*JSON-Object} data
  * @returns boolean if writing to the Database was sucessfull
  */
-exports.writeToDB = function (data ) {
-    
-    //To create a new Bot
-    if(data.botID === undefined) {
-        if(data.key === "create"){
-            agentCollection.insertOne(data);
+exports.writeToDB = function (data) {
 
-        }else if(data.key === "update"){
-            let id = data.newValue.id;
-            // Look for entry with this id
-            if (agentCollection.findOne(data.key === botID)) {
-                //Nicht sicher ob hier nur der botID Key gelöscht wird und nicht das ganze JSON-Object
-                agentCollection.deleteOne(data.botID, function(err, res) {
+    MongoClient.connect(url, function (err, db) {
+        //To create a new Bot
+        if (data.botID === undefined) {
+            if (data.key === "create") {
+                db.collection("botAgents").insertOne(data, function (err, res) {
                     if (err) throw err;
-                }
-            );
-                //Hier fehlt das Feld von dem JSON in welchem die Änderung drin steht.
-                agentCollection.updateOne(data.data.key);
+                    return true;
+                });
             }
             else {
-                agentCollection.insertOne(data);
+                console.log('The key value is not set on create.');
+                return false;
+            }
+            // Look for entry with this id
+        }
+
+        else if (data.botID = !undefined) {
+            /* The update value only can set on 'name' or 'intent' */
+            if (data.update === 'name') {
+                var newName = { $set: { name: data.name } };
+                db.collection("botAgents").updateOne(data.botID, newName,
+                    function (err, res) {
+                        if (err) {
+                            console.log('A bot with such an botID can not be found.');
+                            return false;
+                        }
+                        return true;
+                    });
             }
         }
-    }else if(data.intentID === undefined) {
+        else if (data.update === 'newIntend') {
+            // TODO: Insert intend into bot
+        }
 
-    }else {
-
-    }
-    
-
-    return;
-}
-
-/**
- * @param {*JSON-Object} reference
- * @returns an JSON-Object with the needed Bot-Information
- */
-function readFromDB(reference) {
-
-    return;
-}
-
-/**
- * @param {*String} id
- * @returns the deleted Bot as an JSON-Object
- */
-function deletedFromDB(id) {
-    return;
-}
+        else if (data.update === 'updateIntend') {
+            var newIntend = { $set: { intendID: data.newIntend } };
+            db.collection("botAgents").updateOne(data.intendID, newIntend,
+                function (err, res) {
+                    if (err) {
+                        console.log("Your bot does not have such an intent.");
+                        return false;
+                    }
+                    return true;
+                });
+        }
+    });
+}    
