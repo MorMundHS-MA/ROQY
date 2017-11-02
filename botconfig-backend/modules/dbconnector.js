@@ -1,8 +1,8 @@
 let MongoClient = require('mongodb').MongoClient;
 let url = 'mongodb://141.19.145.166:27017/mydb';
-let exports = {};
+let cexports = {};
 
-let DBConnector = 
+/*let DBConnector =
     MongoClient.connect(url, function(err, db) {
         if (err) throw err;
         db.createCollection('agent', function(err, res) {
@@ -10,14 +10,16 @@ let DBConnector =
         });
         return true;
     });
-let Observer = [];
-let agentCollection = DBConnector.collection('agent');
 
+let Observer = [];
+
+let agentCollection = DBConnector.collection('agent');
+ */
 /**
  * @param {*JSON-Object} data
  * @returns boolean if writing to the Database was sucessfull
  */
-exports.writeToDB = function (data ) {
+cexports.writeToDB = function (data ) {
     
     //
     if(data.botID === undefined) {
@@ -54,7 +56,7 @@ exports.writeToDB = function (data ) {
  * @param {*JSON-Object} reference
  * @returns an JSON-Object with the needed Bot-Information
  */
-function readFromDB(reference) {
+cexports.readFromDB = function(reference) {
 
     return;
 }
@@ -63,6 +65,8 @@ function readFromDB(reference) {
  * @param {*String} id
  * @returns the deleted Bot as an JSON-Object
  */
-function deletedFromDB(id) {
+cexports.deletedFromDB = function(id) {
     return;
 }
+
+module.exports = cexports;
