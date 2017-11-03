@@ -240,6 +240,14 @@ router.post('/bot', function (req, clientResponse) {
 
 });
 
+router.options("/bot/", function(req, clientResponse){
+    console.log("Test");
+    clientResponse.header("Access-Control-Allow-Origin", "http://141.19.142.7:3000");
+    clientResponse.header("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+    clientResponse.header("Access-Control-Max-Age", 86400);
+    clientResponse.statusCode = 200;
+    clientResponse.end();
+})
 
 router.delete("/bot/:id", function (req, clientResponse) {
     // options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + exres.agentResponse.id;
