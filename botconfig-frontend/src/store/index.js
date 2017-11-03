@@ -14,7 +14,16 @@ export const store = new Vuex.Store({
         name: 'Welcome-Bot',
         image: '../assets/bot.png',
         status: 'offline',
-        description: ''
+        description: '',
+        intents: [
+          {
+            id: 0,
+            name: '',
+            answer: '',
+            nextintents: [],
+            questions: []
+          }
+        ]
       }
     ],
     templates: [
@@ -61,17 +70,23 @@ export const store = new Vuex.Store({
     changeState (state, bot) {
       var b = state.bots.indexOf(bot)
       if (state.bots[b].status === 'online') {
-        axios.get('/bot/' + bot.id + '/stop')
+        axios.post('/bot/' + bot.id + '/stop', {
+          'status': bot.status
+        })
         .then(function (response) {
           state.bots[b].status = 'offline'
+          response = state.bots[b].status
         })
         .catch(function (error) {
           console.log(error)
         })
       } else {
-        axios.get('/bot/' + bot.id + '/start')
+        axios.post('/bot/' + bot.id + '/start', {
+          'status': bot.status
+        })
         .then(function (response) {
           state.bots[b].status = 'online'
+          response = state.bots[b].status
         })
         .catch(function (error) {
           console.log(error)
