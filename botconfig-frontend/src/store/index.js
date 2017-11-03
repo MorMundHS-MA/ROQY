@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 
-axios.defaults.baseURL = 'http://141.19.142.7:5000'
+axios.defaults.baseURL = 'http://141.19.142.7:3000'
 
 Vue.use(Vuex)
 
