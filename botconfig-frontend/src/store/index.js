@@ -100,7 +100,7 @@ export const store = new Vuex.Store({
         'intents': []
       })
       .then(function (response) {
-        state.bots.push(response)
+        state.bots.push(bot)
       })
       .catch(function (error) {
         console.log(error)

@@ -2,7 +2,7 @@
   <div class="bot">
       <button  v-on:click="changeBot(botData)">{{ botData.status }}</button>
 
-      <input type="text" v-model="newName" placeholder="Bot Name..."></input>
+      <input type="text" v-model="newName" v-on:keyup.enter="renameItem(botData)" placeholder="Bot Name..."></input>
       <button v-on:click="renameItem(botData)">Rename</button> 
        
       <p>Bot</p>
