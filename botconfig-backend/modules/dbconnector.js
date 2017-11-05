@@ -16,37 +16,13 @@ cexports.writeToDB = function (data) {
     MongoClient.connect(url, function (err, db) {
         //To create a new Bot
         if (data.botID === undefined) {
-            if (data.key === "create") {
-                db.collection("botAgents").insertOne(data, function (err, res) {
-                    if (err) throw err;
-                    return true;
-                });
-            }
-            else {
-                console.log('The key value is not set on create.');
-                return false;
-            }
-            // Look for entry with this id
+            db.collection("botAgents").insertOne(data, function (err, res) {
+                if (err) throw err;
+                return true;
+            });
         }
 
-        else if (data.botID !== undefined) {
-            /* The update value only can set on 'name' or 'intent' */
-            if (data.update === 'name') {
-                var newName = { $set: { name: data.name } };
-                db.collection("botAgents").updateOne(data.botID, newName,
-                    function (err, res) {
-                        if (err) {
-                            console.log('A bot with such an botID can not be found.');
-                            return false;
-                        }
-                        return true;
-                    });
-            }
-        }
-        else if (data.update === 'newIntend') {
-            // TODO: Insert intend into bot
-        }
-        else if (data.update === 'updateIntend') {
+        else {
             var newIntend = { $set: { intendID: data.newIntend } };
             db.collection("botAgents").updateOne(data.intendID, newIntend,
                 function (err, res) {
@@ -58,4 +34,4 @@ cexports.writeToDB = function (data) {
                 });
         }
     });
-}  
+}
