@@ -250,30 +250,30 @@ router.options("/bot/", function(req, clientResponse){
     clientResponse.end();
 })
 
-router.options("/bot/" + bot.id + "/stop", function(req, clientResponse){
+router.options("/bot/:id/stop", function(req, clientResponse){
     console.log("stop");
     clientResponse.header("Access-Control-Allow-Origin", "*");
-    clientResponse.header("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+    clientResponse.header("Access-Control-Allow-Methods", "POST, OPTIONS");
     clientResponse.header("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With")
     clientResponse.header("Access-Control-Max-Age", 86400);
     clientResponse.statusCode = 200;
     clientResponse.end();
 })
 
-router.options("/bot/" + bot.id + "/start", function(req, clientResponse){
+router.options("/bot/:id/start", function(req, clientResponse){
     console.log("start");
     clientResponse.header("Access-Control-Allow-Origin", "*");
-    clientResponse.header("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+    clientResponse.header("Access-Control-Allow-Methods", "POST, OPTIONS");
     clientResponse.header("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With")
     clientResponse.header("Access-Control-Max-Age", 86400);
     clientResponse.statusCode = 200;
     clientResponse.end();
 })
 
-router.options("/bot/" + bot.id, function(req, clientResponse){
+router.options("/bot/:id", function(req, clientResponse){
     console.log("delete");
     clientResponse.header("Access-Control-Allow-Origin", "*");
-    clientResponse.header("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+    clientResponse.header("Access-Control-Allow-Methods", "DELETE, OPTIONS");
     clientResponse.header("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With")
     clientResponse.header("Access-Control-Max-Age", 86400);
     clientResponse.statusCode = 200;
