@@ -58,11 +58,16 @@
       </md-select>
     </md-input-container>
 
-
     </md-step>
-    
+
+    <md-step md-label="Config" :md-editable="true" :md-continue="true" md-button-continue="Save" >
+      <botConfig>
+      </botConfig>
+    </md-step>
+
     <md-step :md-label="$lang.translate.creator.step3" :md-editable="true" :md-continue="true" 
     :md-button-continue="$lang.translate.creator.create" :md-button-back="$lang.translate.creator.back">
+        <h6>{{$lang.translate.creator.question1}}</h6>
 
       <h3>{{$lang.translate.creator.question1}}</h3>
       <br><br>
@@ -76,8 +81,7 @@
 </template>
 
 <script>
-
-import 'vue-material/dist/vue-material.css'
+import botConfig from './BotConfig.vue'
 
 export default {
   data () {
@@ -142,6 +146,9 @@ export default {
       console.log(template)
       this.validInput()
     }
+  },
+  components: {
+    botConfig
   }
 }
 </script>

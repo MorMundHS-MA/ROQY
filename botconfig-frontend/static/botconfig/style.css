@@ -1,0 +1,36 @@
+#wrapper {
+    width: 100%;
+    height: 100%
+}
+
+div.block {
+    background-color: lightgray;
+    position: absolute;
+    border: solid gray 1px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}
+
+input.option {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.disconnected {
+    color: red;
+}
+
+.connecting {
+    color: blue;
+}
+
+.connected {
+    color: forestgreen;
+}
+
+input.cord {
+    display: inline-block;
+    vertical-align: top;
+    width: 50px;
+}
