@@ -27,16 +27,17 @@
             
             </md-menu-item>
 
-            <md-menu-item >
-              <span>Abvanced</span>
-            </md-menu-item>
+            <router-link tag="md-menu-item" to="/config/bot/" >
+              <span>Setting</span>
+            </router-link>
+      
           </md-menu-content>  
           
         </md-menu>
       </md-card-header>
 
       <md-card-media>
-        <img src="../assets/bot.png" :alt="botData.name">   
+        <img src="../assets/bot.png" :alt="botData.name" >   
       </md-card-media>
 
       <md-card-content>
@@ -130,8 +131,17 @@ export default {
 
 <style scoped>
   .md-card{
-    margin:5px;
-    min-width:250px;
+    min-width: 280px;
+    min-height: 450px;
+    max-width:280px;
+    max-height:450px;
+    word-wrap:break-word;
+  }
+  .md-card-content{
+      word-wrap:break-word;
+  }
+  .md-title{
+    text-align: center;
   }
 
 
