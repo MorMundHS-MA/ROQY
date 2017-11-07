@@ -83,7 +83,7 @@ exports.readFromDB = function (request) {
 
             //If the bot ID is set and intents from a bot are wanted
             else {
-                db.collection("botAgents").findOne(request.botId, functioDn (err, res) {
+                db.collection("botAgents").findOne(request.botId, function (err, res) {
                     if (err) {
                         console.log('A bot with such an ID can not be found!');
                         //returns an empty JSON-Object
@@ -92,7 +92,7 @@ exports.readFromDB = function (request) {
 
                     else {
                         //If only one bot is wanted
-                        if (request.intendID === undefined) {
+                        if (request.intendId === undefined) {
                             resolve(db.collection("botAgents").findOne(request.botId));
                         }
 
@@ -126,7 +126,7 @@ exports.deleteFromDB = function(request) {
     })
 }
 
-exports.readMultipleFromDB = function (request) {
+exports.readMultipleFromDB = function (request) {D
     let retval = [];
     for (let i = 0; i < request.length; i++) {
         let response = exports.readFromDB(request[i]);
