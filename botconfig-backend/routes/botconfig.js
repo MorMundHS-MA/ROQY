@@ -77,10 +77,13 @@ router.get("/bot", function (req, clientResponse) {
 });
 
 
-
 router.post('/bot', function (req, clientResponse) {
+    clientResponse.header("Access-Control-Allow-Origin", "*");
+    console.log("In post");
     let appId = "";
     let userData = req.body;
+    console.log(userData);
+    console.log(userData.intents);
     userData.description = userData.description || "";
     userData.img = userData.img || "";
     const initVersion = "1.0";
@@ -107,10 +110,10 @@ router.post('/bot', function (req, clientResponse) {
         .then(res => {
             appId = res;
             options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + appId + "/versions/" + initVersion + "/intents";
-            for (let i = 0; i < userData.Intents.length; i++) {
-                let currentIntent = userData.Intents[i];
+            for (let i = 0; i < userData.intents.length; i++) {
+                let currentIntent = userData.intents[i];
                 options.body = {
-                    name: userData.Intents[i].name
+                    name: userData.intents[i].name
                 };
                     requestPromise(options);
             }
@@ -124,7 +127,7 @@ router.post('/bot', function (req, clientResponse) {
                 let waitUntilIntentsCreatedIntervall = setInterval(() => {
                     requestPromise(options)
                         .then(res => {
-                            if (res.length >= userData.Intents.length) {
+                            if (res.length >= userData.intents.length) {
                                 clearInterval(waitUntilIntentsCreatedIntervall);
                                 resolve(res);
                             }
@@ -136,10 +139,10 @@ router.post('/bot', function (req, clientResponse) {
             console.log("Intents done");
             options.method = "POST";
             options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + appId + "/versions/" + initVersion + "/examples";
-            for (let i = 0; i < userData.Intents.length; i++) {
-                let currentIntent = userData.Intents[i];
+            for (let i = 0; i < userData.intents.length; i++) {
+                let currentIntent = userData.intents[i];
                 options.body = [];
-                for (let j = 0; j < userData.Intents.length; j++) {
+                for (let j = 0; j < userData.intents.length; j++) {
                     options.body.push({
                         "text": currentIntent.questions[j],
                         "intentName": currentIntent.name,
@@ -281,6 +284,7 @@ router.get('/bot/:id/status', function(req, clientResponse){
     //     "botId":id
     // });
     // responseToClient(clientResponse, 200, false, messages.botsFound, {"status":bot.status});
+    clientResponse.send("Suc");
 });
 
 /*
@@ -304,20 +308,28 @@ router.put('/bot/:id/start', function(req, clientResponse){
 stop bot
  */
 router.put('/bot/:id/stop', function(req, clientResponse){
+
     let id = req.params.id;
-    let params = {
-        "key":"state",
-        "newValue":"stopped",
-        "botID":id
-    };
-    console.log("here");
-    if(dbcon.writeToDB(params)){
-        console.log("Wu");
-        responseToClient(clientResponse, 200, false, messages.botHasBeenStopped);
-    }else{
-        console.log("hu");
-        responseToClient(clientResponse, 404, true, messages.generalError);
-    }
+    dbcon.readFromDB({
+        botId:id
+    }).then(res => {
+        console.log(res);
+        if(res !== {}){
+            res.status = "stopped";
+            let write = dbcon.writeToDB({
+                botId:id,
+                data:res
+            });
+            console.log(write);
+            if(write){
+                responseToClient(clientResponse, 200, false, messages.botHasBeenStopped);
+            }else{
+                responseToClient(clientResponse, 404, true, messages.generalError);
+            }
+        }
+
+    });
+
 });
 
 
@@ -348,31 +360,42 @@ router.get('/bot/:id/query/:query', function (req, clientResponse) {
 
 // options
 
-function generalOptions(res){
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-headers, Authorization, X-Requested-With");
-    res.end;
-}
+
 
 router.options("/bot", function(req, clientResponse){
     clientResponse.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-    generalOptions(clientResponse);
+    clientResponse.header("Access-Control-Allow-Origin", "*");
+    clientResponse.header("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+    clientResponse.header("Acces-Control-Max-Age", 86400);
+    clientResponse.end();
 });
 router.options("/bot/:id", function(req, clientResponse){
     clientResponse.header("Access-Control-Allow-Methods", "DELETE, PUT, OPTIONS");
-    generalOptions(clientResponse);
+    clientResponse.header("Access-Control-Allow-Origin", "*");
+    clientResponse.header("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+    clientResponse.header("Acces-Control-Max-Age", 86400);
+    clientResponse.end();
 });
 router.options("/bot/:id/status", function(req, clientResponse){
     clientResponse.header("Access-Control-Allow-Methods", "GET, OPTIONS");
-    generalOptions(clientResponse);
+    clientResponse.header("Access-Control-Allow-Origin", "*");
+    clientResponse.header("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+    clientResponse.header("Acces-Control-Max-Age", 86400);
+    clientResponse.end();
 });
 router.options("/bot/:id/start", function(req, clientResponse){
     clientResponse.header("Access-Control-Allow-Methods", "PUT, OPTIONS");
-    generalOptions(clientResponse);
+    clientResponse.header("Access-Control-Allow-Origin", "*");
+    clientResponse.header("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+    clientResponse.header("Acces-Control-Max-Age", 86400);
+    clientResponse.end();
 });
 router.options("/bot/:id/stop", function(req, clientResponse){
     clientResponse.header("Access-Control-Allow-Methods", "PUT, OPTIONS");
-    generalOptions(clientResponse);
+    clientResponse.header("Access-Control-Allow-Origin", "*");
+    clientResponse.header("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+    clientResponse.header("Acces-Control-Max-Age", 86400);
+    clientResponse.end();
 });
 
 module.exports = router;
