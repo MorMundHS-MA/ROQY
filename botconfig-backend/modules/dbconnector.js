@@ -122,7 +122,7 @@ exports.readFromDB = function (request) {
 
 exports.deleteFromDB = function(request) {
 
-    MongoClient.connect(url, function (err, db) {
+    return MongoClient.connect(url, function (err, db) {
         if (err) throw err;
 
         if(request.botId === undefined) {
@@ -131,7 +131,7 @@ exports.deleteFromDB = function(request) {
         
         //Look for a bot with the specific botID
         else {
-            db.collection("botAgents").findOne(request.botId, function (err, res) {
+            return db.collection("botAgents").findOne({id:request.botId}, function (err, res) {
                 if (err) {
                     console.log('A bot with such an ID can not be found!');
                     return false;
@@ -140,27 +140,18 @@ exports.deleteFromDB = function(request) {
                 //If intents have to be deleted for an specific bot
                 else {
                     if(request.intentId === undefined) {
-                        db.collection("botAgents").deleteOne(request.botId);
+                        db.collection("botAgents").deleteOne({id:request.botId});
+                        console.log("done");
                         return true; //Gebe ich an dieser Stelle nicht den kompletten bot zurück???
                     }
 
                     else {
-                        db.collection("botAgents").findOne(request.botId.intendId, function (err, res) {
-                            if (err) {
-                                console.log('A bot with such an intent can not be found!');
-                                return false;
-                            }
-
-                            else {
-                                db.collection("botAgents").deleteOne(request.botId.intendId);
-                                return true; //An dieser Stelle ebenfalls. Intent zurück geben?
-                            }
-                        })
+                        
                     }
                 }
             });
         }
-    })
+    });
 }
 
 exports.readMultipleFromDB = function (request) {
