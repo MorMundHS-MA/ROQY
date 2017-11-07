@@ -119,10 +119,10 @@ router.post('/bot', function (req, clientResponse) {
         .then(res => {
             appId = res;
             options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + appId + "/versions/" + initVersion + "/intents";
-            for (let i = 0; i < userData.Intents.length; i++) {
-                let currentIntent = userData.Intents[i];
+            for (let i = 0; i < userData.intents.length; i++) {
+                let currentIntent = userData.intents[i];
                 options.body = {
-                    name: userData.Intents[i].name
+                    name: userData.intents[i].name
                 };
                 setTimeout(() => {
                     requestPromise(options);
@@ -138,7 +138,7 @@ router.post('/bot', function (req, clientResponse) {
                 let waitUntilIntentsCreatedIntervall = setInterval(() => {
                     requestPromise(options)
                         .then(res => {
-                            if (res.length >= userData.Intents.length) {
+                            if (res.length >= userData.intents.length) {
                                 clearInterval(waitUntilIntentsCreatedIntervall);
                                 resolve(res);
                             }
@@ -150,10 +150,10 @@ router.post('/bot', function (req, clientResponse) {
             options.method = "POST";
             console.log("Post Quests");
             options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + appId + "/versions/" + initVersion + "/examples";
-            for (let i = 0; i < userData.Intents.length; i++) {
-                let currentIntent = userData.Intents[i];
+            for (let i = 0; i < userData.intents.length; i++) {
+                let currentIntent = userData.intents[i];
                 options.body = [];
-                for (let j = 0; j < userData.Intents.length; j++) {
+                for (let j = 0; j < userData.intents.length; j++) {
                     options.body.push({
                         "text": currentIntent.questions[j],
                         "intentName": currentIntent.name,
@@ -222,8 +222,10 @@ router.post('/bot', function (req, clientResponse) {
             responseToClient(clientResponse, 201, false, messages.botHasBeenCreated, res);
         })
         .catch(err => {
-                console.log(err.statusCode);
-                console.log(err.message);
+                console.log("in errr");
+                console.log(err);
+                console.log("end Errs");
+                responseToClient(clientResponse, 409, true, messages.botAlreadyExists);                
                 if (err.statusCode === 400) {
                     responseToClient(clientResponse, 409, true, messages.botAlreadyExists);
                 } else if (err.statusCode === 409) {
