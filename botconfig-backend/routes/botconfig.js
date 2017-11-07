@@ -65,11 +65,6 @@ function existsAgent(id) {
     })
 };
 
-function delay(t) {
-    return new Promise(function (resolve) {
-        setTimeout(resolve, t)
-    });
-}
 
 
 router.get("/bot", function (req, clientResponse) {
@@ -122,7 +117,7 @@ router.post('/bot', function (req, clientResponse) {
             return new Promise(ret => {
                 ret();
             })
-        })
+        }).delay(500)
         .then(res => {
             options.method = "GET";
             return new Promise(function (resolve) {
@@ -136,8 +131,9 @@ router.post('/bot', function (req, clientResponse) {
                         })
                 }, 500)
             })
-        })
+        }).delay(500)
         .then(res => {
+            console.log("Intents done");
             options.method = "POST";
             options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + appId + "/versions/" + initVersion + "/examples";
             for (let i = 0; i < userData.Intents.length; i++) {
@@ -151,13 +147,14 @@ router.post('/bot', function (req, clientResponse) {
                     });
                     numberOfQuestions++;
                 }
-                    requestPromise(options);
+                requestPromise(options);
             }
             return new Promise(ret => {
                 ret();
             })
-        })
+        }).delay(500)
         .then(res => {
+            console.log("Questions done");
             options.method = "GET";
             return new Promise(function (resolve) {
                 let waitUntilIntentsCreatedIntervall = setInterval(() => {
@@ -172,7 +169,7 @@ router.post('/bot', function (req, clientResponse) {
                         })
                 }, 500)
             })
-        })
+        }).delay(500)
         .then(() => requestPromise(options))
         .then(res => {
             options.method = "GET";
@@ -216,6 +213,7 @@ router.post('/bot', function (req, clientResponse) {
             }else{
                 console.log("Error occured while writing into mongodb!");
             }
+            res.botId = appId;
             responseToClient(clientResponse, 201, false, messages.botHasBeenCreated, res);
         })
         .catch(err => {
