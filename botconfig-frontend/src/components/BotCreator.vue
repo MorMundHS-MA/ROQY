@@ -82,7 +82,7 @@ export default {
         status: 'offline',
         description: this.description
       })
-      this.reset()
+      this.$router.push('/')
     },
     validInput () {
       if (this.botnameValid === true && this.descriptionValid === true && this.selected === true) {
