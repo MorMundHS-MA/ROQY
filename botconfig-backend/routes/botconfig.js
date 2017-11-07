@@ -83,18 +83,10 @@ router.get("/bot", function (req, clientResponse) {
 
 
 router.post('/bot', function (req, clientResponse) {
-    let exampleJson = {
-        "name": "",
-        "Intents": [
-            {
-                "name": "",
-                "answer": "",
-                "questions": []
-            }
-        ]
-    };
     let appId = "";
     let userData = req.body;
+    userData.description = userData.description || "";
+    userData.img = userData.img || "";
     const initVersion = "1.0";
     let numberOfQuestions = 0;
     let questionsDelivered = 0;
@@ -124,9 +116,7 @@ router.post('/bot', function (req, clientResponse) {
                 options.body = {
                     name: userData.Intents[i].name
                 };
-                setTimeout(() => {
                     requestPromise(options);
-                }, 20);
             }
             return new Promise(ret => {
                 ret();
@@ -148,7 +138,6 @@ router.post('/bot', function (req, clientResponse) {
         })
         .then(res => {
             options.method = "POST";
-            console.log("Post Quests");
             options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + appId + "/versions/" + initVersion + "/examples";
             for (let i = 0; i < userData.Intents.length; i++) {
                 let currentIntent = userData.Intents[i];
@@ -161,9 +150,7 @@ router.post('/bot', function (req, clientResponse) {
                     });
                     numberOfQuestions++;
                 }
-                setTimeout(() => {
                     requestPromise(options);
-                }, 20);
             }
             return new Promise(ret => {
                 ret();
@@ -219,6 +206,15 @@ router.post('/bot', function (req, clientResponse) {
         })
         .then(() => requestPromise(options))
         .then(res => {
+            userData.id = appId;
+            userData.status = "running";
+            if(dbcon.writeToDB({
+                "data":userData
+            })){
+                console.log("Successfully wrote to DB!");
+            }else{
+                console.log("Error occured while writing into mongodb!");
+            }
             responseToClient(clientResponse, 201, false, messages.botHasBeenCreated, res);
         })
         .catch(err => {
@@ -280,11 +276,12 @@ router.put('/bot/:id', function(req, clientResponse){
 get bot status
  */
 router.get('/bot/:id/status', function(req, clientResponse){
-    let id = req.params.id;
-    dbcon.readFromDB({
-        "key":"",
-        "botID":""
-    });
+    // TODO uncomment when readFromDB is implemented
+    // let id = req.params.id;
+    // let bot = dbcon.readFromDB({
+    //     "botId":id
+    // });
+    // responseToClient(clientResponse, 200, false, messages.botsFound, {"status":bot.status});
 });
 
 /*

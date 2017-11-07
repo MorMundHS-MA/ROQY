@@ -9,7 +9,7 @@ let url = 'mongodb://141.19.145.166:27017/mydb';
 
 exports.writeToDB = function (request) {
 
-    MongoClient.connect(url, function (err, db) {
+    return MongoClient.connect(url, function (err, db) {
         if (err) throw err;
         //To create a new Bot
         db.createCollection("botAgents", function (err, res) {
