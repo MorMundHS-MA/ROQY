@@ -1,7 +1,6 @@
 <template>
-  <md-stepper >
-    <md-step md-label="Setting Up" :md-editable="true"  :md-continue="allValid">
-      
+  <md-stepper @completed="create">
+    <md-step md-label="Setting Up" :md-editable="true"  :md-continue="allValid">      
           <md-input-container :class="{'md-input-invalid': !botnameValid}">
                   <md-input type="name" v-model="botname" required/>
                   <label>Name</label>
@@ -12,15 +11,13 @@
           </md-input-container>
           
     </md-step>
-  <md-step md-label="Configuration">
-    <p></p>
-  </md-step>
-  <md-step md-label="Overview" :md-button-finish="Create">
-    <h6>Do you want to create it ?</h6>
-  </md-step>
-  
-</md-stepper>
-
+    <md-step md-label="Configuration">
+      <p></p>
+    </md-step>
+    <md-step md-label="Overview" :md-button-finish="create">
+      <h6>Do you want to create it ?</h6>
+    </md-step>  
+  </md-stepper>
 </template>
 
 <script>
@@ -48,7 +45,7 @@ export default {
       this.validInput()
     },
     description () {
-      if (this.description.length <= 100 && this.description.length >= 50) {
+      if (this.description !== '' && this.description.length <= 100) {
         this.descriptionValid = true
       }
       this.validInput()
@@ -56,6 +53,7 @@ export default {
   },
   methods: {
     create () {
+      console.log('Test ' + this.botname)
       if (this.botname !== '') {
         this.$store.commit('addNewbot', {
           name: this.botname,
@@ -63,8 +61,9 @@ export default {
           status: 'offline',
           description: this.description
         })
+        this.$router.push('/')
       } else {
-        console.log('No name')
+        console.warn('No name')
       }
     },
     validInput () {
