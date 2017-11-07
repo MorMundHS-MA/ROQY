@@ -1,12 +1,19 @@
 <template>
   <div id="app">
-    <router-view/>
+    <app-header></app-header>
   </div>
 </template>
 
 <script>
+import header from './Components/BotHeader.vue'
+import 'vue-material/dist/vue-material.css'
+
 export default {
-  name: 'app'
+  name: 'app',
+  components: {
+    'app-header': header
+  }
+
 }
 </script>
 
@@ -15,8 +22,8 @@ export default {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: -21px;
+  margin: 0 ;
+
 }
+
 </style>

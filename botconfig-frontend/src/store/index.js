@@ -11,13 +11,13 @@ export const store = new Vuex.Store({
         name: 'Welcome-Bot',
         image: '../assets/bot.png',
         status: 'offline',
-        description: ''
+        description: '<asdcasdfawslkdjnc ojewqdsoaslk moiwjesoidlkwsamcxoiwa dsjlewmfd '
       },
       {
         name: 'FAQ-Bot',
         image: '../assets/bot.png',
         status: 'online',
-        description: ''
+        description: 'asdcasdfawslkdjnc ojewqdsoaslk moiwjesoidlkwsamcxoiwa dsjlewmfd '
       }
     ],
     templates: [
