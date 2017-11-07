@@ -143,6 +143,4 @@ export default {
   .md-title{
     text-align: center;
   }
-
-
 </style>
