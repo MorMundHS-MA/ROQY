@@ -37,27 +37,30 @@ exports.writeToDB = function (request) {
 
         //If something has to get changed on a spezific bot with a bot ID
         else {
-            db.collection("botAgents").findOne(request.botId, function (err, res) {
+            db.collection("botAgents").findOne({id:request.botId}, function (err, res) {
                 if (err) {
                     console.log('Bot with such a bot ID couldnt be found!');
                     return false;
                 }
-                if (request.intendId === undefinded) {
+                if (request.intendId === undefined) {
                     //TODO delete whole bot and insert new
                     return true;
                 }
                 else {
-                    db.collection("botAgents").findOne(request.botId.intendId,
-                        function (err, res) {
-                            if (err) {
-                                console.log('A bot with such an Intent ID couldnt be found.');
-                                return false;
-                            }
-                            else {
-                                //TODO replace old intent with request.data
-                                return true;
-                            }
-                        });
+                    let intent = undefined;
+                    for(let i = 0; i<res.intents.length; i++){
+                        if(res.intents[i] === request.intentId){
+                            intent = res.intents[i];
+                            break;
+                        }
+                    }
+                    if(intent !== undefined){
+                        //TODO delte old intent and insert new
+                        return true;
+                    } else {
+                      // Intent not found, return false.
+                        return false;
+                    }
                 }
             });
         }
@@ -83,7 +86,7 @@ exports.readFromDB = function (request) {
 
             //If the bot ID is set and intents from a bot are wanted
             else {
-                db.collection("botAgents").findOne(request.botId, function (err, res) {
+                db.collection("botAgents").findOne({id:request.botId}, function (err, res) {
                     if (err) {
                         console.log('A bot with such an ID can not be found!');
                         //returns an empty JSON-Object
@@ -93,20 +96,22 @@ exports.readFromDB = function (request) {
                     else {
                         //If only one bot is wanted
                         if (request.intendId === undefined) {
-                            resolve(db.collection("botAgents").findOne(request.botId));
+                            resolve(res);
                         }
 
                         else {
-                            db.collection("botAgents").findOne(request.botId.intendId,
-                                function (err, res) {
-                                    if (err) {
-                                        //returns an empty JSON-Object
-                                        resolve({});
-                                    }
-                                    else {
-                                        resolve(db.collection("botAgents").findOne(request.botId.intendId));
-                                    }
-                                });
+                            let intent = undefined;
+                            for(let i = 0; i<res.intents.length; i++){
+                                if(res.intents[i] === request.intentId){
+                                    intent = res.intents[i];
+                                    break;
+                                }
+                            }
+                            if(intent !== undefined){
+                                resolve({});
+                            } else {
+                                resolve(intent);
+                            }
                         }
                     }
                 });
@@ -126,7 +131,7 @@ exports.deleteFromDB = function(request) {
     })
 }
 
-exports.readMultipleFromDB = function (request) {D
+exports.readMultipleFromDB = function (request) {
     let retval = [];
     for (let i = 0; i < request.length; i++) {
         let response = exports.readFromDB(request[i]);
