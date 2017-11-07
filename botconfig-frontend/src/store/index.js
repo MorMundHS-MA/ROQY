@@ -71,7 +71,7 @@ export const store = new Vuex.Store({
     changeState (state, bot) {
       var b = state.bots.indexOf(bot)
       if (state.bots[b].status === 'online') {
-        axios.post('/bot/' + bot.id + '/stop', {
+        axios.put('/bot/' + bot.id + '/stop', {
           'status': bot.status
         })
         .then(function (response) {
@@ -82,7 +82,7 @@ export const store = new Vuex.Store({
           console.log(error)
         })
       } else {
-        axios.post('/bot/' + bot.id + '/start', {
+        axios.put('/bot/' + bot.id + '/start', {
           'status': bot.status
         })
         .then(function (response) {
@@ -102,6 +102,7 @@ export const store = new Vuex.Store({
       })
       .then(function (response) {
         state.bots.push(bot)
+        console.log('aasdsa')
       })
       .catch(function (error) {
         console.log(error)
@@ -112,6 +113,7 @@ export const store = new Vuex.Store({
       })
       .then(function (response) {
         state.bots.splice(state.bots.indexOf(bot), 1)
+        console.log('teste delete')
       })
       .catch(function (error) {
         console.log(error)

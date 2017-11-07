@@ -255,7 +255,7 @@ router.options("/bot/", function(req, clientResponse){
 router.options("/bot/:id/stop", function(req, clientResponse){
     console.log("stop");
     clientResponse.header("Access-Control-Allow-Origin", "*");
-    clientResponse.header("Access-Control-Allow-Methods", "POST, OPTIONS");
+    clientResponse.header("Access-Control-Allow-Methods", "PUT, OPTIONS");
     clientResponse.header("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With")
     clientResponse.header("Access-Control-Max-Age", 86400);
     clientResponse.statusCode = 200;
@@ -265,7 +265,7 @@ router.options("/bot/:id/stop", function(req, clientResponse){
 router.options("/bot/:id/start", function(req, clientResponse){
     console.log("start");
     clientResponse.header("Access-Control-Allow-Origin", "*");
-    clientResponse.header("Access-Control-Allow-Methods", "POST, OPTIONS");
+    clientResponse.header("Access-Control-Allow-Methods", "PUT, OPTIONS");
     clientResponse.header("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With")
     clientResponse.header("Access-Control-Max-Age", 86400);
     clientResponse.statusCode = 200;
