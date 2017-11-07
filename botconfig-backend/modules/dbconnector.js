@@ -3,7 +3,7 @@ let MongoClient = require('mongodb').MongoClient;
 let url = 'mongodb://141.19.145.166:27017/mydb';
 
 /**
- * This method is for write a new bot or changing intents inside
+ * This method is for write a new bot or changing intents inside 
  * the Mongo Database
  * @param {*JSON-Object} request
  * @returns boolean if writing to the Database was sucessfull
@@ -11,8 +11,8 @@ let url = 'mongodb://141.19.145.166:27017/mydb';
 exports.writeToDB = function (request) {
 
     let retval = {
-        "message":"",
-        "success":true
+        "message": "",
+        "success": true
     }
 
     return MongoClient.connect(url, function (err, db) {
@@ -24,7 +24,7 @@ exports.writeToDB = function (request) {
         });
 
         //To create an complete new bot, if no botID is set
-        if (request.botID === undefined) {
+        if (request.botId === undefined) {
             db.collection("botAgents").insertOne(request.data, function (err, res) {
                 if (err) {
                     console.log('Bot couldnt get inserted! Dont ask me why.');
@@ -37,17 +37,17 @@ exports.writeToDB = function (request) {
 
         //If something has to get changed on a spezific bot with a bot ID
         else {
-            db.collection("botAgents").findOne(request.botID, function (err, res) {
+            db.collection("botAgents").findOne(request.botId, function (err, res) {
                 if (err) {
                     console.log('Bot with such a bot ID couldnt be found!');
                     return false;
                 }
-                if (request.intendID === undefinded) {
+                if (request.intendId === undefinded) {
                     //TODO delete whole bot and insert new
                     return true;
                 }
                 else {
-                    db.collection("botAgents").findOne(request.botID.intendID,
+                    db.collection("botAgents").findOne(request.botId.intendId,
                         function (err, res) {
                             if (err) {
                                 console.log('A bot with such an Intent ID couldnt be found.');
@@ -65,17 +65,17 @@ exports.writeToDB = function (request) {
 }
 
 /**
- * This method is for getting a whole bot or reading intents out of the
+ * This method is for getting a whole bot or reading intents out of the 
  * Mongo Database
  */
 exports.readFromDB = function (request) {
 
-    return new Promise(function(resolve){
+    return new Promise(function (resolve) {
         MongoClient.connect(url, function (err, db) {
             if (err) throw err;
 
-            if(request.botID === undefined) {
-                return db.collection("botAgents").find({}).toArray(function(err, res) {
+            if (request.botId === undefined) {
+                return db.collection("botAgents").find({}).toArray(function (err, res) {
                     resolve(res);
                 });
 
@@ -83,7 +83,7 @@ exports.readFromDB = function (request) {
 
             //If the bot ID is set and intents from a bot are wanted
             else {
-                db.collection("botAgents").findOne(request.botID, function (err, res) {
+                db.collection("botAgents").findOne(request.botId, functioDn (err, res) {
                     if (err) {
                         console.log('A bot with such an ID can not be found!');
                         //returns an empty JSON-Object
@@ -92,19 +92,19 @@ exports.readFromDB = function (request) {
 
                     else {
                         //If only one bot is wanted
-                        if(request.intendID === undefined) {
-                            resolve(db.collection("botAgents").findOne(request.botID));
+                        if (request.intendID === undefined) {
+                            resolve(db.collection("botAgents").findOne(request.botId));
                         }
 
                         else {
-                            db.collection("botAgents").findOne(request.botID.intendID,
+                            db.collection("botAgents").findOne(request.botId.intendId,
                                 function (err, res) {
                                     if (err) {
                                         //returns an empty JSON-Object
                                         resolve({});
                                     }
                                     else {
-                                        resolve(db.collection("botAgents").findOne(request.botID.intendID));
+                                        resolve(db.collection("botAgents").findOne(request.botId.intendId));
                                     }
                                 });
                         }
@@ -115,11 +115,20 @@ exports.readFromDB = function (request) {
     });
 }
 
+exports.deleteFromDB = function(request) {
 
+    MongoClient.connect(url, function (err, db) {
+        if (err) throw err;
 
-exports.readMultipleFromDB = function(request){
+        if(request.botId === undefined) {
+            return false;
+        }
+    })
+}
+
+exports.readMultipleFromDB = function (request) {
     let retval = [];
-    for(let i = 0; i<request.length; i++){
+    for (let i = 0; i < request.length; i++) {
         let response = exports.readFromDB(request[i]);
         retval.push(response);
     }
