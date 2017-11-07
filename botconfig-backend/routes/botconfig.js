@@ -79,6 +79,8 @@ router.get("/bot", function (req, clientResponse) {
 
 router.post('/bot', function (req, clientResponse) {
     clientResponse.header("Access-Control-Allow-Origin", "*");
+    clientResponse.header("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+    clientResponse.header("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With")
     console.log("In post");
     let appId = "";
     let userData = req.body;
@@ -234,10 +236,47 @@ router.post('/bot', function (req, clientResponse) {
                 }
             }
         );
-
-
 });
 
+router.options("/bot/", function(req, clientResponse){
+    console.log("create test");
+    clientResponse.header("Access-Control-Allow-Origin", "*");
+    clientResponse.header("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+    clientResponse.header("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With")
+    clientResponse.header("Access-Control-Max-Age", 86400);
+    clientResponse.statusCode = 200;
+    clientResponse.end();
+})
+
+router.options("/bot/:id/stop", function(req, clientResponse){
+    console.log("stop");
+    clientResponse.header("Access-Control-Allow-Origin", "*");
+    clientResponse.header("Access-Control-Allow-Methods", "PUT, OPTIONS");
+    clientResponse.header("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With")
+    clientResponse.header("Access-Control-Max-Age", 86400);
+    clientResponse.statusCode = 200;
+    clientResponse.end();
+})
+
+router.options("/bot/:id/start", function(req, clientResponse){
+    console.log("start");
+    clientResponse.header("Access-Control-Allow-Origin", "*");
+    clientResponse.header("Access-Control-Allow-Methods", "PUT, OPTIONS");
+    clientResponse.header("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With")
+    clientResponse.header("Access-Control-Max-Age", 86400);
+    clientResponse.statusCode = 200;
+    clientResponse.end();
+})
+
+router.options("/bot/:id", function(req, clientResponse){
+    console.log("delete");
+    clientResponse.header("Access-Control-Allow-Origin", "*");
+    clientResponse.header("Access-Control-Allow-Methods", "DELETE, OPTIONS");
+    clientResponse.header("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With")
+    clientResponse.header("Access-Control-Max-Age", 86400);
+    clientResponse.statusCode = 200;
+    clientResponse.end();
+})
 
 router.delete("/bot/:id", function (req, clientResponse) {
     // options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + exres.agentResponse.id;
