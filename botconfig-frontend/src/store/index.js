@@ -101,7 +101,6 @@ export const store = new Vuex.Store({
       })
       .then(function (response) {
         state.bots.push(bot)
-        console.log('aasdsa')
       })
       .catch(function (error) {
         console.log(error)
@@ -119,7 +118,15 @@ export const store = new Vuex.Store({
       })
     },
     renameBot (state, bot) {
-      state.bots[state.bots.indexOf(bot[0])].name = bot[1].name
+      axios.put('/bot/' + bot.id, {
+        'name': bot.name
+      })
+      .then(function (response) {
+        state.bots[state.bots.indexOf(bot[0])].name = bot[1].name
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
     }
   },
   actions: {
