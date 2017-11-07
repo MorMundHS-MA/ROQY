@@ -37,6 +37,11 @@ export const store = new Vuex.Store({
         name: 'FAQ-Bot',
         image: '',
         description: ''
+      },
+      {
+        name: 'Ravenclaw-Bot',
+        image: '',
+        description: ''
       }
     ]
   },

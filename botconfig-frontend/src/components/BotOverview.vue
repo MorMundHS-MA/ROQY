@@ -9,8 +9,8 @@
       
     </md-layout>
 
-     <md-layout md-gutter class="row" >
-          <md-layout md-flex-xsmall="100" md-flex-small="100" md-flex-medium="33 " md-flex="25"  
+     <md-layout class="row" style="margin:20px;" >
+          <md-layout md-flex-xsmall="100" md-flex-small="100" md-flex-medium="33 " md-flex-large="25"  md-flex-xlarge="20"
             class="row" v-for="(bot, bots) in bots" :key="bot.id">
             <bot-info :botData="bot"></bot-info>
           </md-layout>
@@ -40,7 +40,8 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped >
   .row {
-    margin:0.2%;
+    padding: auto;
+    margin-top:0.4%;
   }
 
   .add {

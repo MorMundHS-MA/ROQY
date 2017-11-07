@@ -32,7 +32,7 @@ export default new Router({
       component: marketplace
     },
     {
-      path: '/config/bot/:id',
+      path: '/config/bot/',
       name: 'config',
       component: config
     }
