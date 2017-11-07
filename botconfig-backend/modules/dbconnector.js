@@ -128,6 +128,38 @@ exports.deleteFromDB = function(request) {
         if(request.botId === undefined) {
             return false;
         }
+        
+        //Look for a bot with the specific botID
+        else {
+            db.collection("botAgents").findOne(request.botId, function (err, res) {
+                if (err) {
+                    console.log('A bot with such an ID can not be found!');
+                    return false;
+                }
+                
+                //If intents have to be deleted for an specific bot
+                else {
+                    if(request.intentId === undefined) {
+                        db.collection("botAgents").deleteOne(request.botId);
+                        return true; //Gebe ich an dieser Stelle nicht den kompletten bot zurück???
+                    }
+
+                    else {
+                        db.collection("botAgents").findOne(request.botId.intendId, function (err, res) {
+                            if (err) {
+                                console.log('A bot with such an intent can not be found!');
+                                return false;
+                            }
+
+                            else {
+                                db.collection("botAgents").deleteOne(request.botId.intendId);
+                                return true; //An dieser Stelle ebenfalls. Intent zurück geben?
+                            }
+                        })
+                    }
+                }
+            });
+        }
     })
 }
 
