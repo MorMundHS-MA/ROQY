@@ -21,6 +21,7 @@ const messages = {
 
 const LUISKEY = "ed2ff1a97f924b8e8a1402e6700a8bf4";
 let LUISClient;
+
 function responseToClient(res, status, error, message, add) {
     res.header("Content-Type", "application/json");
     let responseMessage = {
@@ -345,6 +346,35 @@ router.get('/bot/:id/query/:query', function (req, clientResponse) {
         }
     })
 
+});
+
+// options
+
+function generalOptions(res){
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-headers, Authorization, X-Requested-With");
+    res.end;
+}
+
+router.options("/bot", function(req, clientResponse){
+    clientResponse.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+    generalOptions(clientResponse);
+});
+router.options("/bot/:id", function(req, clientResponse){
+    clientResponse.header("Access-Control-Allow-Methods", "DELETE, PUT, OPTIONS");
+    generalOptions(clientResponse);
+});
+router.options("/bot/:id/status", function(req, clientResponse){
+    clientResponse.header("Access-Control-Allow-Methods", "GET, OPTIONS");
+    generalOptions(clientResponse);
+});
+router.options("/bot/:id/start", function(req, clientResponse){
+    clientResponse.header("Access-Control-Allow-Methods", "PUT, OPTIONS");
+    generalOptions(clientResponse);
+});
+router.options("/bot/:id/stop", function(req, clientResponse){
+    clientResponse.header("Access-Control-Allow-Methods", "PUT, OPTIONS");
+    generalOptions(clientResponse);
 });
 
 module.exports = router;
