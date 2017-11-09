@@ -2,29 +2,13 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 
-axios.defaults.baseURL = 'http://141.19.142.7:3000'
+axios.defaults.baseURL = 'http://141.19.157.234:3000'
 
 Vue.use(Vuex)
 
 export const store = new Vuex.Store({
   state: {
     bots: [
-      {
-        id: 0,
-        name: 'Welcome-Bot',
-        image: '../assets/bot.png',
-        status: 'offline',
-        description: '',
-        intents: [
-          {
-            id: 0,
-            name: '',
-            answer: '',
-            nextintents: [],
-            questions: []
-          }
-        ]
-      }
     ],
     templates: [
       {
@@ -59,19 +43,25 @@ export const store = new Vuex.Store({
       return this.state.templates
     }
   },
+  // synchrone function to change state of app
   mutations: {
+    // return status of bot from state
     getBotStatus (state, bot) {
       return this.getState(bot)
     },
+    // get all bots from server and save them in state
     getBots (state) {
       axios.get('/bot')
       .then(function (response) {
-        console.log(response)
+        for (var i = 0; i < response.length; i++) {
+          this.state.push(response[i])
+        }
       })
       .catch(function (error) {
         console.log(error)
       })
     },
+    // change status of bot in server and then in state if app
     changeState (state, bot) {
       var b = state.bots.indexOf(bot)
       if (state.bots[b].status === 'online') {
@@ -98,19 +88,23 @@ export const store = new Vuex.Store({
         })
       }
     },
+    // add new bot in DB and then in bots array in state
     addNewbot (state, bot) {
+      bot.intents = []
       axios.post('/bot', {
         'name': bot.name,
         'description': bot.description,
         'intents': []
       })
       .then(function (response) {
+        bot.id = response.data.extra.botId
         state.bots.push(bot)
       })
       .catch(function (error) {
         console.log(error)
       })
     },
+    // delete bot from server, then from state of app
     deleteBot (state, bot) {
       axios.delete('/bot/' + bot.id, {
       })
@@ -122,10 +116,10 @@ export const store = new Vuex.Store({
         console.log(error)
       })
     },
+    // change name of bot
     renameBot (state, bot) {
-      axios.put('/bot/' + bot.id, {
-        'name': bot.name
-      })
+      bot[0].name = bot[1].name
+      axios.put('/bot/' + bot[0].id, bot[0])
       .then(function (response) {
         state.bots[state.bots.indexOf(bot[0])].name = bot[1].name
       })
@@ -134,6 +128,7 @@ export const store = new Vuex.Store({
       })
     }
   },
+  // asynchrone function to change state of app
   actions: {
 
     changeStateAsync ({ commit }, index) {
