@@ -43,7 +43,20 @@ exports.writeToDB = function (request) {
                     return false;
                 }
                 if (request.intendId === undefined) {
-                    //TODO delete whole bot and insert new
+                    db.collection("botAgents").deleteOne({id:request.botId}, function(err, res){
+                        if(err){
+
+                        }else{
+                            db.collection("botAgents").insertOne(request.data, function (err, res) {
+                                if (err) {
+                                    console.log('Bot couldnt get inserted! Dont ask me why.');
+                                    throw err;
+                                }
+                                console.log('Bot sucessfull inserted!');
+                                return true;
+                            });
+                        }
+                    });
                     return true;
                 }
                 else {
