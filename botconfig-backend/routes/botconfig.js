@@ -71,9 +71,12 @@ router.get("/bot", function (req, clientResponse) {
     clientResponse.header("Access-Control-Allow-Origin", "*");
     clientResponse.setHeader("Content-Type", "text/html; charset=utf-8");
     let bots = dbcon.readFromDB({
-        "key":"allBots"
+
+    }).then(res => {
+        responseToClient(clientResponse, 200, false, messages.botsFound, res);
     });
-    responseToClient(clientResponse, 200, false, messages.botsFound, bots);
+
+
 });
 
 
@@ -85,7 +88,7 @@ router.post('/bot', function (req, clientResponse) {
     console.log(userData);
     console.log(userData.intents);
     userData.description = userData.description || "";
-    userData.img = userData.img || "";
+    userData.img = userData.img || "../assets/bot.png";
     const initVersion = "1.0";
     let numberOfQuestions = 0;
     let questionsDelivered = 0;
@@ -115,7 +118,7 @@ router.post('/bot', function (req, clientResponse) {
                 options.body = {
                     name: userData.intents[i].name
                 };
-                    requestPromise(options);
+                requestPromise(options);
             }
             return new Promise(ret => {
                 ret();
@@ -210,8 +213,8 @@ router.post('/bot', function (req, clientResponse) {
             userData.id = appId;
             userData.status = "running";
             if(dbcon.writeToDB({
-                "data":userData
-            })){
+                    "data":userData
+                })){
                 console.log("Successfully wrote to DB!");
             }else{
                 console.log("Error occured while writing into mongodb!");
@@ -258,6 +261,9 @@ router.delete("/bot/:id", function (req, clientResponse) {
 
         else {
             requestPromise(options).then(res => {
+                dbcon.deleteFromDB({
+                    botId:id
+                })
                 responseToClient(clientResponse, 200, false, messages.botDeleted);
             }).catch(err => {
                 responseToClient(clientResponse, 400, true, err.message);
@@ -268,14 +274,21 @@ router.delete("/bot/:id", function (req, clientResponse) {
     })
 });
 /*
-Update Bot
+ Update Bot
  */
 router.put('/bot/:id', function(req, clientResponse){
+    let id = req.params.id;
+    let write = dbcon.writeToDB({
+        botId:id,
+        data:req.body
+    })
+
+    responseToClient(clientResponse, 200, false, "Bot updated successfully");
 
 });
 
 /*
-get bot status
+ get bot status
  */
 router.get('/bot/:id/status', function(req, clientResponse){
     // TODO uncomment when readFromDB is implemented
@@ -288,44 +301,48 @@ router.get('/bot/:id/status', function(req, clientResponse){
 });
 
 /*
-start bot
+ start bot
  */
 router.put('/bot/:id/start', function(req, clientResponse){
-    let id = req.params.id;
-    let params = {
-        "key":"state",
-        "newValue":"running",
-        "botID":id
-    };
-    if(dbcon.writeToDB(params)){
-        responseToClient(clientResponse, 200, false, messages.botHasBeenStarted);
-    }else{
-        responseToClient(clientResponse, 404, true, messages.generalError);
-    }
-});
-
-/*
-stop bot
- */
-router.put('/bot/:id/stop', function(req, clientResponse){
+    clientResponse.header("Access-Control-Allow-Origin", "*");
 
     let id = req.params.id;
     dbcon.readFromDB({
         botId:id
     }).then(res => {
-        console.log(res);
+        if(res !== {}){
+            res.status = "running";
+            let write = dbcon.writeToDB({
+                botId:id,
+                data:res
+            });
+
+            responseToClient(clientResponse, 200, false, messages.botHasBeenStopped);
+
+        }
+
+    });
+});
+
+/*
+ stop bot
+ */
+router.put('/bot/:id/stop', function(req, clientResponse){
+    clientResponse.header("Access-Control-Allow-Origin", "*");
+
+    let id = req.params.id;
+    dbcon.readFromDB({
+        botId:id
+    }).then(res => {
         if(res !== {}){
             res.status = "stopped";
             let write = dbcon.writeToDB({
                 botId:id,
                 data:res
             });
-            console.log(write);
-            if(write){
-                responseToClient(clientResponse, 200, false, messages.botHasBeenStopped);
-            }else{
-                responseToClient(clientResponse, 404, true, messages.generalError);
-            }
+
+            responseToClient(clientResponse, 200, false, messages.botHasBeenStopped);
+
         }
 
     });
