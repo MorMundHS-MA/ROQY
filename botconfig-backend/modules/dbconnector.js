@@ -49,17 +49,10 @@ exports.writeToDB = function (request) {
 
                 //replace found bot with request.data
                 if (request.intendId === undefined) {
-<<<<<<< HEAD
                     db.collection("botAgents").deleteOne({ id: request.botId }, function (err, res) {
                         if (err) {
                             throw err;
                         } else {
-=======
-                    db.collection("botAgents").deleteOne({id:request.botId}, function(err, res){
-                        if(err){
-
-                        }else{
->>>>>>> d7f6f18742b4699068bcbbae20c40ac98435b2ed
                             db.collection("botAgents").insertOne(request.data, function (err, res) {
                                 if (err) {
                                     console.log('Bot couldnt get inserted! Dont ask me why.');
