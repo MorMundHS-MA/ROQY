@@ -141,7 +141,7 @@ exports.readFromDB = function (request) {
                             if (intent !== undefined) {
                                 resolve({});
 
-                                //return an empty JSON Array    
+                            //return an empty JSON Array    
                             } else {
                                 resolve(intent);
                             }
@@ -203,7 +203,15 @@ exports.deleteFromDB = function (request) {
                             //delete found intent
                             else {
                                 db.collection.update({},
-                                {$unset}) //Ab hier muss ich weiter machen!!!
+                                {$unset: {
+                                    "id" : request.botId, 
+                                    "intents" : [
+                                        {
+                                            "intendId" : request.intendId
+                                        }
+                                    ]
+                                }});
+                                return true; 
                             }
                         });
                     }
@@ -212,6 +220,7 @@ exports.deleteFromDB = function (request) {
         }
     });
 }
+
 /*
 exports.readMultipleFromDB = function (request) {
     let retval = [];
