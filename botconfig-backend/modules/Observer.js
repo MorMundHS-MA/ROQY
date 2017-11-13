@@ -7,8 +7,11 @@ let runtime = require("./RunTime.js");
 runObserver = function(dbConnector) {
     
     let lifeCycle = setInterval(function(){
-        let newData = [dbConnector.readFromDB({})]
+        let newData = [];
         let oldData = [];
+
+        newData.push(dbConnector.readFromDB({}));
+        
         if(newData.length === 0) {
             if(oldData.length === 0) {
                 oldData = newData;
@@ -19,7 +22,7 @@ runObserver = function(dbConnector) {
                 for (i = 0; i < oldData.length-1; i++) {
                     nextBot[i] = oldData[i];
                     runtime.deleteBot(nextBot);
-                    //TODO: Remove first entry in oldData
+                    oldData.shift();
                 }
                 return
             }
@@ -30,12 +33,13 @@ runObserver = function(dbConnector) {
             nextBot[i] = newData[i];
 
             if(oldData === nextBot[i]) {
-                //TODO: Remove found Bot in oldData
+                //Remove found Bot in oldData
+                oldData.splice(i, 1);
             }
             else {
                 runtime.addBot(nextBot);
             }
-            //TODO: Remove first entry in newData
+            newData.shift();
         }
 
     }, 5000)
