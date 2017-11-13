@@ -9,38 +9,38 @@ runObserver = function(dbConnector) {
     let lifeCycle = setInterval(function(){
         let newData = [];
         let oldData = [];
+        let nextBot;
 
         newData.push(dbConnector.readFromDB({}));
         
-        if(newData.length === 0) {
-            if(oldData.length === 0) {
-                oldData = newData;
-                return
-            }
-            else {
-                let nextBot = [];
-                for (i = 0; i < oldData.length-1; i++) {
-                    nextBot[i] = oldData[i];
-                    runtime.deleteBot(nextBot);
-                    oldData.shift();
-                }
-                return
-            }
-        }
-        let nextBot = [];
+        let i = 0;
 
-        for(i = 0; i < newData.length-1; i++) {
-            nextBot[i] = newData[i];
-
-            if(oldData === nextBot[i]) {
-                //Remove found Bot in oldData
-                oldData.splice(i, 1);
-            }
-            else {
+        while(newData.length !== 0) {
+            //Save first bot in newData to nextBot
+            nextBot = newData[0];
+            
+            //Look for nextBot in oldData
+            if(oldData[i] !== nextBot) {
                 runtime.addBot(nextBot);
             }
+            
+            //Remove found Bot in oldData
+            else oldData.splice(i,1);
+            
+            //Remove first entry in newData
             newData.shift();
         }
+        
+        while(oldData.length !== 0) {
+            
+            //Save first bot in oldData to nextBot
+            nextBot = oldData[0];
+            runtime.deleteBot(nextBot);
 
+            //Remove first entry in oldData
+            oldData.shift();
+        }
+        //TODO: Save fetched data to oldData
+        return;
     }, 5000)
 }
