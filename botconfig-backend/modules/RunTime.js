@@ -6,8 +6,14 @@ const requestPromise = require('request-promise');
 
 const runTime = express();
 
-runTime.deleteBot = function(id){
+runTime.addBot = function(bot){
     // TODO do something
+    return true;
+}
+
+runTime.deleteBot = function(bot){
+    // TODO do something
+    return true;
 }
 
 module.exports = runTime;
