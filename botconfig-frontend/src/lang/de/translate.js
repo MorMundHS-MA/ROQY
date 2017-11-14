@@ -1,3 +1,4 @@
 module.exports = {
-  hello: 'Hallo!'
+  hello: 'Hallo!',
+  my_bots: 'Meine Bots'
 }
