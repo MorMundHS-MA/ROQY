@@ -142,139 +142,147 @@ router.post('/bot', function (req, clientResponse) {
         json: true
     };
 
-    requestPromise(options)
-        .then(res => {
-            appId = res;
-            options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + appId + "/versions/" + initVersion + "/intents";
-            for (let i = 0; i < userData.intents.length; i++) {
-                let currentIntent = userData.intents[i];
-                options.body = {
-                    name: userData.intents[i].name
-                };
-                requestPromise(options);
-            }
-            return new Promise(ret => {
-                ret();
-            })
-        }).delay(500)
-        .then(res => {
-            options.method = "GET";
-            return new Promise(function (resolve) {
-                let waitUntilIntentsCreatedIntervall = setInterval(() => {
-                    requestPromise(options)
-                        .then(res => {
-                            if (res.length >= userData.intents.length) {
-                                clearInterval(waitUntilIntentsCreatedIntervall);
-                                resolve(res);
-                            }
-                        })
-                }, 500)
-            })
-        }).delay(500)
-        .then(res => {
-            console.log("Intents done");
-            options.method = "POST";
-            options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + appId + "/versions/" + initVersion + "/examples";
-            for (let i = 0; i < userData.intents.length; i++) {
-                let currentIntent = userData.intents[i];
-                options.body = [];
-                for (let j = 0; j < userData.intents.length; j++) {
-                    options.body.push({
-                        "text": currentIntent.questions[j],
-                        "intentName": currentIntent.name,
-                        "entityLabels": []
-                    });
-                    numberOfQuestions++;
-                }
-                requestPromise(options);
-            }
-            return new Promise(ret => {
-                ret();
-            })
-        }).delay(500)
-        .then(res => {
-            console.log("Questions done");
-            options.method = "GET";
-            return new Promise(function (resolve) {
-                let waitUntilIntentsCreatedIntervall = setInterval(() => {
-                    requestPromise(options)
-                        .then(res => {
-                            if (res.length >= numberOfQuestions) {
-                                clearInterval(waitUntilIntentsCreatedIntervall);
-                                options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + appId + "/versions/" + initVersion + "/train";
-                                options.method = "POST";
-                                resolve(res);
-                            }
-                        })
-                }, 500)
-            })
-        }).delay(500)
-        .then(() => requestPromise(options))
-        .then(res => {
-            console.log("Start Training");
-            options.method = "GET";
-            return new Promise(function (resolve) {
-                let waitUntilIntentsCreatedIntervall = setInterval(() => {
-                    requestPromise(options)
-                        .then(res => {
-                            let trainingDone = true;
-                            for (let i = 0; i < res.length && trainingDone; i++) {
-                                if (res[i].details.statusId === 1) {
-                                    // TODO maybe retrain?
-                                    throw new Error(messages.errorWhileCreating, 409);
-                                }
-                                if (res[i].details.statusId !== 0) {
-                                    trainingDone = false;
-                                }
-                            }
-                            if (trainingDone) {
-                                console.log("Training done");
-                                clearInterval(waitUntilIntentsCreatedIntervall);
-                                options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + appId + "/publish";
-                                options.method = "POST";
-                                options.body = {
-                                    "versionId": "1.0",
-                                    "isStaging": false,
-                                    "region": "westus"
-                                }
-                                resolve(res);
-                            }
-                        })
-                }, 500)
-            })
-        })
-        .then(() => requestPromise(options))
-        .then(res => {
-            userData.id = appId;
-            userData.status = "running";
-            if(dbcon.writeToDB({
-                    "data":userData
-                })){
-                console.log("Successfully wrote to DB!");
-            }else{
-                console.log("Error occured while writing into mongodb!");
-            }
-            res.botId = appId;
-            // TODO Start Docker Image with appId from here!
-            responseToClient(clientResponse, 201, false, messages.botHasBeenCreated, res);
-        })
-        .catch(err => {
-                console.log(err.statusCode);
-                console.log(err.message);
-                if (err.statusCode === 400) {
-                    responseToClient(clientResponse, 409, true, messages.botAlreadyExists);
-                } else if (err.statusCode === 409) {
-                    responseToClient(clientResponse, 409, true, messages.errorWhileCreating);
-                    options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + appId
-                    options.method = "DELETE";
+    if (req.header("Authorization") !== undefined){
+        requestPromise(options)
+            .then(res => {
+                appId = res;
+                options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + appId + "/versions/" + initVersion + "/intents";
+                for (let i = 0; i < userData.intents.length; i++) {
+                    let currentIntent = userData.intents[i];
+                    options.body = {
+                        name: userData.intents[i].name
+                    };
                     requestPromise(options);
-                } else {
-                    responseToClient(clientResponse, err.statusCode, err.message);
                 }
-            }
-        );
+                return new Promise(ret => {
+                    ret();
+                })
+            }).delay(500)
+            .then(res => {
+                options.method = "GET";
+                return new Promise(function (resolve) {
+                    let waitUntilIntentsCreatedIntervall = setInterval(() => {
+                        requestPromise(options)
+                            .then(res => {
+                                if (res.length >= userData.intents.length) {
+                                    clearInterval(waitUntilIntentsCreatedIntervall);
+                                    resolve(res);
+                                }
+                            })
+                    }, 500)
+                })
+            }).delay(500)
+            .then(res => {
+                console.log("Intents done");
+                options.method = "POST";
+                options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + appId + "/versions/" + initVersion + "/examples";
+                for (let i = 0; i < userData.intents.length; i++) {
+                    let currentIntent = userData.intents[i];
+                    options.body = [];
+                    for (let j = 0; j < userData.intents.length; j++) {
+                        options.body.push({
+                            "text": currentIntent.questions[j],
+                            "intentName": currentIntent.name,
+                            "entityLabels": []
+                        });
+                        numberOfQuestions++;
+                    }
+                    requestPromise(options);
+                }
+                return new Promise(ret => {
+                    ret();
+                })
+            }).delay(500)
+            .then(res => {
+                console.log("Questions done");
+                options.method = "GET";
+                return new Promise(function (resolve) {
+                    let waitUntilIntentsCreatedIntervall = setInterval(() => {
+                        requestPromise(options)
+                            .then(res => {
+                                if (res.length >= numberOfQuestions) {
+                                    clearInterval(waitUntilIntentsCreatedIntervall);
+                                    options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + appId + "/versions/" + initVersion + "/train";
+                                    options.method = "POST";
+                                    resolve(res);
+                                }
+                            })
+                    }, 500)
+                })
+            }).delay(500)
+            .then(() => requestPromise(options))
+            .then(res => {
+                console.log("Start Training");
+                options.method = "GET";
+                return new Promise(function (resolve) {
+                    let waitUntilIntentsCreatedIntervall = setInterval(() => {
+                        requestPromise(options)
+                            .then(res => {
+                                let trainingDone = true;
+                                for (let i = 0; i < res.length && trainingDone; i++) {
+                                    if (res[i].details.statusId === 1) {
+                                        // TODO maybe retrain?
+                                        throw new Error(messages.errorWhileCreating, 409);
+                                    }
+                                    if (res[i].details.statusId !== 0) {
+                                        trainingDone = false;
+                                    }
+                                }
+                                if (trainingDone) {
+                                    console.log("Training done");
+                                    clearInterval(waitUntilIntentsCreatedIntervall);
+                                    options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + appId + "/publish";
+                                    options.method = "POST";
+                                    options.body = {
+                                        "versionId": "1.0",
+                                        "isStaging": false,
+                                        "region": "westus"
+                                    }
+                                    resolve(res);
+                                }
+                            })
+                    }, 500)
+                })
+            })
+            .then(() => requestPromise(options))
+            .then(res => {
+                userData.id = appId;
+                userData.status = "running";
+                if (dbcon.writeToDB({
+                        "data": userData
+                    })) {
+                    console.log("Successfully wrote to DB!");
+                } else {
+                    console.log("Error occured while writing into mongodb!");
+                }
+                res.botId = appId;
+                // TODO Start Docker Image with appId from here!
+                responseToClient(clientResponse, 201, false, messages.botHasBeenCreated, res);
+            })
+            .catch(err => {
+                    console.log(err.statusCode);
+                    console.log(err.message);
+                    if (err.statusCode === 400) {
+                        responseToClient(clientResponse, 409, true, messages.botAlreadyExists);
+                    } else if (err.statusCode === 409) {
+                        responseToClient(clientResponse, 409, true, messages.errorWhileCreating);
+                        options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + appId
+                        options.method = "DELETE";
+                        requestPromise(options);
+                    } else {
+                        responseToClient(clientResponse, err.statusCode, err.message);
+                    }
+                }
+            );
 
-
+}else{
+        userData.id = "test";
+        userData.status = "test";
+        dbcon.writeToDB({
+            data: userData
+        });
+        responseToClient(clientResponse, 200, "Test Erfolgreich");
+    }
 });
 
 /**
