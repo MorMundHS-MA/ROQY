@@ -276,12 +276,12 @@ router.post('/bot', function (req, clientResponse) {
             );
 
 }else{
-        userData.id = "test";
+        userData.id =  Date.now();
         userData.status = "test";
         dbcon.writeToDB({
             data: userData
         });
-        responseToClient(clientResponse, 200, "Test Erfolgreich");
+        responseToClient(clientResponse, 200, false, "Test Erfolgreich", {botId: userData.id});
     }
 });
 
