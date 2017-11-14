@@ -1,4 +1,5 @@
 const express = require('express');
+const ncmd = require('node-command-line');
 const requestPromise = require('request-promise');
 const router = express.Router();
 const ILuis = require('luis-node-sdk');
@@ -254,6 +255,7 @@ router.post('/bot', function (req, clientResponse) {
                 console.log("Error occured while writing into mongodb!");
             }
             res.botId = appId;
+            // TODO Start Docker Image with appId from here!
             responseToClient(clientResponse, 201, false, messages.botHasBeenCreated, res);
         })
         .catch(err => {
@@ -388,7 +390,7 @@ router.put('/bot/:id/start', function(req, clientResponse){
                 data:res
             });
 
-            responseToClient(clientResponse, 200, false, messages.botHasBeenStopped);
+            responseToClient(clientResponse, 200, false, messages.botHasBeenStarted);
 
         }
 
