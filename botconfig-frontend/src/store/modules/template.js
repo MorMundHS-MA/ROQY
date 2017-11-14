@@ -23,8 +23,10 @@ const mutations = {
 }
     
 const actions = {
-    addNewTemplate (state, template) {
-        
+    getAllTemplate ({commit}) {
+        data.getTemplates( templats => {
+            commit(types.RECEIVE_TEMPLATES, { templates })
+        })
     }
 }
     
