@@ -3,7 +3,7 @@ import Vuex from 'vuex'
 import * as actions from './actions'
 import * as getters from './getters'
 import bots from './modules/bots'
-import templates from './modules/templates'
+import templates from './modules/template'
 
 Vue.use(Vuex)
 

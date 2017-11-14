@@ -28,13 +28,13 @@ import 'vue-material/dist/vue-material.css'
 export default {
   computed: {
     bots () {
-      this.$store.commit('getbots')
-      return this.$store.state.bots
-    },
-    created () {
-      this.$store.dispatch('getAllBots')
-      this.$store.dispatch('getTemplates')
+      return this.$store.getters.getbots
     }
+  },
+  created () {
+    console.log('created')
+    this.$store.dispatch('getAllBots')
+    // this.$store.dispatch('getTemplates')
   },
   components: {
     botInfo

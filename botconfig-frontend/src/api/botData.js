@@ -1,13 +1,13 @@
 import axios from 'axios'
 
-axios.defaults.baseURL = 'http://141.19.152.7:3000'
+axios.defaults.baseURL = 'http://141.19.142.7:3000'
 
 export default {
   getBots (cb) {
     setTimeout(function () {
       axios.get('/bot')
             .then(function (response) {
-              cb(response)
+              cb(response.data)
             })
             .catch(function (error) {
               console.log(error)
@@ -32,7 +32,7 @@ export default {
   },
   changeBotState (bot, start, stop) {
     setTimeout(function () {
-      if (bot.status === 'online') {
+      if (bot.status === 'running') {
         axios.put('/bot/' + bot.id + '/stop', {
           'status': bot.status
         })
@@ -65,7 +65,7 @@ export default {
           console.log(error)
         })
   },
-  renameBotName (cb, bot) {
+  renameBot (cb, bot) {
     setTimeout(function () {
       bot[0].name = bot[1].name
       axios.put('/bot/' + bot[0].id, bot[0])
