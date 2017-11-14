@@ -1,6 +1,9 @@
 import axios from 'axios'
 
 axios.defaults.baseURL = 'http://141.19.142.7:3000'
+var config = {
+  headers: {'testing': true}
+}
 
 export default {
   getBots (cb) {
@@ -19,7 +22,8 @@ export default {
       axios.post('/bot', {
         'name': bot.name,
         'description': bot.description,
-        'intents': []
+        'intents': [],
+        config
       })
       .then(function (response) {
         bot.id = response.data.extra.botId
