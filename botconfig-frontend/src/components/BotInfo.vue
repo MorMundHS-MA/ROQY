@@ -106,14 +106,14 @@ export default {
   },
   methods: {
     deleteItem (item) {
-      this.$store.commit('deleteBot', item)
+      this.$store.dispatch('deleteBot', item)
       this.closeDialog(this.confirm.ref1)
     },
     changeBot (item) {
-      this.$store.commit('changeState', item)
+      this.$store.dispatch('changeStatus', item)
     },
     renameItem (item) {
-      this.$store.commit('renameBot', [item, {
+      this.$store.dispatch('renameBot', [item, {
         name: this.newName}])
       this.closeDialog(this.confirm.ref2)
       this.newName = ''

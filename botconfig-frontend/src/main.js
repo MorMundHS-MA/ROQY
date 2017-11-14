@@ -6,8 +6,12 @@ import router from './router'
 import vueMaterial from 'vue-material'
 
 import {store} from './store'
+var lang = require('vuejs-localization')
 
 Vue.use(vueMaterial)
+
+lang.requireAll(require.context('./lang', true, /\.js$/))
+Vue.use(lang)
 
 Vue.config.productionTip = false
 
