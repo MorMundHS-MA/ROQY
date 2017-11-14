@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-axios.defaults.baseURL = 'http://141.19.157.234:3000'
+axios.defaults.baseURL = 'http://141.19.152.7:3000'
 
 export default {
   getBots (cb) {

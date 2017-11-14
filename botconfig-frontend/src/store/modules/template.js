@@ -26,6 +26,11 @@ const actions = {
     data.getTemplates(templates => {
       commit(types.RECEIVE_TEMPLATES, { templates })
     })
+  },
+  addTemplate ({commit}, template) {
+    data.addNewTemplate(teamplate => {
+      commit(types.ADD_NEW_TEMPALTE, { template })
+    }, template)
   }
 }
 

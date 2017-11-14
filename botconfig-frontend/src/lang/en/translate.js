@@ -1,5 +1,4 @@
 module.exports = {
-  hello: 'Hello!',
   header: {
     bot_config: 'Bot Configuration',
     my_bots: 'My Bots',
@@ -21,7 +20,6 @@ module.exports = {
     renameTitle: 'Write the new name of your bot !!!',
     contentHtml: 'This bot will be on database deleted, if you confirm it, there is no way to back it up.',
     ok: 'Delete',
-    rename: 'Rename',
     cancel: 'Cancel'
   }
 }

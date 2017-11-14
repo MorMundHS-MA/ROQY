@@ -33,6 +33,7 @@ export default {
     },
     created () {
       this.$store.dispatch('getAllBots')
+      this.$store.dispatch('getTemplates')
     }
   },
   components: {
