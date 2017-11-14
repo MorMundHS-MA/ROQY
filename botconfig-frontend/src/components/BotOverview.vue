@@ -30,6 +30,9 @@ export default {
     bots () {
       this.$store.commit('getbots')
       return this.$store.state.bots
+    },
+    created () {
+      this.$store.dispatch('getAllBots')
     }
   },
   components: {
