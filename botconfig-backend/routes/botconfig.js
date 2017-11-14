@@ -306,24 +306,31 @@ router.delete("/bot/:id", function (req, clientResponse) {
         },
         json: true
     }
-    existsAgent(id).then(res => {
-        if (!res.exists) {
-            responseToClient(clientResponse, 404, true, messages.botNotFound);
-        }
+    if(req.header("Authorization") === undefined){
+        dbcon.deleteFromDB({
+            botId:id
+        });
+        responseToClient(clientResponse, 200, false, messages.botDeleted);
+    }else {
+        existsAgent(id).then(res => {
+            if (!res.exists) {
+                responseToClient(clientResponse, 404, true, messages.botNotFound);
+            }
 
-        else {
-            requestPromise(options).then(res => {
-                dbcon.deleteFromDB({
-                    botId:id
+            else {
+                requestPromise(options).then(res => {
+                    dbcon.deleteFromDB({
+                        botId: id
+                    });
+                    responseToClient(clientResponse, 200, false, messages.botDeleted);
+                }).catch(err => {
+                    responseToClient(clientResponse, 400, true, err.message);
                 })
-                responseToClient(clientResponse, 200, false, messages.botDeleted);
-            }).catch(err => {
-                responseToClient(clientResponse, 400, true, err.message);
-            })
-        }
-    }).catch(err => {
-        responseToClient(clientResponse, 400, true, err.message);
-    })
+            }
+        }).catch(err => {
+            responseToClient(clientResponse, 400, true, err.message);
+        })
+    }
 });
 
 /**
