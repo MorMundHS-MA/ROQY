@@ -8,6 +8,10 @@ const dbcon = require('../modules/dbconnector');
 var APPID = "4f51b70e-cc17-46b8-8009-801a34e28c90";
 const APPKEY = "ed2ff1a97f924b8e8a1402e6700a8bf4";
 
+/**
+ * Here are all messages defined, so for changes we don't have redundant data.
+ * @type {{botNotFound: string, botAlreadyExists: string, botDeleted: string, botHasBeenCreated: string, botsFound: string, errorWhileCreating: string, botHasBeenStarted: string, botHasBeenStopped: string, generalError: string, botUpdated: string}}
+ */
 const messages = {
     "botNotFound": "The specified bot could not be found: ",
     "botAlreadyExists": "A bot with that name already exists!",
@@ -17,12 +21,21 @@ const messages = {
     "errorWhileCreating": "Error while creating the bot, please try again.",
     "botHasBeenStarted":"The bot has been successfully started!",
     "botHasBeenStopped":"The bot has been successfully stopped!",
-    "generalError":"An error occured."
+    "generalError":"An error occured.",
+    "botUpdated":"Bot has been updated successfully!"
 };
 
 const LUISKEY = "ed2ff1a97f924b8e8a1402e6700a8bf4";
 let LUISClient;
 
+/**
+ * Sends a response to client
+ * @param res - JSON Object - response object for client
+ * @param status - Number - status code
+ * @param error - Boolean - is an error occured?
+ * @param message - String - returned message
+ * @param add - Object - extra data for client, this could be everything and should be specified!
+ */
 function responseToClient(res, status, error, message, add) {
     res.header("Content-Type", "application/json");
     let responseMessage = {
@@ -35,8 +48,8 @@ function responseToClient(res, status, error, message, add) {
     res.status(status).send(JSON.stringify(responseMessage));
 }
 /**
- *
- * @param id Name of Bot
+ * Checks wether a bot with this id already exists or not
+ * @param id - id of Bot
  * @returns
  *      {
  *          "exists": true when a bot with this name exists,
@@ -67,27 +80,46 @@ function existsAgent(id) {
 };
 
 
-
+/**
+ * Get all Bots
+ * This endpoint returns all Bots.
+ * Parameters:
+ *      none
+ * Headers
+ *      Authorization - Account ID from LiveEngage to identify the bots this customer owns.
+ */
 router.get("/bot", function (req, clientResponse) {
     clientResponse.header("Access-Control-Allow-Origin", "*");
     clientResponse.setHeader("Content-Type", "text/html; charset=utf-8");
     let bots = dbcon.readFromDB({
-
     }).then(res => {
         responseToClient(clientResponse, 200, false, messages.botsFound, res);
     });
-
-
 });
 
-
+/**
+ * Create Bot
+ * This endpoint creates a new Bot
+ *
+ * Parameters:
+ *      name - name of the Bot
+ *      img - image of the Bot
+ *      description - description of the Bot
+ *      intents - an Array of intents
+ *              id - id of the intent
+ *              name - name of the intent
+ *              answer - answer when this intent is called
+ *              nextIntents - an Array of ID's of the following intents
+ *              questions - an Array of Strings, how you could ask for this intent
+ *
+ * Headers:
+ *      Authorization - Account ID from LiveEngage to identify the bots this customer owns.
+ */
 router.post('/bot', function (req, clientResponse) {
     clientResponse.header("Access-Control-Allow-Origin", "*");
-    console.log("In post");
+    console.log("Create Bots");
     let appId = "";
     let userData = req.body;
-    console.log(userData);
-    console.log(userData.intents);
     userData.description = userData.description || "";
     userData.img = userData.img || "../assets/bot.png";
     const initVersion = "1.0";
@@ -179,6 +211,7 @@ router.post('/bot', function (req, clientResponse) {
         }).delay(500)
         .then(() => requestPromise(options))
         .then(res => {
+            console.log("Start Training");
             options.method = "GET";
             return new Promise(function (resolve) {
                 let waitUntilIntentsCreatedIntervall = setInterval(() => {
@@ -195,6 +228,7 @@ router.post('/bot', function (req, clientResponse) {
                                 }
                             }
                             if (trainingDone) {
+                                console.log("Training done");
                                 clearInterval(waitUntilIntentsCreatedIntervall);
                                 options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + appId + "/publish";
                                 options.method = "POST";
@@ -243,7 +277,15 @@ router.post('/bot', function (req, clientResponse) {
 
 });
 
-
+/**
+ * Delete
+ * Deletes the specified Bot.
+ *
+ * Parameters:
+ *      :id - ID of the bot which should be deleted
+ * Headers:
+ *      Authorization - Account ID from LiveEngage to identify the bots this customer owns.
+ */
 router.delete("/bot/:id", function (req, clientResponse) {
     // options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + exres.agentResponse.id;
     clientResponse.header("Access-Control-Allow-Origin", "*");
@@ -275,35 +317,64 @@ router.delete("/bot/:id", function (req, clientResponse) {
         responseToClient(clientResponse, 400, true, err.message);
     })
 });
-/*
- Update Bot
+
+/**
+ * Update
+ * Updates the bot with new Data.
+ *
+ * Parameters:
+ *      :id - ID of the bot which sould be updated
+ *      data - JSON Object of the Bot.
+ *              name - name of the Bot
+ *              img - image of the Bot
+ *              description - description of the Bot
+ *              intents - an Array of intents
+ *                      id - id of the intent
+ *                      name - name of the intent
+ *                      answer - answer when this intent is called
+ *                      nextIntents - an Array of ID's of the following intents
+ *                      questions - an Array of Strings, how you could ask for this intent
+ * Headers:
+ *      Authorization - Account ID from LiveEngage to identify the bots this customer owns.
  */
 router.put('/bot/:id', function(req, clientResponse){
     let id = req.params.id;
     let write = dbcon.writeToDB({
         botId:id,
         data:req.body
-    })
+    });
 
-    responseToClient(clientResponse, 200, false, "Bot updated successfully");
+    responseToClient(clientResponse, 200, false, messages.botUpdated);
 
 });
 
-/*
- get bot status
+/**
+ * Status
+ * When you make a get Request on this endpoint, the bot status is returned. "stopped" for a stopped bot, "running" for
+ * a running Bot, "test" for a test state and "problem" when a unknown problem occured.
+ *
+ * Parameters:
+ *      :id - ID of the bot
+ * Headers:
+ *      Authorization - Account ID from LiveEngage to identify the bots this customer owns.
  */
 router.get('/bot/:id/status', function(req, clientResponse){
-    // TODO uncomment when readFromDB is implemented
-    // let id = req.params.id;
-    // let bot = dbcon.readFromDB({
-    //     "botId":id
-    // });
-    // responseToClient(clientResponse, 200, false, messages.botsFound, {"status":bot.status});
-    clientResponse.send("Suc");
+     let id = req.params.id;
+     dbcon.readFromDB({
+         "botId":id
+     }).then(bot => {
+         responseToClient(clientResponse, 200, false, messages.botsFound, {"status":bot.status});
+     });
 });
 
-/*
- start bot
+/**
+ * Start bot
+ * When you make a put Request on this Endpoint, the bot which is specified by :id get started
+ *
+ * Parameters:
+ *      :id - ID of the bot
+ * Headers:
+ *      Authorization - Account ID from LiveEngage to identify the bots this customer owns.
  */
 router.put('/bot/:id/start', function(req, clientResponse){
     clientResponse.header("Access-Control-Allow-Origin", "*");
@@ -326,8 +397,14 @@ router.put('/bot/:id/start', function(req, clientResponse){
     });
 });
 
-/*
- stop bot
+/**
+ * Stop bot
+ * When you make a put Request on this Endpoint, the bot which is specified by :id is stopped.
+ *
+ * Parameters:
+ *      :id - ID of the bot
+ * Headers:
+ *      Authorization - Account ID from LiveEngage to identify the bots this customer owns.
  */
 router.put('/bot/:id/stop', function(req, clientResponse){
     clientResponse.header("Access-Control-Allow-Origin", "*");
@@ -352,7 +429,16 @@ router.put('/bot/:id/stop', function(req, clientResponse){
 });
 
 
-
+/**
+ * Query
+ * Starts a query to LUIS and responses an answer
+ *
+ * Parameters:
+ *      :id - ID of the bot
+ *      :query - Query for LUIS
+ * Headers:
+ *      Authorization - Account ID from LiveEngage to identify the bots this customer owns.
+ */
 router.get('/bot/:id/query/:query', function (req, clientResponse) {
     res.header("Access-Control-Allow-Origin", "*");
     const id = req.params.id;
@@ -367,7 +453,15 @@ router.get('/bot/:id/query/:query', function (req, clientResponse) {
             });
             LUISClient.predict(query, {
                 onSuccess: function(response){
-                    responseToClient(clientResponse, 200, false, response.topScoringIntent.intent);
+                    dbcon.readFromDB({
+                        botId: id
+                    }).then(bot => {
+                        for(let i = 0; i<bot.intents.length; i++){
+                            if(bot.intents[i].name === response.topScoringIntent.intent){
+                                responseToClient(clientResponse, 200, false, bot.intents[i].answer);
+                            }
+                        }
+                    })
                 }
             })
         } else {
@@ -377,9 +471,9 @@ router.get('/bot/:id/query/:query', function (req, clientResponse) {
 
 });
 
-// options
 
 
+// options. They set some Headers for CORS
 
 router.options("/bot", function(req, clientResponse){
     clientResponse.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
