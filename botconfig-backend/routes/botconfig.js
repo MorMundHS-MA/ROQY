@@ -319,7 +319,7 @@ router.put('/bot/:id/start', function(req, clientResponse){
                 data:res
             });
 
-            responseToClient(clientResponse, 200, false, messages.botHasBeenStopped);
+            responseToClient(clientResponse, 200, false, messages.botHasBeenStarted);
 
         }
 
