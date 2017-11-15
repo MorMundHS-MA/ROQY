@@ -1,6 +1,8 @@
 let MongoClient = require('mongodb').MongoClient;
-
 let url = 'mongodb://141.19.145.166:27017/mydb';
+
+let username = '';
+let password = '';
 
 /**
  * This method is for write a new bot or changing intents inside 
