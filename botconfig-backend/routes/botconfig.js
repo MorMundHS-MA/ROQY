@@ -87,8 +87,9 @@ function existsAgent(id) {
  */
 router.get("/auth", function(req, clientResponse){
     // TODO Real authorization --> Liveperson!
-    let username = req.params.username;
-    let password = req.params.password;
+    let username = req.param("username");
+    let password = req.param("password");
+    console.log(username + " " + password);
     if(username !== undefined && password !== undefined){
         responseToClient(clientResponse, 200, false, messages.authSuccess, {Authorization:23625217});
     }else {
@@ -105,6 +106,11 @@ router.get("/auth", function(req, clientResponse){
  *      Authorization - Account ID from LiveEngage to identify the bots this customer owns.
  */
 router.get("/bot", function (req, clientResponse) {
+    let auth = req.header("Authorization");
+    if(auth === undefined){
+        responseToClient(clientResponse, 401, true, messages.unauthorized);
+        return;
+    }
     clientResponse.header("Access-Control-Allow-Origin", "*");
     clientResponse.setHeader("Content-Type", "text/html; charset=utf-8");
     let bots = dbcon.readFromDB({
@@ -132,6 +138,7 @@ router.get("/bot", function (req, clientResponse) {
  *      Authorization - Account ID from LiveEngage to identify the bots this customer owns.
  */
 router.post('/bot', function (req, clientResponse) {
+    
     clientResponse.header("Access-Control-Allow-Origin", "*");
     console.log("Create Bots");
     let appId = "";
@@ -311,6 +318,7 @@ router.post('/bot', function (req, clientResponse) {
  *      Authorization - Account ID from LiveEngage to identify the bots this customer owns.
  */
 router.delete("/bot/:id", function (req, clientResponse) {
+
     // options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + exres.agentResponse.id;
     clientResponse.header("Access-Control-Allow-Origin", "*");
     let id = req.params.id;
@@ -369,6 +377,11 @@ router.delete("/bot/:id", function (req, clientResponse) {
  *      Authorization - Account ID from LiveEngage to identify the bots this customer owns.
  */
 router.put('/bot/:id', function(req, clientResponse){
+    let auth = req.header("Authorization");
+    if(auth === undefined){
+        responseToClient(clientResponse, 401, true, messages.unauthorized);
+        return;
+    }
     let id = req.params.id;
     let write = dbcon.writeToDB({
         botId:id,
@@ -390,7 +403,12 @@ router.put('/bot/:id', function(req, clientResponse){
  *      Authorization - Account ID from LiveEngage to identify the bots this customer owns.
  */
 router.get('/bot/:id/status', function(req, clientResponse){
-     let id = req.params.id;
+    let auth = req.header("Authorization");
+    if(auth === undefined){
+        responseToClient(clientResponse, 401, true, messages.unauthorized);
+        return;
+    }
+    let id = req.params.id;
      dbcon.readFromDB({
          "botId":id
      }).then(bot => {
@@ -408,6 +426,11 @@ router.get('/bot/:id/status', function(req, clientResponse){
  *      Authorization - Account ID from LiveEngage to identify the bots this customer owns.
  */
 router.put('/bot/:id/start', function(req, clientResponse){
+    let auth = req.header("Authorization");
+    if(auth === undefined){
+        responseToClient(clientResponse, 401, true, messages.unauthorized);
+        return;
+    }
     clientResponse.header("Access-Control-Allow-Origin", "*");
 
     let id = req.params.id;
@@ -438,6 +461,11 @@ router.put('/bot/:id/start', function(req, clientResponse){
  *      Authorization - Account ID from LiveEngage to identify the bots this customer owns.
  */
 router.put('/bot/:id/stop', function(req, clientResponse){
+    let auth = req.header("Authorization");
+    if(auth === undefined){
+        responseToClient(clientResponse, 401, true, messages.unauthorized);
+        return;
+    }
     clientResponse.header("Access-Control-Allow-Origin", "*");
 
     let id = req.params.id;
@@ -471,6 +499,11 @@ router.put('/bot/:id/stop', function(req, clientResponse){
  *      Authorization - Account ID from LiveEngage to identify the bots this customer owns.
  */
 router.get('/bot/:id/query/:query', function (req, clientResponse) {
+    let auth = req.header("Authorization");
+    if(auth === undefined){
+        responseToClient(clientResponse, 401, true, messages.unauthorized);
+        return;
+    }
     res.header("Access-Control-Allow-Origin", "*");
     const id = req.params.id;
     const query = req.params.query;
