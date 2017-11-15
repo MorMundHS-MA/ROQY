@@ -24,7 +24,12 @@ const messages = {
     "generalError":"An error occured.",
     "botUpdated":"Bot has been updated successfully!",
     "authSuccess":"Authorization was successfull!",
-    "unauthorized":"Sorry, you are not authorized for this action!"
+    "unauthorized":"Sorry, you are not authorized for this action!",
+    "privacyNotAcceptable":"Privacy type is not acceptable!",
+    "noDescrption":"Description must be set!",
+    "noPrivacy":"Privacy must be set!",
+    "noBotType":"BotType must be set!",
+    "botTypeNotAcceptable":"BotType is not acceptable!"
 };
 
 const LUISKEY = "ed2ff1a97f924b8e8a1402e6700a8bf4";
@@ -138,12 +143,32 @@ router.get("/bot", function (req, clientResponse) {
  *      Authorization - Account ID from LiveEngage to identify the bots this customer owns.
  */
 router.post('/bot', function (req, clientResponse) {
-    
     clientResponse.header("Access-Control-Allow-Origin", "*");
     console.log("Create Bots");
     let appId = "";
     let userData = req.body;
-    userData.description = userData.description || "";
+    if(userData.description === undefined){
+        responseToClient(clientResponse, 406, true, messages.noDescrption);
+        return;
+    }
+    if(userData.botType === undefined){
+        responseToClient(clientResponse, 406, true, messages.noBotType);
+        return;
+    }
+    if(userData.botType !== "faq" && userData.botType !== "welcome"){
+        responseToClient(clientResponse, 406, true, messages.botTypeNotAcceptable);
+        return;
+    }
+    if(userData.privacy === undefined){
+        responseToClient(clientResponse, 406, true, messages.noPrivacy);
+        return;
+    }
+    if(userData.privacy !== "public" && userData.privacy !== "private"){
+        responseToClient(clientResponse, 406, true, messages.privacyNotAcceptable);
+        return;
+    }
+
+
     userData.img = userData.img || "../assets/bot.png";
     const initVersion = "1.0";
     let numberOfQuestions = 0;
@@ -308,6 +333,21 @@ router.post('/bot', function (req, clientResponse) {
     }
 });
 
+
+router.get('/bot/public', function(req, clientResponse){
+    clientResponse.header("Access-Control-Allow-Origin", "*");
+    clientResponse.setHeader("Content-Type", "text/html; charset=utf-8");
+    let bots = dbcon.readFromDB({
+    }).then(res => {
+        let retval = [];
+        for(let i = 0; i<res.length; i++){
+            if(res[i].privacy === "public"){
+                retval += res[i];
+            }
+        }
+        responseToClient(clientResponse, 200, false, messages.botsFound, retval);
+    });
+});
 /**
  * Delete
  * Deletes the specified Bot.
@@ -414,6 +454,31 @@ router.get('/bot/:id/status', function(req, clientResponse){
      }).then(bot => {
          responseToClient(clientResponse, 200, false, messages.botsFound, {"status":bot.status});
      });
+});
+
+router.put('/bot/:id/privacy', function(req, clientResponse){
+    let auth = req.header("Authorization");
+    let id = req.params.id;
+    if(auth === undefined){
+        responseToClient(clientResponse, 401, true, messages.unauthorized);
+        return;
+    }
+    let privacy = req.body.privacy;
+    if(privacy === undefined){
+        responseToClient(clientResponse, 406, true, messages.privacyNotAcceptable);
+        return;
+    }
+    dbcon.readFromDB({
+        botId:id
+    }).then(res => {
+        if(res !== {}) {
+            res.privacy = privacy;
+            dbcon.writeToDB({
+                botId: id,
+                data: res
+            })
+        }
+    })
 });
 
 /**
@@ -538,6 +603,22 @@ router.get('/bot/:id/query/:query', function (req, clientResponse) {
 
 
 // options. They set some Headers for CORS
+
+router.options("/bot/:id/privacy", function(req, clientResponse){
+    clientResponse.header("Access-Control-Allow-Methods", "PUT, OPTIONS");
+    clientResponse.header("Access-Control-Allow-Origin", "*");
+    clientResponse.header("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+    clientResponse.header("Acces-Control-Max-Age", 86400);
+    clientResponse.end();
+});
+
+router.options("/bot/public", function(req, clientResponse){
+    clientResponse.header("Access-Control-Allow-Methods", "GET, OPTIONS");
+    clientResponse.header("Access-Control-Allow-Origin", "*");
+    clientResponse.header("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+    clientResponse.header("Acces-Control-Max-Age", 86400);
+    clientResponse.end();
+});
 
 router.options("/auth", function(req, clientResponse){
     clientResponse.header("Access-Control-Allow-Methods", "GET, OPTIONS");
