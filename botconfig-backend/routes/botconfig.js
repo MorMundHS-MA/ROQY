@@ -22,7 +22,9 @@ const messages = {
     "botHasBeenStarted":"The bot has been successfully started!",
     "botHasBeenStopped":"The bot has been successfully stopped!",
     "generalError":"An error occured.",
-    "botUpdated":"Bot has been updated successfully!"
+    "botUpdated":"Bot has been updated successfully!",
+    "authSuccess":"Authorization was successfull!",
+    "unauthorized":"Sorry, you are not authorized for this action!"
 };
 
 const LUISKEY = "ed2ff1a97f924b8e8a1402e6700a8bf4";
@@ -79,6 +81,20 @@ function existsAgent(id) {
     })
 };
 
+
+/**
+ *
+ */
+router.get("/auth", function(req, clientResponse){
+    // TODO Real authorization --> Liveperson!
+    let username = req.params.username;
+    let password = req.params.password;
+    if(username !== undefined && password !== undefined){
+        responseToClient(clientResponse, 200, false, messages.authSuccess, {Authorization:23625217});
+    }else {
+        responseToClient(clientResponse, 401, true, messages.unauthorized);
+    }
+});
 
 /**
  * Get all Bots
@@ -489,6 +505,14 @@ router.get('/bot/:id/query/:query', function (req, clientResponse) {
 
 
 // options. They set some Headers for CORS
+
+router.options("/auth", function(req, clientResponse){
+    clientResponse.header("Access-Control-Allow-Methods", "GET, OPTIONS");
+    clientResponse.header("Access-Control-Allow-Origin", "*");
+    clientResponse.header("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+    clientResponse.header("Acces-Control-Max-Age", 86400);
+    clientResponse.end();
+});
 
 router.options("/bot", function(req, clientResponse){
     clientResponse.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
