@@ -1,5 +1,5 @@
 <template>
-<div> 
+  <div>
     <md-layout  md-gutter="16" style="margin-top:1%;margin-bottom:1%;">
       <md-layout md-align="end" >
         <md-layout md-row md-flex-xsmall="100" md-flex-small="100" md-flex-medium="33" md-flex="25">
@@ -17,8 +17,7 @@
     </md-layout>
      </md-list>
     </md-layout>
-    
-    </div>
+  </div>
 </template>
 
 <script>
