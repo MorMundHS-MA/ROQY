@@ -31,11 +31,6 @@ export default {
       return this.$store.getters.getbots
     }
   },
-  created () {
-    console.log('created')
-    this.$store.dispatch('getAllBots')
-    // this.$store.dispatch('getTemplates')
-  },
   components: {
     botInfo
   }
