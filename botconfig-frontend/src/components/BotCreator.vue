@@ -51,7 +51,7 @@ export default {
   },
   computed: {
     templates () {
-      return this.$store.state.templates
+      return this.$store.getters.getTemplates
     }
   },
   watch: {

@@ -10,7 +10,7 @@ export default {
     setTimeout(function () {
       axios.get('/bot')
             .then(function (response) {
-              cb(response.data)
+              cb(response.data.extra)
             })
             .catch(function (error) {
               console.log(error)
@@ -50,24 +50,26 @@ export default {
         axios.put('/bot/' + bot.id + '/start', {
           'status': bot.status
         })
-                .then(function (response) {
-                  start(bot)
-                })
-                .catch(function (error) {
-                  console.log(error)
-                })
-      }
-    }, 100)
-  },
-  deleteBot (cb, bot) {
-    axios.delete('/bot/' + bot.id, {
-    })
         .then(function (response) {
-          cb(bot)
+          start(bot)
         })
         .catch(function (error) {
           console.log(error)
         })
+      }
+    }, 100)
+  },
+  deleteBot (cb, bot) {
+    setTimeout(function () {
+      axios.delete('/bot/' + bot.id, {
+      })
+      .then(function (response) {
+        cb(bot)
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+    }, 100)
   },
   renameBot (cb, bot) {
     setTimeout(function () {
@@ -79,6 +81,18 @@ export default {
             .catch(function (error) {
               console.log(error)
             })
+    }, 100)
+  },
+  getBot (cb, bot) {
+    setTimeout(() => {
+      axios.get('/bot/' + bot.id, {
+      })
+      .then(function (response) {
+        cb(bot)
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
     }, 100)
   }
 

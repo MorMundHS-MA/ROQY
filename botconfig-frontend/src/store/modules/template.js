@@ -3,7 +3,24 @@ import * as types from '../mutation-types'
 
 // initial state
 const state = {
-  templates: []
+  templates: [
+    {
+      name: 'Welcome-Bot',
+      image: '',
+      description: ''
+
+    },
+    {
+      name: 'FAQ-Bot',
+      image: '',
+      description: ''
+    },
+    {
+      name: 'Ravenclaw-Bot',
+      image: '',
+      description: ''
+    }
+  ]
 }
 
 const getters = {

@@ -3,23 +3,23 @@ module.exports = {
     bot_config: 'Bot Configuration',
     my_bots: 'Meine Bots',
     bot_template: 'Bot Templates',
-    bot_marketplace: 'Marketplace'
+    bot_marketplace: 'Marktplatz'
   },
   creater: {
     name: 'Name',
-    description: 'Description',
-    question1: 'Do you want to create it?',
-    question2: 'Choose a bot Template'
+    description: 'Beschreibung',
+    question1: 'Wollen Sie den Bot erstellen?',
+    question2: 'Wählen Sie ein Bot-Template aus.'
   },
   info: {
-    rename: 'Rename',
-    delete: 'Delete',
-    setting: 'Setting',
-    new_name: 'New Name',
-    title: 'Do you want to delete this Bot ?',
+    rename: 'Umbennen',
+    delete: 'Löschen',
+    setting: 'Bearbeiten',
+    new_name: 'Neu Name',
+    title: 'Wollen Sie den Bot Löschen?',
     renameTitle: 'Write the new name of your bot !!!',
     contentHtml: 'This bot will be on database deleted, if you confirm it, there is no way to back it up.',
-    ok: 'Delete',
+    ok: 'Löschen',
     cancel: 'Cancel'
   }
 }

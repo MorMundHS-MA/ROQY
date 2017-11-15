@@ -7,7 +7,7 @@ export default {
     setTimeout(function () {
       axios.get('/template')
       .then(function (response) {
-        cb(response)
+        cb(response.data.extra)
       })
       .catch(function (error) {
         console.log(error)

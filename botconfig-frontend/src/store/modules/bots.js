@@ -3,13 +3,16 @@ import * as types from '../mutation-types'
 
 // initial state
 const state = {
-  bots: []
+  bots: [],
+  bot: {}
 }
 
 const getters = {
   getbots () {
-    console.log('get')
     return state.bots
+  },
+  getBot () {
+    return state.bot
   },
   getName (state, bot) {
     return state.bots[state.bots.indexOf(bot)].name
@@ -46,15 +49,17 @@ const actions = {
             () => commit(types.CHANGE_STATE_TO_START, { bot }),
             () => commit(types.CHANGE_STATE_TO_STOP, { bot })
         )
+  },
+  getBot ({commit}, bot) {
+    data.getBot(bot => {
+      commit(types.RECEIVE_BOT, { bot })
+    }, bot)
   }
 }
 
 const mutations = {
   [types.RECEIVE_BOTS] (state, { bots }) {
-    console.log(bots)
-    for (var i = 0; i < bots.extra.length; i++) {
-      state.bots.push(bots.extra[i])
-    }
+    state.bots = bots
   },
   [types.ADD_NEW_BOT] (state, { bot }) {
     state.bots.push(bot)
@@ -70,6 +75,9 @@ const mutations = {
   },
   [types.CHANGE_STATE_TO_STOP] (state, { bot }) {
     state.bots[state.bots.indexOf(bot)].status = 'Stopped'
+  },
+  [types.RECEIVE_BOT] (state, { bot }) {
+    state.bot = bot
   }
 }
 

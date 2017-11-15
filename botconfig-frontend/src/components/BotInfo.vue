@@ -27,7 +27,7 @@
             
             </md-menu-item>
 
-            <router-link tag="md-menu-item" to="/config/bot/" >
+            <router-link tag="md-menu-item"   :to="{ path: '/config/bot', query: { id: botData._id }}">
               <span>Setting</span>
             </router-link>
       
