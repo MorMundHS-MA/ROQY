@@ -3,14 +3,6 @@
   <div>
   <div>
     <md-toolbar class=" md-dense md-raised" style="background-color:#F2F1EF; color: #ff720b;">
-    <div>
-      <md-tabs md-sync-route>
-        <md-tab md-label='My Bots' to='/'></md-tab>
-        <md-tab md-label='Templates' to='/template'></md-tab>
-        <md-tab md-label='Marketplace' to='/marketplace'></md-tab>
-        <md-tab md-label='Login' to=''></md-tab>
-      </md-tabs>
-    </div> 
 
       <h1 class="md-title">Bot Overview</h1>
       
