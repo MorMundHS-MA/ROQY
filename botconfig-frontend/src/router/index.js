@@ -5,6 +5,7 @@ import creator from '@/components/BotCreator'
 import template from '@/components/BotTemplate'
 import marketplace from '@/components/BotMarketplace'
 import config from '@/components/BotConfig'
+import login from '@/components/BotLogin'
 
 Vue.use(Router)
 
@@ -35,6 +36,11 @@ export default new Router({
       path: '/config/bot/',
       name: 'config',
       component: config
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: login
     }
   ]
 })

@@ -18,11 +18,11 @@
               <span >{{botData.status}}</span>
             </md-menu-item>
 
-            <md-menu-item id="#renameconfirm"  @click="openDialog(confirm.ref2)">
+            <md-menu-item id="#renameconfirm"  v-on:click="openDialog(confirm.ref2)">
               <span >Rename</span>
             </md-menu-item>
 
-            <md-menu-item id="confirm" @click="openDialog(confirm.ref1)">
+            <md-menu-item id="confirm" v-on:click="openDialog(confirm.ref1)">
               <span >Delete</span>
             
             </md-menu-item>
@@ -52,8 +52,8 @@
       <md-dialog-content>{{confirm.contentHtml}}</md-dialog-content>
 
       <md-dialog-actions>
-        <md-button class="md-primary" @click="closeDialog(confirm.ref1)"> {{confirm.cancel}}</md-button>
-        <md-button class="md-primary" @click="deleteItem(botData)" >{{confirm.ok}}</md-button>
+        <md-button class="md-primary" v-on:click="closeDialog(confirm.ref1)"> {{confirm.cancel}}</md-button>
+        <md-button class="md-primary" v-on:click="deleteItem(botData)" >{{confirm.ok}}</md-button>
       </md-dialog-actions>
     </md-dialog>
 
@@ -68,8 +68,8 @@
       </md-dialog-content>
 
       <md-dialog-actions>
-        <md-button class="md-primary" @click="closeDialog(confirm.ref2)"> {{confirm.cancel}}</md-button>
-        <md-button class="md-primary" :disabled='!isValid' @click="renameItem(botData)" >{{confirm.rename}}</md-button>
+        <md-button class="md-primary" v-on:click="closeDialog(confirm.ref2)"> {{confirm.cancel}}</md-button>
+        <md-button class="md-primary" :disabled='!isValid' v-on:click="renameItem(botData)" >{{confirm.rename}}</md-button>
       </md-dialog-actions>
     </md-dialog>
   </div>
