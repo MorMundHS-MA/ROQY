@@ -2,17 +2,18 @@
 <template>
   <div>
     <md-toolbar class="md-dense toolbar ">
-    <h1 class="md-title">Bot config</h1>
-    <div id="lg">
+    <img class="logo" src="../assets/ROQY.png" :alt="ROQY">
+    <!--TODO "md-title" dient nur als Platzhalter zwischen Logo und DE|EN.
+        Platzhalter entfernen und Logo + Sprachauswahl richtig einordnen!-->
+    <h1 class="md-title"></h1>
+    <div class="lg">
       <div>
           <span @click="changeLang('de')" class="de" >DE</span>
           <span @click="changeLang('en')">EN</span> 
-        
       </div>
     </div>
     </md-toolbar>
     <md-toolbar class=" md-dense " style="background-color:#F2F1EF; color: #ff720b;">
-
       <div id="route">
           <router-link tag="md-button" to="/bots" active-class="active">{{$lang.translate.header.my_bots}}</router-link>
           <router-link tag="md-button" to="/template" active-class="active">{{$lang.translate.header.bot_template}}</router-link>
@@ -48,13 +49,6 @@ export default {
   color: white;
 
 }
-.md-title{
-  flex:1;
-  text-align:left;
-  margin: 0%;
-  padding:0%;
-}
-
 .md-button {
   color:black;  
   font-weight:600;
@@ -67,10 +61,6 @@ export default {
   margin-left: auto;
   margin-right: auto;
 }
-#lg {
-  margin-right: 1%;
-}
-
 span {
     cursor: pointer;
     font-family: 'Roboto';
@@ -86,6 +76,17 @@ span.de {
 .md-ripple.md-active {
   animation: none !important;
 }
-
-
+.logo {
+  width: 191px;
+  height: 50px;
+}
+.lg {
+  text-align: right;
+}
+.md-title{
+  flex:1;
+  text-align:left;
+  margin: 0%;
+  padding:0%;
+}
 </style>
