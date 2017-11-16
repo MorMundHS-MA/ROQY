@@ -42,6 +42,9 @@ export default new Router({
       name: 'login',
       component: login
     },
-    { path: '/', redirect: '/bots' }
+    {
+      path: '/',
+      redirect: '/bots'
+    }
   ]
 })
