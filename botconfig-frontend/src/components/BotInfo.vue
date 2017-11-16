@@ -8,7 +8,7 @@
         <div class="md-subhead"></h5>{{botData.template}}</h5></div>
         </md-card-header-text>
 
-        <md-switch v-on:click="changeBot(botData)" ></md-switch>
+        <md-switch></md-switch>
 
         <md-menu  md-direction="bottom left">
           <md-button class="md-icon-button" md-menu-trigger>

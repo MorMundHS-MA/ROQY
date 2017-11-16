@@ -13,7 +13,7 @@ Vue.use(vueMaterial)
 
 Vue.material.registerTheme('default', {
   primary: 'orange',
-  accent: 'red'
+  accent: 'black'
 })
 
 Vue.use(lang)

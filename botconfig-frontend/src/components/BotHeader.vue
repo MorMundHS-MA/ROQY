@@ -1,17 +1,17 @@
 
 <template>
   <div>
-    <md-toolbar class="md-dense toolbar ">
-    <img class="logo" src="../assets/ROQY.png" :alt="ROQY">
-    <!--TODO "md-title" dient nur als Platzhalter zwischen Logo und DE|EN.
-        Platzhalter entfernen und Logo + Sprachauswahl richtig einordnen!-->
-    <h1 class="md-title"></h1>
-    <div class="lg">
-      <div>
-          <span @click="changeLang('de')" class="de" >DE</span>
-          <span @click="changeLang('en')">EN</span> 
+    <md-toolbar class="md-dense md-accent">
+      <img class="logo" src="../assets/ROQY.png" :alt="ROQY">
+      <!--TODO "md-title" dient nur als Platzhalter zwischen Logo und DE|EN.
+          Platzhalter entfernen und Logo + Sprachauswahl richtig einordnen!-->
+      <h1 class="md-title"></h1>
+      <div class="lg">
+        <div>
+            <span @click="changeLang('de')" class="de" >DE</span>
+            <span @click="changeLang('en')">EN</span> 
+        </div>
       </div>
-    </div>
     </md-toolbar>
     <md-toolbar class=" md-dense " style="background-color:#F2F1EF; color: #ff720b;">
       <div id="route">
@@ -44,11 +44,6 @@ export default {
 </script>
 
 <style scoped>
-.toolbar {
-  background-color:black;
-  color: white;
-
-}
 .md-button {
   color:black;  
   font-weight:600;
