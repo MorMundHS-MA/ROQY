@@ -16,9 +16,6 @@
           </md-button>
 
           <md-menu-content>
-            <md-menu-item  v-on:click="changeBot(botData)">
-              {{botData.status}}
-            </md-menu-item>
 
             <md-menu-item id="#renameconfirm"  v-on:click="openDialog(confirm.ref2)">
               <span >Rename</span>
