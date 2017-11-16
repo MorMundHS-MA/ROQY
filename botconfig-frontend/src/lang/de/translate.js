@@ -28,5 +28,8 @@ module.exports = {
     cancel: 'Abbrechen',
     running: 'Aktiv',
     stopped: 'Inaktiv'
+  },
+  overview: {
+    create: 'BOT ERSTELLEN'
   }
 }
