@@ -1,27 +1,18 @@
 
 <template>
   <div>
-  <div>
     <md-toolbar class=" md-dense md-raised" style="background-color:#F2F1EF; color: #ff720b;">
-    <div>
-      <md-tabs md-sync-route>
-        <md-tab md-label='My Bots' to='/'></md-tab>
-        <md-tab md-label='Templates' to='/template'></md-tab>
-        <md-tab md-label='Marketplace' to='/marketplace'></md-tab>
-        <md-tab md-label='Login' to=''></md-tab>
-      </md-tabs>
-    </div> 
 
-      <h1 class="md-title">Bot Overview</h1>
+      <h1 class="md-title">{{title}}</h1>
       
       <div>
         <router-link tag="md-button" to="/" >My Bot</router-link>
         <router-link tag="md-button" to="/template" >Bot Template</router-link>
         <router-link tag="md-button" to="/marketplace" >Marketplace</router-link>
+        <router-link tag="md-button" to="/login" >Login</router-link>
       </div>
     </md-toolbar>
     <router-view />
-  </div>
   </div>
 </template>
 
@@ -29,7 +20,12 @@
 import 'vue-material/dist/vue-material.css'
 
 export default {
-  name: 'header'
+  name: 'header',
+  data () {
+    return {
+      title: 'Bot Overview'
+    }
+  }
 }
 </script>
 
