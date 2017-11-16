@@ -15,20 +15,21 @@
 
           <md-menu-content>
             <md-menu-item  v-on:click="changeBot(botData)">
-              <span >{{botData.status}}</span>
+              <span v-if="botData.status === 'Running'">{{$lang.translate.info.running}}</span>
+              <span v-else>{{$lang.translate.info.stopped}}</span>
             </md-menu-item>
 
             <md-menu-item id="#renameconfirm"  v-on:click="openDialog(confirm.ref2)">
-              <span >Rename</span>
+              <span >{{$lang.translate.info.rename}}</span>
             </md-menu-item>
 
             <md-menu-item id="confirm" v-on:click="openDialog(confirm.ref1)">
-              <span >Delete</span>
+              <span >{{$lang.translate.info.delete}}</span>
             
             </md-menu-item>
 
             <router-link tag="md-menu-item" to="/config/bot/" >
-              <span>Setting</span>
+              <span>{{$lang.translate.info.setting}}</span>
             </router-link>
           </md-menu-content>  
           
@@ -58,10 +59,10 @@
 
 
     <md-dialog md-open-from="#renameconfirm" md-close-to="#renameconfirm" ref='dialog2'>
-      <md-dialog-title>{{confirm.renameTitle}}</md-dialog-title>
+      <md-dialog-title>{{$lang.translate.info.renameTitle}}</md-dialog-title>
 
       <md-dialog-content><md-input-container>
-        <label>New Name</label>
+        <label{{$lang.translate.creater.new_name}}</label>
           <md-input v-model="newName" placeholder="New Name"   required></md-input>
         </md-input-container>
       </md-dialog-content>

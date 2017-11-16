@@ -10,10 +10,14 @@ module.exports = {
     name: 'Name',
     description: 'Beschreibung',
     question1: 'Möchten Sie den Bot erstellen?',
-    question2: 'Wähle ein Bot Template aus'
+    question2: 'Wähle ein Bot Template aus',
+    next: 'Weiter',
+    cancel: 'Abbrechen',
+    back: 'Zurück',
+    create: 'Erstellen'
   },
   info: {
-    rename: 'Neuer Name',
+    rename: 'Umbenennen',
     delete: 'Löschen',
     setting: 'Einstellung',
     new_name: 'Neuer Name',
@@ -21,6 +25,8 @@ module.exports = {
     renameTitle: 'Neuer Name vom Bot benötigt!',
     contentHtml: 'Durch das bestätigen kann der Bot nicht mehr wiederhergestellt werden!',
     ok: 'Löschen',
-    cancel: 'Abbrechen'
+    cancel: 'Abbrechen',
+    running: 'Aktiv',
+    stopped: 'Inaktiv'
   }
 }

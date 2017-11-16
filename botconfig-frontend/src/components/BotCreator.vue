@@ -4,15 +4,15 @@
       
           <md-input-container :class="{'md-input-invalid': !botnameValid}" md-clearable>
                   <md-input type="name" v-model="botname" required/>
-                  <label>Name</label>
+                  <label>{{$lang.translate.creater.name}}</label>
           </md-input-container>
           <md-input-container :class="{'md-input-invalid': !descriptionValid}" md-clearable>
                   <md-input type="name" v-model="description" required/>
-                  <label>Description</label>
+                  <label>{{$lang.translate.creater.description}}</label>
           </md-input-container>
             
           <md-input-container>
-            <label for="templates">{{selectTittle}}</label>
+            <label for="templates">{{$lang.translate.creater.question2}}</label>
             <md-select name="option=" id="option="  v-model="item" :selected="item" required>
               <md-option v-for="(option, index) in templates"
                 :key="index"
@@ -26,7 +26,7 @@
     <md-step md-label="Overview" :md-editable="true" :md-continue="true" md-button-continue="Create" >
       <md-content>
           
-        <h6>Do you want to create it ?</h6>
+        <h6>{{$lang.translate.creater.question1}}</h6>
 
       </md-content>
     </md-step>
@@ -45,7 +45,6 @@ export default {
       descriptionValid: false,
       allValid: false,
       item: '',
-      selectTittle: 'Choose a bot Template',
       selected: false
     }
   },
