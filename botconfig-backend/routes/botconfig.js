@@ -143,6 +143,12 @@ router.get("/bot", function (req, clientResponse) {
  *      Authorization - Account ID from LiveEngage to identify the bots this customer owns.
  */
 router.post('/bot', function (req, clientResponse) {
+
+    let auth = req.header("Authorization");
+    if(auth === undefined){
+        responseToClient(clientResponse, 401, true, messages.unauthorized);
+        return;
+    }
     clientResponse.header("Access-Control-Allow-Origin", "*");
     console.log("Create Bots");
     let appId = "";
@@ -190,7 +196,7 @@ router.post('/bot', function (req, clientResponse) {
         json: true
     };
 
-    if (req.header("Authorization") !== undefined){
+    if (userData.test === undefined){
         requestPromise(options)
             .then(res => {
                 appId = res;
@@ -358,6 +364,11 @@ router.get('/bot/public', function(req, clientResponse){
  *      Authorization - Account ID from LiveEngage to identify the bots this customer owns.
  */
 router.delete("/bot/:id", function (req, clientResponse) {
+    let auth = req.header("Authorization");
+    if(auth === undefined){
+        responseToClient(clientResponse, 401, true, messages.unauthorized);
+        return;
+    }
 
     // options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + exres.agentResponse.id;
     clientResponse.header("Access-Control-Allow-Origin", "*");
@@ -369,8 +380,10 @@ router.delete("/bot/:id", function (req, clientResponse) {
             "Ocp-Apim-Subscription-Key": APPKEY
         },
         json: true
-    }
-    if(req.header("Authorization") === undefined){
+    };
+    let userData = req.body;
+    console.log(userData);
+    if(userData.test !== undefined){
         dbcon.deleteFromDB({
             botId:id
         });
