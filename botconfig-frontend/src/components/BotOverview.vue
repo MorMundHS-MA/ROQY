@@ -4,7 +4,7 @@
     <md-layout  md-gutter="13" style="margin-top:1%;margin-bottom:1%;">
       <md-layout md-align="end" >
         <md-layout md-row md-flex-xsmall="100" md-flex-small="100" md-flex-medium="33" md-flex="25">
-          <router-link tag="md-button" to="/newBot" class=" md-warn" >Create new Bot</router-link>
+          <router-link tag="md-button" to="/newBot" class=" md-warn" >{{$lang.translate.overview.create}}</router-link>
         </md-layout>
       </md-layout>
     </md-layout>
