@@ -26,7 +26,7 @@ export default {
   name: 'header',
   data () {
     return {
-      title: 'Bot Overview'
+      title: 'BotOverview'
     }
   }
 }
