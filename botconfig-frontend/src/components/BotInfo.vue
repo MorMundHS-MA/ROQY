@@ -145,17 +145,18 @@ export default {
     max-width: 260px;
     max-height: 360px;
     word-wrap:break-word;
+    margin: 20px;
   }
   .md-card-content{
     word-wrap:break-word;
   }
   .md-title{
     text-align: left;
+    margin: 10px;
   }
   img{
     width: 148px;
     height: 148px;
-    display: inline;
   }
   #imgwrapper{
     text-align: center;
