@@ -1,14 +1,11 @@
 import axios from 'axios'
 
 axios.defaults.baseURL = 'http://141.19.142.7:3000'
-var config = {
-  headers: {'testing': true}
-}
 
 export default {
   getBots (cb) {
     setTimeout(function () {
-      axios.get('/bot')
+      axios.get('/bot', { headers: { Authorization: 'ed2ff1a97f924b8e8a1402e6700a8bf4' } })
             .then(function (response) {
               cb(response.data.extra)
             })
@@ -23,10 +20,17 @@ export default {
         'name': bot.name,
         'description': bot.description,
         'intents': [],
-        config
-      })
+        'test': 'true',
+        'botType': 'faq',
+        'privacy': 'public'
+      },
+        {
+          headers: {
+            Authorization: 'ed2ff1a97f924b8e8a1402e6700a8bf4'
+          }
+        })
       .then(function (response) {
-        bot.id = response.data.extra.botId
+        bot._id = response.data.extra.botId
         cb(bot)
       })
       .catch(function (error) {
@@ -37,7 +41,7 @@ export default {
   changeBotState (bot, start, stop) {
     setTimeout(function () {
       if (bot.status === 'running') {
-        axios.put('/bot/' + bot.id + '/stop', {
+        axios.put('/bot/' + bot._id + '/stop', {
           'status': bot.status
         })
         .then(function (response) {
@@ -47,7 +51,7 @@ export default {
           console.log(error)
         })
       } else {
-        axios.put('/bot/' + bot.id + '/start', {
+        axios.put('/bot/' + bot._id + '/start', {
           'status': bot.status
         })
         .then(function (response) {
@@ -61,7 +65,10 @@ export default {
   },
   deleteBot (cb, bot) {
     setTimeout(function () {
-      axios.delete('/bot/' + bot.id, {
+      axios.delete('/bot/' + bot._id, {
+        headers: {
+          Authorization: 'ed2ff1a97f924b8e8a1402e6700a8bf4'
+        }
       })
       .then(function (response) {
         cb(bot)
@@ -74,7 +81,7 @@ export default {
   renameBot (cb, bot) {
     setTimeout(function () {
       bot[0].name = bot[1].name
-      axios.put('/bot/' + bot[0].id, bot[0])
+      axios.put('/bot/' + bot[0]._id, bot[0], { headers: { Authorization: 'ed2ff1a97f924b8e8a1402e6700a8bf4' } })
             .then(function (response) {
               cb(bot)
             })
@@ -85,7 +92,7 @@ export default {
   },
   getBot (cb, bot) {
     setTimeout(() => {
-      axios.get('/bot/' + bot.id, {
+      axios.get('/bot/' + bot._id, {
       })
       .then(function (response) {
         cb(bot)

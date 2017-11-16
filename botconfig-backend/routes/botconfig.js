@@ -112,11 +112,11 @@ router.get("/auth", function(req, clientResponse){
  */
 router.get("/bot", function (req, clientResponse) {
     let auth = req.header("Authorization");
+    clientResponse.header("Access-Control-Allow-Origin", "*");
     if(auth === undefined){
         responseToClient(clientResponse, 401, true, messages.unauthorized);
         return;
     }
-    clientResponse.header("Access-Control-Allow-Origin", "*");
     clientResponse.setHeader("Content-Type", "text/html; charset=utf-8");
     let bots = dbcon.readFromDB({
     }).then(res => {

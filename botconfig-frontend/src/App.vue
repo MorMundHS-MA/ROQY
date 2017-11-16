@@ -14,7 +14,6 @@ export default {
     'app-header': header
   },
   created () {
-    console.log('created')
     this.$store.dispatch('getAllBots')
     // this.$store.dispatch('getTemplates')
   }
