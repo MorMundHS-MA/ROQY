@@ -330,7 +330,7 @@ router.post('/bot', function (req, clientResponse) {
             );
 
 }else{
-        userData.id =  Date.now();
+        userData.id =  Date.now() + "id";
         userData.status = "test";
         dbcon.writeToDB({
             data: userData

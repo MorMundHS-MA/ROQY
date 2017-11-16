@@ -68,6 +68,9 @@ export default {
       axios.delete('/bot/' + bot._id, {
         headers: {
           Authorization: 'ed2ff1a97f924b8e8a1402e6700a8bf4'
+        },
+        data: {
+          test: ''
         }
       })
       .then(function (response) {
