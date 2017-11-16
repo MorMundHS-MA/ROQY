@@ -6183,6 +6183,10 @@ vue@^2.5.2:
   version "2.5.2"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.5.2.tgz#fd367a87bae7535e47f9dc5c9ec3b496e5feb5a4"
 
+vuejs-localization@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/vuejs-localization/-/vuejs-localization-1.0.2.tgz#b33ea3daf5616c423d65c9873e7cc21795bcc4e2"
+
 vuetify@^0.16.9:
   version "0.16.9"
   resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-0.16.9.tgz#fd61f219e4a40d7afe5e24a803df5658a40b38e4"

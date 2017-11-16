@@ -51,7 +51,7 @@ export default {
   },
   computed: {
     templates () {
-      return this.$store.state.templates
+      return this.$store.getters.getTemplates
     }
   },
   watch: {
@@ -76,7 +76,7 @@ export default {
   },
   methods: {
     create () {
-      this.$store.commit('addNewbot', {
+      this.$store.dispatch('addNewBot', {
         name: this.botname,
         image: '../assets/bot.png',
         status: 'offline',

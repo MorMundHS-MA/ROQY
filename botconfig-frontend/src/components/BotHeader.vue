@@ -9,6 +9,7 @@
         <router-link tag="md-button" to="/" >My Bot</router-link>
         <router-link tag="md-button" to="/template" >Bot Template</router-link>
         <router-link tag="md-button" to="/marketplace" >Marketplace</router-link>
+        <router-link tag="md-button" to="/login" >LogIn</router-link>
       </div>
     </md-toolbar>
     <router-view />

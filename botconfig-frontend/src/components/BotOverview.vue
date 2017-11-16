@@ -28,8 +28,7 @@ import 'vue-material/dist/vue-material.css'
 export default {
   computed: {
     bots () {
-      this.$store.commit('getbots')
-      return this.$store.state.bots
+      return this.$store.getters.getbots
     }
   },
   components: {
