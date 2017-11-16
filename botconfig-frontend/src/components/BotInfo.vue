@@ -8,7 +8,7 @@
         <div class="md-subhead"></h5>{{botData.template}}</h5></div>
         </md-card-header-text>
 
-        <md-switch v-on:click="changeBot(botData)" class="primary"></md-switch>
+        <md-switch v-on:click="changeBot(botData)" ></md-switch>
 
         <md-menu  md-direction="bottom left">
           <md-button class="md-icon-button" md-menu-trigger>
@@ -36,13 +36,12 @@
           </md-menu-content>  
           
         </md-menu>
+        
       </md-card-header>
 
-      <md-card-media>
-        <div>
-         <img src="../assets/bot.png" :alt="botData.name">   
-        </div>
-      </md-card-media>
+      <div id="imgwrapper">
+        <img src="../assets/bot.png" :alt="botData.name">
+      </div>
 
       <md-card-header-text>
         <div class="md-title"><h5>{{botData.name}}</h5></div>
@@ -157,6 +156,9 @@ export default {
     width: 148px;
     height: 148px;
     display: inline;
+  }
+  #imgwrapper{
+    text-align: center;
   }
 
 
