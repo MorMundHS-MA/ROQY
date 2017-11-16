@@ -4,13 +4,14 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import vueMaterial from 'vue-material'
+import flagIcon from 'vue-flag-icon'
 
 import {store} from './store'
 var lang = require('vuejs-localization')
+lang.requireAll(require.context('./lang', true, /\.js$/))
 
 Vue.use(vueMaterial)
-
-lang.requireAll(require.context('./lang', true, /\.js$/))
+Vue.use(flagIcon)
 Vue.use(lang)
 
 Vue.config.productionTip = false
@@ -20,6 +21,7 @@ new Vue({
   el: '#app',
   store,
   router,
+  lang,
   template: '<App/>',
   components: { App }
 })

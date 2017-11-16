@@ -30,7 +30,6 @@
             <router-link tag="md-menu-item" to="/config/bot/" >
               <span>Setting</span>
             </router-link>
-      
           </md-menu-content>  
           
         </md-menu>

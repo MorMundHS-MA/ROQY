@@ -3,7 +3,8 @@ module.exports = {
     bot_config: 'Bot Configuration',
     my_bots: 'My Bots',
     bot_template: 'Bot Templates',
-    bot_marketplace: 'Marketplace'
+    bot_marketplace: 'Marketplace',
+    bot_login: 'Log In'
   },
   creater: {
     name: 'Name',
