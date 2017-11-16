@@ -13,7 +13,7 @@ export default new Router({
   mode: 'history',
   routes: [
     {
-      path: '/',
+      path: '/bots',
       name: 'overview',
       component: overview
     },
@@ -41,6 +41,7 @@ export default new Router({
       path: '/login',
       name: 'login',
       component: login
-    }
+    },
+    { path: '/', redirect: '/bots' }
   ]
 })
