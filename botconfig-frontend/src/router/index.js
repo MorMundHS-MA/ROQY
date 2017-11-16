@@ -5,7 +5,7 @@ import creator from '@/components/BotCreator'
 import template from '@/components/BotTemplate'
 import marketplace from '@/components/BotMarketplace'
 import config from '@/components/BotConfig'
-import logIn from '@/components/Login'
+import login from '@/components/BotLogin'
 
 Vue.use(Router)
 
@@ -13,7 +13,7 @@ export default new Router({
   mode: 'history',
   routes: [
     {
-      path: '/',
+      path: '/bots',
       name: 'overview',
       component: overview
     },
@@ -39,8 +39,12 @@ export default new Router({
     },
     {
       path: '/login',
-      name: 'logIn',
-      component: logIn
+      name: 'login',
+      component: login
+    },
+    {
+      path: '/',
+      redirect: '/bots'
     }
   ]
 })

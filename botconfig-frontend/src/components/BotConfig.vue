@@ -1,5 +1,5 @@
 <template>
-    <h3> config UI</h3>
+    <h3>Config UI</h3>
 </template>
 
 <script>

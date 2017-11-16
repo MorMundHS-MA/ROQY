@@ -3,10 +3,12 @@
   <div>
     <md-card md-with-hover >
       <md-card-header>
+
         <md-card-header-text>
-          <div class="md-title">{{botData.name}}</div>
-          <div class="md-subhead">{{botData.template}}</div>
+        <div class="md-subhead"></h5>{{botData.template}}</h5></div>
         </md-card-header-text>
+
+        <md-switch v-on:click="changeBot(botData)" ></md-switch>
 
         <md-menu  md-direction="bottom left">
           <md-button class="md-icon-button" md-menu-trigger>
@@ -14,15 +16,12 @@
           </md-button>
 
           <md-menu-content>
-            <md-menu-item  v-on:click="changeBot(botData)">
-              <span >{{botData.status}}</span>
-            </md-menu-item>
 
-            <md-menu-item id="#renameconfirm"  @click="openDialog(confirm.ref2)">
+            <md-menu-item id="#renameconfirm"  v-on:click="openDialog(confirm.ref2)">
               <span >Rename</span>
             </md-menu-item>
 
-            <md-menu-item id="confirm" @click="openDialog(confirm.ref1)">
+            <md-menu-item id="confirm" v-on:click="openDialog(confirm.ref1)">
               <span >Delete</span>
             
             </md-menu-item>
@@ -34,11 +33,17 @@
           </md-menu-content>  
           
         </md-menu>
+        
       </md-card-header>
 
-      <md-card-media>
-        <img src="../assets/bot.png" :alt="botData.name" >   
-      </md-card-media>
+      <div id="imgwrapper">
+        <img src="../assets/bot.png" :alt="botData.name">
+      </div>
+
+      <md-card-header-text>
+        <div class="md-title"><h5>{{botData.name}}</h5></div>
+        <div class="md-subhead">{{botData.template}}</div>
+      </md-card-header-text>
 
       <md-card-content>
         {{botData.description}}
@@ -52,8 +57,8 @@
       <md-dialog-content>{{confirm.contentHtml}}</md-dialog-content>
 
       <md-dialog-actions>
-        <md-button class="md-primary" @click="closeDialog(confirm.ref1)"> {{confirm.cancel}}</md-button>
-        <md-button class="md-primary" @click="deleteItem(botData)" >{{confirm.ok}}</md-button>
+        <md-button class="md-primary" v-on:click="closeDialog(confirm.ref1)"> {{confirm.cancel}}</md-button>
+        <md-button class="md-primary" v-on:click="deleteItem(botData)" >{{confirm.ok}}</md-button>
       </md-dialog-actions>
     </md-dialog>
 
@@ -68,8 +73,8 @@
       </md-dialog-content>
 
       <md-dialog-actions>
-        <md-button class="md-primary" @click="closeDialog(confirm.ref2)"> {{confirm.cancel}}</md-button>
-        <md-button class="md-primary" :disabled='!isValid' @click="renameItem(botData)" >{{confirm.rename}}</md-button>
+        <md-button class="md-primary" v-on:click="closeDialog(confirm.ref2)"> {{confirm.cancel}}</md-button>
+        <md-button class="md-primary" :disabled='!isValid' v-on:click="renameItem(botData)" >{{confirm.rename}}</md-button>
       </md-dialog-actions>
     </md-dialog>
   </div>
@@ -86,7 +91,7 @@ export default {
       newName: '',
       confirm: {
         title: 'Do you want to delete this Bot ?',
-        renameTitle: 'Write the new name of your bot !!!',
+        renameTitle: 'Write the new name of your bot !',
         contentHtml: 'This bot will be on database deleted, if you confirm it, there is no way to back it up.',
         ok: 'Delete',
         rename: 'Rename',
@@ -94,7 +99,8 @@ export default {
         ref1: 'dialog1',
         ref2: 'dialog2'
       },
-      isValid: false
+      isValid: false,
+      aktiv: false
     }
   },
   watch: {
@@ -131,16 +137,27 @@ export default {
 
 <style scoped>
   .md-card{
-    min-width: 280px;
-    min-height: 450px;
-    max-width:280px;
-    max-height:450px;
+    min-width: 260px;
+    min-height: 360px;
+    max-width: 260px;
+    max-height: 360px;
     word-wrap:break-word;
+    margin: 20px;
   }
   .md-card-content{
-      word-wrap:break-word;
+    word-wrap:break-word;
   }
   .md-title{
+    text-align: left;
+    margin: 10px;
+  }
+  img{
+    width: 148px;
+    height: 148px;
+  }
+  #imgwrapper{
     text-align: center;
   }
+
+
 </style>

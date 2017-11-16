@@ -1,27 +1,32 @@
+
 <template>
   <div>
-    <md-toolbar class=" md-dense md-raised" style="background-color:#F2F1EF; color: #ff720b;">
-      
+    <md-toolbar class=" md-dense " style="background-color:#F2F1EF; color: #ff720b;">
+      <h1 class="md-title">Bot config</h1>
+    </md-toolbar>
+    <md-toolbar class=" md-dense " style="background-color:#F2F1EF; color: #ff720b;">
 
-      <h1 class="md-title">BOT CONFIG</h1>
-      
-      <div>
-        <router-link tag="md-button" to="/" >My Bot</router-link>
-        <router-link tag="md-button" to="/template" >Bot Template</router-link>
-        <router-link tag="md-button" to="/marketplace" >Marketplace</router-link>
-        <router-link tag="md-button" to="/login" >LogIn</router-link>
+      <div id="route">
+          <router-link tag="md-button" to="/bots" active-class="active">My Bot</router-link>
+          <router-link tag="md-button" to="/template" active-class="active">Bot Template</router-link>
+          <router-link tag="md-button" to="/marketplace" active-class="active">Marketplace</router-link>
+          <router-link tag="md-button" to="/login" active-class="active">Login</router-link>
       </div>
     </md-toolbar>
     <router-view />
   </div>
 </template>
 
-
 <script>
 import 'vue-material/dist/vue-material.css'
 
 export default {
-  name: 'header'
+  name: 'header',
+  data () {
+    return {
+      title: 'BotOverview'
+    }
+  }
 }
 </script>
 
@@ -36,12 +41,12 @@ export default {
 }
 
 .md-button {
-  background-color:#F2F1EF; 
-  border: 2px solid #ff720b; 
-  border-radius: 6px;
+  background-color:#F2F1EF;  
   font-family:'sans-serif';
   font-weight:600;
-  
+}
+.active {
+  border-bottom: 2px solid #ff720b;
 }
 
 </style>

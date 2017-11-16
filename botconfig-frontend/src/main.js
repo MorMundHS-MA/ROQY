@@ -10,6 +10,11 @@ var lang = require('vuejs-localization')
 
 Vue.use(vueMaterial)
 
+Vue.material.registerTheme('default', {
+  primary: 'orange',
+  accent: 'red'
+})
+
 lang.requireAll(require.context('./lang', true, /\.js$/))
 Vue.use(lang)
 
