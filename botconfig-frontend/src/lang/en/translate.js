@@ -31,5 +31,10 @@ module.exports = {
   },
   overview: {
     create: 'CREATE NEW BOT'
+  },
+  login: {
+    tittle: 'Login',
+    username: 'Username',
+    password: 'Password'
   }
 }

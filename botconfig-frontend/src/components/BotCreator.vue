@@ -28,7 +28,7 @@
           
         <h6>{{$lang.translate.creater.question1}}</h6>
 
-      </md-content>
+      </md-content> 
     </md-step>
   
 </md-stepper> 
