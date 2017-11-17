@@ -436,12 +436,17 @@ router.put('/bot/:id', function(req, clientResponse){
         return;
     }
     let id = req.params.id;
-    let write = dbcon.writeToDB({
-        botId:id,
-        data:req.body
-    });
-
-    responseToClient(clientResponse, 200, false, messages.botUpdated);
+    dbcon.readFromDB({
+        botId:id
+    }).then(res => {
+        console.log(res);
+        res.name = req.body.name;
+        let write = dbcon.writeToDB({
+            botId:id,
+            data:res
+        });
+        responseToClient(clientResponse, 200, false, messages.botUpdated, res);
+    })
 
 });
 
