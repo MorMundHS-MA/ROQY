@@ -12,7 +12,7 @@ module.exports = {
       .url(devServer)
       .waitForElementVisible('#app', 5000)
       .assert.elementPresent('.md-title')
-      .assert.containsText('h1', 'BOT CONFIG')
+      .assert.elementPresent('.logo')
       .end()
   }
 }
