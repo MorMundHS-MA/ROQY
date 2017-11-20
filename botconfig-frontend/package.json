@@ -20,6 +20,7 @@
     "vue-material": "^0.8.1",
     "vue-router": "^3.0.1",
     "vuejs-localization": "^1.0.2",
+    "vuelidate": "^0.6.1",
     "vuetify": "^0.16.9",
     "vuex": "^3.0.0"
   },
