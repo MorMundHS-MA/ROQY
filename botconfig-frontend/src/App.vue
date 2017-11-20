@@ -12,8 +12,11 @@ export default {
   name: 'app',
   components: {
     'app-header': header
+  },
+  created () {
+    this.$store.dispatch('getAllBots')
+    // this.$store.dispatch('getTemplates')
   }
-
 }
 </script>
 

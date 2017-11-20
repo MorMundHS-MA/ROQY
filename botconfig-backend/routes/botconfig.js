@@ -22,7 +22,14 @@ const messages = {
     "botHasBeenStarted":"The bot has been successfully started!",
     "botHasBeenStopped":"The bot has been successfully stopped!",
     "generalError":"An error occured.",
-    "botUpdated":"Bot has been updated successfully!"
+    "botUpdated":"Bot has been updated successfully!",
+    "authSuccess":"Authorization was successfull!",
+    "unauthorized":"Sorry, you are not authorized for this action!",
+    "privacyNotAcceptable":"Privacy type is not acceptable!",
+    "noDescrption":"Description must be set!",
+    "noPrivacy":"Privacy must be set!",
+    "noBotType":"BotType must be set!",
+    "botTypeNotAcceptable":"BotType is not acceptable!"
 };
 
 const LUISKEY = "ed2ff1a97f924b8e8a1402e6700a8bf4";
@@ -81,6 +88,21 @@ function existsAgent(id) {
 
 
 /**
+ *
+ */
+router.get("/auth", function(req, clientResponse){
+    // TODO Real authorization --> Liveperson!
+    let username = req.param("username");
+    let password = req.param("password");
+    console.log(username + " " + password);
+    if(username !== undefined && password !== undefined){
+        responseToClient(clientResponse, 200, false, messages.authSuccess, {Authorization:23625217});
+    }else {
+        responseToClient(clientResponse, 401, true, messages.unauthorized);
+    }
+});
+
+/**
  * Get all Bots
  * This endpoint returns all Bots.
  * Parameters:
@@ -89,7 +111,12 @@ function existsAgent(id) {
  *      Authorization - Account ID from LiveEngage to identify the bots this customer owns.
  */
 router.get("/bot", function (req, clientResponse) {
+    let auth = req.header("Authorization");
     clientResponse.header("Access-Control-Allow-Origin", "*");
+    if(auth === undefined){
+        responseToClient(clientResponse, 401, true, messages.unauthorized);
+        return;
+    }
     clientResponse.setHeader("Content-Type", "text/html; charset=utf-8");
     let bots = dbcon.readFromDB({
     }).then(res => {
@@ -116,11 +143,38 @@ router.get("/bot", function (req, clientResponse) {
  *      Authorization - Account ID from LiveEngage to identify the bots this customer owns.
  */
 router.post('/bot', function (req, clientResponse) {
+
+    let auth = req.header("Authorization");
+    if(auth === undefined){
+        responseToClient(clientResponse, 401, true, messages.unauthorized);
+        return;
+    }
     clientResponse.header("Access-Control-Allow-Origin", "*");
     console.log("Create Bots");
     let appId = "";
     let userData = req.body;
-    userData.description = userData.description || "";
+    if(userData.description === undefined){
+        responseToClient(clientResponse, 406, true, messages.noDescrption);
+        return;
+    }
+    if(userData.botType === undefined){
+        responseToClient(clientResponse, 406, true, messages.noBotType);
+        return;
+    }
+    if(userData.botType !== "faq" && userData.botType !== "welcome"){
+        responseToClient(clientResponse, 406, true, messages.botTypeNotAcceptable);
+        return;
+    }
+    if(userData.privacy === undefined){
+        responseToClient(clientResponse, 406, true, messages.noPrivacy);
+        return;
+    }
+    if(userData.privacy !== "public" && userData.privacy !== "private"){
+        responseToClient(clientResponse, 406, true, messages.privacyNotAcceptable);
+        return;
+    }
+
+
     userData.img = userData.img || "../assets/bot.png";
     const initVersion = "1.0";
     let numberOfQuestions = 0;
@@ -142,141 +196,164 @@ router.post('/bot', function (req, clientResponse) {
         json: true
     };
 
-    requestPromise(options)
-        .then(res => {
-            appId = res;
-            options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + appId + "/versions/" + initVersion + "/intents";
-            for (let i = 0; i < userData.intents.length; i++) {
-                let currentIntent = userData.intents[i];
-                options.body = {
-                    name: userData.intents[i].name
-                };
-                requestPromise(options);
-            }
-            return new Promise(ret => {
-                ret();
-            })
-        }).delay(500)
-        .then(res => {
-            options.method = "GET";
-            return new Promise(function (resolve) {
-                let waitUntilIntentsCreatedIntervall = setInterval(() => {
-                    requestPromise(options)
-                        .then(res => {
-                            if (res.length >= userData.intents.length) {
-                                clearInterval(waitUntilIntentsCreatedIntervall);
-                                resolve(res);
-                            }
-                        })
-                }, 500)
-            })
-        }).delay(500)
-        .then(res => {
-            console.log("Intents done");
-            options.method = "POST";
-            options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + appId + "/versions/" + initVersion + "/examples";
-            for (let i = 0; i < userData.intents.length; i++) {
-                let currentIntent = userData.intents[i];
-                options.body = [];
-                for (let j = 0; j < userData.intents.length; j++) {
-                    options.body.push({
-                        "text": currentIntent.questions[j],
-                        "intentName": currentIntent.name,
-                        "entityLabels": []
-                    });
-                    numberOfQuestions++;
-                }
-                requestPromise(options);
-            }
-            return new Promise(ret => {
-                ret();
-            })
-        }).delay(500)
-        .then(res => {
-            console.log("Questions done");
-            options.method = "GET";
-            return new Promise(function (resolve) {
-                let waitUntilIntentsCreatedIntervall = setInterval(() => {
-                    requestPromise(options)
-                        .then(res => {
-                            if (res.length >= numberOfQuestions) {
-                                clearInterval(waitUntilIntentsCreatedIntervall);
-                                options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + appId + "/versions/" + initVersion + "/train";
-                                options.method = "POST";
-                                resolve(res);
-                            }
-                        })
-                }, 500)
-            })
-        }).delay(500)
-        .then(() => requestPromise(options))
-        .then(res => {
-            console.log("Start Training");
-            options.method = "GET";
-            return new Promise(function (resolve) {
-                let waitUntilIntentsCreatedIntervall = setInterval(() => {
-                    requestPromise(options)
-                        .then(res => {
-                            let trainingDone = true;
-                            for (let i = 0; i < res.length && trainingDone; i++) {
-                                if (res[i].details.statusId === 1) {
-                                    // TODO maybe retrain?
-                                    throw new Error(messages.errorWhileCreating, 409);
-                                }
-                                if (res[i].details.statusId !== 0) {
-                                    trainingDone = false;
-                                }
-                            }
-                            if (trainingDone) {
-                                console.log("Training done");
-                                clearInterval(waitUntilIntentsCreatedIntervall);
-                                options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + appId + "/publish";
-                                options.method = "POST";
-                                options.body = {
-                                    "versionId": "1.0",
-                                    "isStaging": false,
-                                    "region": "westus"
-                                }
-                                resolve(res);
-                            }
-                        })
-                }, 500)
-            })
-        })
-        .then(() => requestPromise(options))
-        .then(res => {
-            userData.id = appId;
-            userData.status = "running";
-            if(dbcon.writeToDB({
-                    "data":userData
-                })){
-                console.log("Successfully wrote to DB!");
-            }else{
-                console.log("Error occured while writing into mongodb!");
-            }
-            res.botId = appId;
-            // TODO Start Docker Image with appId from here!
-            responseToClient(clientResponse, 201, false, messages.botHasBeenCreated, res);
-        })
-        .catch(err => {
-                console.log(err.statusCode);
-                console.log(err.message);
-                if (err.statusCode === 400) {
-                    responseToClient(clientResponse, 409, true, messages.botAlreadyExists);
-                } else if (err.statusCode === 409) {
-                    responseToClient(clientResponse, 409, true, messages.errorWhileCreating);
-                    options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + appId
-                    options.method = "DELETE";
+    if (userData.test === undefined){
+        requestPromise(options)
+            .then(res => {
+                appId = res;
+                options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + appId + "/versions/" + initVersion + "/intents";
+                for (let i = 0; i < userData.intents.length; i++) {
+                    let currentIntent = userData.intents[i];
+                    options.body = {
+                        name: userData.intents[i].name
+                    };
                     requestPromise(options);
-                } else {
-                    responseToClient(clientResponse, err.statusCode, err.message);
                 }
-            }
-        );
+                return new Promise(ret => {
+                    ret();
+                })
+            }).delay(500)
+            .then(res => {
+                options.method = "GET";
+                return new Promise(function (resolve) {
+                    let waitUntilIntentsCreatedIntervall = setInterval(() => {
+                        requestPromise(options)
+                            .then(res => {
+                                if (res.length >= userData.intents.length) {
+                                    clearInterval(waitUntilIntentsCreatedIntervall);
+                                    resolve(res);
+                                }
+                            })
+                    }, 500)
+                })
+            }).delay(500)
+            .then(res => {
+                console.log("Intents done");
+                options.method = "POST";
+                options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + appId + "/versions/" + initVersion + "/examples";
+                for (let i = 0; i < userData.intents.length; i++) {
+                    let currentIntent = userData.intents[i];
+                    options.body = [];
+                    for (let j = 0; j < userData.intents.length; j++) {
+                        options.body.push({
+                            "text": currentIntent.questions[j],
+                            "intentName": currentIntent.name,
+                            "entityLabels": []
+                        });
+                        numberOfQuestions++;
+                    }
+                    requestPromise(options);
+                }
+                return new Promise(ret => {
+                    ret();
+                })
+            }).delay(500)
+            .then(res => {
+                console.log("Questions done");
+                options.method = "GET";
+                return new Promise(function (resolve) {
+                    let waitUntilIntentsCreatedIntervall = setInterval(() => {
+                        requestPromise(options)
+                            .then(res => {
+                                if (res.length >= numberOfQuestions) {
+                                    clearInterval(waitUntilIntentsCreatedIntervall);
+                                    options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + appId + "/versions/" + initVersion + "/train";
+                                    options.method = "POST";
+                                    resolve(res);
+                                }
+                            })
+                    }, 500)
+                })
+            }).delay(500)
+            .then(() => requestPromise(options))
+            .then(res => {
+                console.log("Start Training");
+                options.method = "GET";
+                return new Promise(function (resolve) {
+                    let waitUntilIntentsCreatedIntervall = setInterval(() => {
+                        requestPromise(options)
+                            .then(res => {
+                                let trainingDone = true;
+                                for (let i = 0; i < res.length && trainingDone; i++) {
+                                    if (res[i].details.statusId === 1) {
+                                        // TODO maybe retrain?
+                                        throw new Error(messages.errorWhileCreating, 409);
+                                    }
+                                    if (res[i].details.statusId !== 0) {
+                                        trainingDone = false;
+                                    }
+                                }
+                                if (trainingDone) {
+                                    console.log("Training done");
+                                    clearInterval(waitUntilIntentsCreatedIntervall);
+                                    options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + appId + "/publish";
+                                    options.method = "POST";
+                                    options.body = {
+                                        "versionId": "1.0",
+                                        "isStaging": false,
+                                        "region": "westus"
+                                    }
+                                    resolve(res);
+                                }
+                            })
+                    }, 500)
+                })
+            })
+            .then(() => requestPromise(options))
+            .then(res => {
+                userData.id = appId;
+                userData.status = "running";
+                if (dbcon.writeToDB({
+                        "data": userData
+                    })) {
+                    console.log("Successfully wrote to DB!");
+                } else {
+                    console.log("Error occured while writing into mongodb!");
+                }
+                res.botId = appId;
+                // TODO Start Docker Image with appId from here!
+                responseToClient(clientResponse, 201, false, messages.botHasBeenCreated, res);
+            })
+            .catch(err => {
+                    console.log(err.statusCode);
+                    console.log(err.message);
+                    if (err.statusCode === 400) {
+                        responseToClient(clientResponse, 409, true, messages.botAlreadyExists);
+                    } else if (err.statusCode === 409) {
+                        responseToClient(clientResponse, 409, true, messages.errorWhileCreating);
+                        options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + appId
+                        options.method = "DELETE";
+                        requestPromise(options);
+                    } else {
+                        responseToClient(clientResponse, err.statusCode, err.message);
+                    }
+                }
+            );
 
-
+}else{
+        userData.id =  Date.now() + "id";
+        userData.status = "test";
+        dbcon.writeToDB({
+            data: userData
+        });
+        responseToClient(clientResponse, 200, false, "Test Erfolgreich", {botId: userData.id});
+    }
 });
 
+
+router.get('/bot/public', function(req, clientResponse){
+    clientResponse.header("Access-Control-Allow-Origin", "*");
+    clientResponse.setHeader("Content-Type", "text/html; charset=utf-8");
+    let bots = dbcon.readFromDB({
+    }).then(res => {
+        let retval = [];
+        for(let i = 0; i<res.length; i++){
+            if(res[i].privacy === "public"){
+                retval += res[i];
+            }
+        }
+        responseToClient(clientResponse, 200, false, messages.botsFound, retval);
+    });
+});
 /**
  * Delete
  * Deletes the specified Bot.
@@ -287,6 +364,12 @@ router.post('/bot', function (req, clientResponse) {
  *      Authorization - Account ID from LiveEngage to identify the bots this customer owns.
  */
 router.delete("/bot/:id", function (req, clientResponse) {
+    let auth = req.header("Authorization");
+    if(auth === undefined){
+        responseToClient(clientResponse, 401, true, messages.unauthorized);
+        return;
+    }
+
     // options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + exres.agentResponse.id;
     clientResponse.header("Access-Control-Allow-Origin", "*");
     let id = req.params.id;
@@ -297,25 +380,34 @@ router.delete("/bot/:id", function (req, clientResponse) {
             "Ocp-Apim-Subscription-Key": APPKEY
         },
         json: true
-    }
-    existsAgent(id).then(res => {
-        if (!res.exists) {
-            responseToClient(clientResponse, 404, true, messages.botNotFound);
-        }
+    };
+    let userData = req.body;
+    console.log(userData);
+    if(userData.test !== undefined){
+        dbcon.deleteFromDB({
+            botId:id
+        });
+        responseToClient(clientResponse, 200, false, messages.botDeleted);
+    }else {
+        existsAgent(id).then(res => {
+            if (!res.exists) {
+                responseToClient(clientResponse, 404, true, messages.botNotFound);
+            }
 
-        else {
-            requestPromise(options).then(res => {
-                dbcon.deleteFromDB({
-                    botId:id
+            else {
+                requestPromise(options).then(res => {
+                    dbcon.deleteFromDB({
+                        botId: id
+                    });
+                    responseToClient(clientResponse, 200, false, messages.botDeleted);
+                }).catch(err => {
+                    responseToClient(clientResponse, 400, true, err.message);
                 })
-                responseToClient(clientResponse, 200, false, messages.botDeleted);
-            }).catch(err => {
-                responseToClient(clientResponse, 400, true, err.message);
-            })
-        }
-    }).catch(err => {
-        responseToClient(clientResponse, 400, true, err.message);
-    })
+            }
+        }).catch(err => {
+            responseToClient(clientResponse, 400, true, err.message);
+        })
+    }
 });
 
 /**
@@ -338,13 +430,23 @@ router.delete("/bot/:id", function (req, clientResponse) {
  *      Authorization - Account ID from LiveEngage to identify the bots this customer owns.
  */
 router.put('/bot/:id', function(req, clientResponse){
+    let auth = req.header("Authorization");
+    if(auth === undefined){
+        responseToClient(clientResponse, 401, true, messages.unauthorized);
+        return;
+    }
     let id = req.params.id;
-    let write = dbcon.writeToDB({
-        botId:id,
-        data:req.body
-    });
-
-    responseToClient(clientResponse, 200, false, messages.botUpdated);
+    dbcon.readFromDB({
+        botId:id
+    }).then(res => {
+        console.log(res);
+        res.name = req.body.name;
+        let write = dbcon.writeToDB({
+            botId:id,
+            data:res
+        });
+        responseToClient(clientResponse, 200, false, messages.botUpdated, res);
+    })
 
 });
 
@@ -359,12 +461,42 @@ router.put('/bot/:id', function(req, clientResponse){
  *      Authorization - Account ID from LiveEngage to identify the bots this customer owns.
  */
 router.get('/bot/:id/status', function(req, clientResponse){
-     let id = req.params.id;
+    let auth = req.header("Authorization");
+    if(auth === undefined){
+        responseToClient(clientResponse, 401, true, messages.unauthorized);
+        return;
+    }
+    let id = req.params.id;
      dbcon.readFromDB({
          "botId":id
      }).then(bot => {
          responseToClient(clientResponse, 200, false, messages.botsFound, {"status":bot.status});
      });
+});
+
+router.put('/bot/:id/privacy', function(req, clientResponse){
+    let auth = req.header("Authorization");
+    let id = req.params.id;
+    if(auth === undefined){
+        responseToClient(clientResponse, 401, true, messages.unauthorized);
+        return;
+    }
+    let privacy = req.body.privacy;
+    if(privacy === undefined){
+        responseToClient(clientResponse, 406, true, messages.privacyNotAcceptable);
+        return;
+    }
+    dbcon.readFromDB({
+        botId:id
+    }).then(res => {
+        if(res !== {}) {
+            res.privacy = privacy;
+            dbcon.writeToDB({
+                botId: id,
+                data: res
+            })
+        }
+    })
 });
 
 /**
@@ -377,6 +509,11 @@ router.get('/bot/:id/status', function(req, clientResponse){
  *      Authorization - Account ID from LiveEngage to identify the bots this customer owns.
  */
 router.put('/bot/:id/start', function(req, clientResponse){
+    let auth = req.header("Authorization");
+    if(auth === undefined){
+        responseToClient(clientResponse, 401, true, messages.unauthorized);
+        return;
+    }
     clientResponse.header("Access-Control-Allow-Origin", "*");
 
     let id = req.params.id;
@@ -407,6 +544,11 @@ router.put('/bot/:id/start', function(req, clientResponse){
  *      Authorization - Account ID from LiveEngage to identify the bots this customer owns.
  */
 router.put('/bot/:id/stop', function(req, clientResponse){
+    let auth = req.header("Authorization");
+    if(auth === undefined){
+        responseToClient(clientResponse, 401, true, messages.unauthorized);
+        return;
+    }
     clientResponse.header("Access-Control-Allow-Origin", "*");
 
     let id = req.params.id;
@@ -440,6 +582,11 @@ router.put('/bot/:id/stop', function(req, clientResponse){
  *      Authorization - Account ID from LiveEngage to identify the bots this customer owns.
  */
 router.get('/bot/:id/query/:query', function (req, clientResponse) {
+    let auth = req.header("Authorization");
+    if(auth === undefined){
+        responseToClient(clientResponse, 401, true, messages.unauthorized);
+        return;
+    }
     res.header("Access-Control-Allow-Origin", "*");
     const id = req.params.id;
     const query = req.params.query;
@@ -474,6 +621,30 @@ router.get('/bot/:id/query/:query', function (req, clientResponse) {
 
 
 // options. They set some Headers for CORS
+
+router.options("/bot/:id/privacy", function(req, clientResponse){
+    clientResponse.header("Access-Control-Allow-Methods", "PUT, OPTIONS");
+    clientResponse.header("Access-Control-Allow-Origin", "*");
+    clientResponse.header("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+    clientResponse.header("Acces-Control-Max-Age", 86400);
+    clientResponse.end();
+});
+
+router.options("/bot/public", function(req, clientResponse){
+    clientResponse.header("Access-Control-Allow-Methods", "GET, OPTIONS");
+    clientResponse.header("Access-Control-Allow-Origin", "*");
+    clientResponse.header("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+    clientResponse.header("Acces-Control-Max-Age", 86400);
+    clientResponse.end();
+});
+
+router.options("/auth", function(req, clientResponse){
+    clientResponse.header("Access-Control-Allow-Methods", "GET, OPTIONS");
+    clientResponse.header("Access-Control-Allow-Origin", "*");
+    clientResponse.header("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+    clientResponse.header("Acces-Control-Max-Age", 86400);
+    clientResponse.end();
+});
 
 router.options("/bot", function(req, clientResponse){
     clientResponse.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
