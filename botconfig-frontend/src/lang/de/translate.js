@@ -14,7 +14,10 @@ module.exports = {
     next: 'Weiter',
     cancel: 'Abbrechen',
     back: 'Zurück',
-    create: 'Erstellen'
+    create: 'Erstellen',
+    char: 'max. 160 Zeichen',
+    title: 'Erstelle deinen Bot',
+    template: 'Wähle ein Template'
   },
   info: {
     rename: 'Umbenennen',
