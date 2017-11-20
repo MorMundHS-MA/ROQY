@@ -11,16 +11,16 @@
             <input class="cord" placeholder="x" id="posX-{{blockID}}" />
             <input class="cord" placeholder="y" id="posY-{{blockID}}" />
             <button id="mov-{{blockID}}" onclick="move(event)">Move</button>
-            <ul id="list-{{blockID}}"></ul>
+            <div id="list-{{blockID}}"></div>
             <button id="btn-{{blockID}}" onclick="addNewOption(event)">New</button>
         </div>
     </script>
     <script id="option-template" type="x-tmpls-mustache">
-        <li>
+        <div>
             <input class="option" placeholder="Frage" id="inp-{{blockID}}-{{optID}}" />
             <input class="option" placeholder="Antwort" id="inp-{{blockID}}-{{optID}}-B" />
-            <span class="connector disconnected" id="con-{{blockID}}-{{optID}}" onclick="connect(event)">*</span>
-        </li>
+            <span class="connector disconnected out" id="con-{{blockID}}-{{optID}}" onclick="connect(event)">*</span>
+        </div>
     </script>
     <link rel="stylesheet" href="style.css" />
 </head>
@@ -28,6 +28,9 @@
     <div id="wrapper">
         <canvas id="can" width="1700" height="600"></canvas>
     </div>
-    <button onclick="addNewBlock()">New block</button>
+    <div id="toolbar">
+            <button class="toolbar" onclick="addNewBlock()">New block</button>
+            <button class="toolbar" onclick="addNewStart()">Start</button>
+    </div>
 </body>
 </html>
