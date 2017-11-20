@@ -1,5 +1,7 @@
 <template>
-  <md-stepper @completed="create" href="/">
+<md-layout md-align="center">
+ <md-layout md-flex md-column md-flex="70" md-flex-medium="70" md-flex-small="60" md-flex-xsmall="90"  >
+   <md-stepper @completed="create" href="/">
     <md-step md-label="Setting Up" :md-editable="true"  :md-continue="allValid" md-button-continue="Next">
       
           <md-input-container :class="{'md-input-invalid': !botnameValid}" md-clearable>
@@ -32,6 +34,8 @@
     </md-step>
   
 </md-stepper> 
+ </md-layout>
+ </md-layout>
 
 </template>
 
