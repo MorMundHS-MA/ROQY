@@ -30,7 +30,7 @@ export default {
           }
         })
       .then(function (response) {
-        bot._id = response.data.extra.botId
+        bot.id = response.data.extra.botId
         cb(bot)
       })
       .catch(function (error) {
@@ -41,7 +41,7 @@ export default {
   changeBotState (bot, start, stop) {
     setTimeout(function () {
       if (bot.status === 'running') {
-        axios.put('/bot/' + bot._id + '/stop', {
+        axios.put('/bot/' + bot.id + '/stop', {
           'status': bot.status
         })
         .then(function (response) {
@@ -51,7 +51,7 @@ export default {
           console.log(error)
         })
       } else {
-        axios.put('/bot/' + bot._id + '/start', {
+        axios.put('/bot/' + bot.id + '/start', {
           'status': bot.status
         })
         .then(function (response) {
@@ -65,7 +65,8 @@ export default {
   },
   deleteBot (cb, bot) {
     setTimeout(function () {
-      axios.delete('/bot/' + bot._id, {
+      console.log(bot)
+      axios.delete('/bot/' + bot.id, {
         headers: {
           Authorization: 'ed2ff1a97f924b8e8a1402e6700a8bf4'
         },
@@ -84,7 +85,7 @@ export default {
   renameBot (cb, bot) {
     setTimeout(function () {
       bot[0].name = bot[1].name
-      axios.put('/bot/' + bot[0]._id, bot[0], { headers: { Authorization: 'ed2ff1a97f924b8e8a1402e6700a8bf4' } })
+      axios.put('/bot/' + bot[0].id, bot[0], { headers: { Authorization: 'ed2ff1a97f924b8e8a1402e6700a8bf4' } })
             .then(function (response) {
               cb(bot)
             })
@@ -95,7 +96,7 @@ export default {
   },
   getBot (cb, bot) {
     setTimeout(() => {
-      axios.get('/bot/' + bot._id, {
+      axios.get('/bot/' + bot.id, {
       })
       .then(function (response) {
         cb(bot)
