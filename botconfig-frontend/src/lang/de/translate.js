@@ -4,7 +4,7 @@ module.exports = {
     my_bots: 'Meine Bots',
     bot_template: 'Bot Templates',
     bot_marketplace: 'Marktplatz',
-    bot_login: 'Anmelden'
+    bot_login: 'Abmelden'
   },
   creator: {
     name: 'Name',
