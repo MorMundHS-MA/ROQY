@@ -1,15 +1,11 @@
 <template>
-    <h3>Marketplace</h3>
+    <h3>Login</h3>
 </template>
-
 
 <script>
 
-
 </script>
 
-
 <style scoped>
-
 
 </style>

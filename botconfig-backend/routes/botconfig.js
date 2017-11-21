@@ -112,11 +112,11 @@ router.get("/auth", function(req, clientResponse){
  */
 router.get("/bot", function (req, clientResponse) {
     let auth = req.header("Authorization");
+    clientResponse.header("Access-Control-Allow-Origin", "*");
     if(auth === undefined){
         responseToClient(clientResponse, 401, true, messages.unauthorized);
         return;
     }
-    clientResponse.header("Access-Control-Allow-Origin", "*");
     clientResponse.setHeader("Content-Type", "text/html; charset=utf-8");
     let bots = dbcon.readFromDB({
     }).then(res => {
@@ -330,7 +330,7 @@ router.post('/bot', function (req, clientResponse) {
             );
 
 }else{
-        userData.id =  Date.now();
+        userData.id =  Date.now() + "id";
         userData.status = "test";
         dbcon.writeToDB({
             data: userData
@@ -436,12 +436,17 @@ router.put('/bot/:id', function(req, clientResponse){
         return;
     }
     let id = req.params.id;
-    let write = dbcon.writeToDB({
-        botId:id,
-        data:req.body
-    });
-
-    responseToClient(clientResponse, 200, false, messages.botUpdated);
+    dbcon.readFromDB({
+        botId:id
+    }).then(res => {
+        console.log(res);
+        res.name = req.body.name;
+        let write = dbcon.writeToDB({
+            botId:id,
+            data:res
+        });
+        responseToClient(clientResponse, 200, false, messages.botUpdated, res);
+    })
 
 });
 

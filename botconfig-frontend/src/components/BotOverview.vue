@@ -1,24 +1,22 @@
 <template>
-<div> 
-    <md-layout  md-gutter="16" style="margin-top:1%;margin-bottom:1%;">
+  <div>
+
+    <md-layout  md-gutter="13" style="margin-top:1%;margin-bottom:1%;">
       <md-layout md-align="end" >
         <md-layout md-row md-flex-xsmall="100" md-flex-small="100" md-flex-medium="33" md-flex="25">
-          <router-link tag="md-button" to="/newBot" class=" md-warn" >Create new Bot</router-link>
+          <router-link tag="md-button" to="/newBot" class=" md-warn" >{{$lang.translate.overview.create}}</router-link>
         </md-layout>
       </md-layout>
-      
     </md-layout>
 
-     <md-layout class="row" style="margin:20px;" >
-          <md-layout md-flex-xsmall="100" md-flex-small="100" md-flex-medium="33 " md-flex-large="25"  md-flex-xlarge="20"
-            class="row" v-for="(bot, bots) in bots" :key="bot.id">
-            <bot-info :botData="bot"></bot-info>
-          </md-layout>
+    <md-layout class="row" style="margin:20px;" >
+      <md-layout md-flex-xsmall="100" md-flex-small="100" md-flex-medium="33" md-flex-large="25"  md-flex-xlarge="20"
+        class="row" v-for="(bot, bots) in bots" :key="bot.id">
+        <bot-info :botData="bot"></bot-info>
+      </md-layout>
     </md-layout>
-     </md-list>
-    </md-layout>
-    
-    </div>
+
+  </div>
 </template>
 
 <script>
@@ -28,8 +26,7 @@ import 'vue-material/dist/vue-material.css'
 export default {
   computed: {
     bots () {
-      this.$store.commit('getbots')
-      return this.$store.state.bots
+      return this.$store.getters.getbots
     }
   },
   components: {
