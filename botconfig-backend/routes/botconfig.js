@@ -29,7 +29,11 @@ const messages = {
     "noDescrption":"Description must be set!",
     "noPrivacy":"Privacy must be set!",
     "noBotType":"BotType must be set!",
-    "botTypeNotAcceptable":"BotType is not acceptable!"
+    "botTypeNotAcceptable":"BotType is not acceptable!",
+    "privacyUpdated":"Privacy has been updated successfully!",
+    "writeDBError":"Error while writing into DB.",
+    "readDBError":"Error while reading from DB",
+    "deleteDBError":"Error while deleting from DB"
 };
 
 const LUISKEY = "ed2ff1a97f924b8e8a1402e6700a8bf4";
@@ -302,17 +306,21 @@ router.post('/bot', function (req, clientResponse) {
             .then(res => {
                 userData.id = appId;
                 userData.status = "running";
-                if (dbcon.writeToDB({
-                        "data": userData
-                    })) {
-                    console.log("Successfully wrote to DB!");
-                } else {
-                    console.log("Error occured while writing into mongodb!");
-                }
+                dbcon.writeToDB({
+                    "data": userData
+                });
+            }).then(success => {
+            if(success){
                 res.botId = appId;
                 // TODO Start Docker Image with appId from here!
+                console.log("Successfully wrote to DB!");
                 responseToClient(clientResponse, 201, false, messages.botHasBeenCreated, res);
-            })
+            }else{
+                responseToClient(clientResponse, 500, true, messages.writeDBError);
+                console.log("Error occured while writing into mongodb!");
+            }
+
+        })
             .catch(err => {
                     console.log(err.statusCode);
                     console.log(err.message);
@@ -329,13 +337,18 @@ router.post('/bot', function (req, clientResponse) {
                 }
             );
 
-}else{
+    }else{
         userData.id =  Date.now() + "id";
         userData.status = "test";
         dbcon.writeToDB({
             data: userData
+        }).then(success => {
+            if(success){
+                responseToClient(clientResponse, 200, false, "Test Erfolgreich", {botId: userData.id});
+            }else {
+                responseToClient(clientResponse, 500, true, messages.writeDBError);
+            }
         });
-        responseToClient(clientResponse, 200, false, "Test Erfolgreich", {botId: userData.id});
     }
 });
 
@@ -386,8 +399,13 @@ router.delete("/bot/:id", function (req, clientResponse) {
     if(userData.test !== undefined){
         dbcon.deleteFromDB({
             botId:id
+        }).then(success => {
+            if(success){
+                responseToClient(clientResponse, 200, false, messages.botDeleted);
+            }else{
+                responseToClient(clientResponse, 500, true, messages.deleteDBError);
+            }
         });
-        responseToClient(clientResponse, 200, false, messages.botDeleted);
     }else {
         existsAgent(id).then(res => {
             if (!res.exists) {
@@ -398,8 +416,13 @@ router.delete("/bot/:id", function (req, clientResponse) {
                 requestPromise(options).then(res => {
                     dbcon.deleteFromDB({
                         botId: id
+                    }).then(success => {
+                        if(success){
+                            responseToClient(clientResponse, 200, false, messages.botDeleted);
+                        }else{
+                            responseToClient(clientResponse, 500, true, messages.deleteDBError);
+                        }
                     });
-                    responseToClient(clientResponse, 200, false, messages.botDeleted);
                 }).catch(err => {
                     responseToClient(clientResponse, 400, true, err.message);
                 })
@@ -444,8 +467,13 @@ router.put('/bot/:id', function(req, clientResponse){
         let write = dbcon.writeToDB({
             botId:id,
             data:res
+        }).then(success => {
+            if(success){
+                responseToClient(clientResponse, 200, false, messages.botUpdated, res);
+            }else{
+                responseToClient(clientResponse, 500, true, messages.writeDBError);
+            }
         });
-        responseToClient(clientResponse, 200, false, messages.botUpdated, res);
     })
 
 });
@@ -467,11 +495,11 @@ router.get('/bot/:id/status', function(req, clientResponse){
         return;
     }
     let id = req.params.id;
-     dbcon.readFromDB({
-         "botId":id
-     }).then(bot => {
-         responseToClient(clientResponse, 200, false, messages.botsFound, {"status":bot.status});
-     });
+    dbcon.readFromDB({
+        "botId":id
+    }).then(bot => {
+        responseToClient(clientResponse, 200, false, messages.botsFound, {"status":bot.status});
+    });
 });
 
 router.put('/bot/:id/privacy', function(req, clientResponse){
@@ -494,6 +522,12 @@ router.put('/bot/:id/privacy', function(req, clientResponse){
             dbcon.writeToDB({
                 botId: id,
                 data: res
+            }).then(success => {
+                if(success){
+                    responseToClient(clientResponse, 200, false, messages.privacyUpdated);
+                }else{
+                    responseToClient(clientResponse, 500, true, messages.writeDBError);
+                }
             })
         }
     })
@@ -525,9 +559,14 @@ router.put('/bot/:id/start', function(req, clientResponse){
             let write = dbcon.writeToDB({
                 botId:id,
                 data:res
+            }).then(success => {
+                if(success){
+                    responseToClient(clientResponse, 200, false, messages.botHasBeenStarted);
+                }else{
+                    responseToClient(clientResponse, 500, true, messages.writeDBError);
+                }
             });
 
-            responseToClient(clientResponse, 200, false, messages.botHasBeenStarted);
 
         }
 
@@ -560,10 +599,13 @@ router.put('/bot/:id/stop', function(req, clientResponse){
             let write = dbcon.writeToDB({
                 botId:id,
                 data:res
+            }).then(success => {
+                if(success){
+                    responseToClient(clientResponse, 200, false, messages.botHasBeenStopped);
+                }else{
+                    responseToClient(clientResponse, 500, true, messages.writeDBError);
+                }
             });
-
-            responseToClient(clientResponse, 200, false, messages.botHasBeenStopped);
-
         }
 
     });
