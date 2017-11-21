@@ -39,7 +39,7 @@ exports.writeToDB = function (request) {
                 db.collection("botAgents").findOne({ id: request.botId }, function (err, res) {
 
                     //bot not found
-                    if (err) {
+                    if (err || res === null) {
                         console.log('Bot with such a bot ID couldnt be found!');
                         resolve(false);
                     }
@@ -111,7 +111,7 @@ exports.readFromDB = function (request) {
             //If the bot ID is set and intents from a bot are wanted
             else {
                 db.collection("botAgents").findOne({ id: request.botId }, function (err, res) {
-                    if (err) {
+                    if (err || res === null) {
                         console.error('A bot with such an ID can not be found!');
                         //returns an empty JSON-Object
                         resolve({});
@@ -167,7 +167,7 @@ exports.deleteFromDB = function (request) {
             //Look for a bot with the specific botId
             else {
                 return db.collection("botAgents").findOne({ id: request.botId }, function (err, res) {
-                    if (err) {
+                    if (err || res === null) {
                         console.log('A bot with such an ID can not be found!');
                         resolve(false);
                     }
