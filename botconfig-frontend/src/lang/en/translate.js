@@ -6,7 +6,7 @@ module.exports = {
     bot_marketplace: 'Marketplace',
     bot_login: 'Log In'
   },
-  creater: {
+  creator: {
     name: 'Name',
     description: 'Description',
     question1: 'Do you want to create it?',
@@ -17,7 +17,10 @@ module.exports = {
     create: 'Create',
     char: 'max. 160 characters',
     title: 'Create your Bot',
-    template: 'Pick a Template'
+    template: 'Pick a Template',
+    step1: 'Create a Bot',
+    step2: 'Configuration',
+    step3: 'Overview'
   },
   info: {
     rename: 'Rename',

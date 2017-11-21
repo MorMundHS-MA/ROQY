@@ -3,32 +3,43 @@
 <md-layout md-align="center">
  <md-layout md-flex md-column md-flex="70" md-flex-medium="70" md-flex-small="60" md-flex-xsmall="90"  >
    <md-stepper @completed="create" href="/">
-    <md-step md-label="Create a Bot" :md-editable="true"  :md-continue="allValid" md-button-continue="Next">
+    <md-step :md-label="$lang.translate.creator.step1" :md-editable="true"  :md-continue="allValid" md-button-continue="Next">
 
-      <h2 class="inputwrapper" style="text-align:center">{{$lang.translate.creater.title}}</h2>
+      <h2 class="inputwrapper" style="text-align:center">{{$lang.translate.creator.title}}</h2>
       
-      <md-field class="inputwrapper">
-        <div class="textarea"><label><b>{{$lang.translate.creater.name}}</b></label></div>
-        <md-input id="entername" class="marginleft" type="name" v-model="botname" required/>
-      </md-field>
+      <div class="inputwrapper">
+        <div class="textarea"><label><b>{{$lang.translate.creator.name}}</b></label></div>
+        <input id="entername" class="marginleft" type="name" v-model="botname" required/>
+      </div>
       
-      <md-field class="inputwrapper">
-        <div class="textarea"><label><b>{{$lang.translate.creater.description}}</b></label></div>
-        <md-textarea id="enterdescription" class="textarea marginleft" type="name" v-model="description" placeholder="max 160 characters" required></md-textarea>
-      </md-field>
+      <div class="inputwrapper">
+        <div class="textarea"><label><b>{{$lang.translate.creator.description}}</b></label></div>
+        <textarea id="enterdescription" class="textarea marginleft" type="name" v-model="description" :placeholder="$lang.translate.creator.char" required></textarea>
+      </div>
       
-      <md-field class="inputwrapper">
-        <div class="textarea"><label><b>{{$lang.translate.creater.template}}</b></label></div>
-      </md-field>
+      <div class="inputwrapper">
+        <div class="textarea"><label><b>{{$lang.translate.creator.template}}</b></label></div>
+      </div>
+
+
+      <md-input-container>
+            <label for="templates">{{$lang.translate.creator.question2}}</label>
+            <md-select name="option=" id="option="  v-model="item" :selected="item" required>
+              <md-option v-for="(option, index) in templates"
+                :key="index"
+                :value="option.name">
+                {{option.name}}
+              </md-option>
+            </md-select>
+          </md-input-container>
     
     </md-step>
     
-    <md-step md-label="Overview" :md-editable="true" :md-continue="true" md-button-continue="Create" >
-      <md-content>
-          
-        <h3>{{$lang.translate.creater.question1}}</h3>
+    <md-step :md-label="$lang.translate.creator.step3" :md-editable="true" :md-continue="true" md-button-continue="Create" >
 
-      </md-content> 
+      <h3>{{$lang.translate.creator.question1}}</h3>
+      <br><br>
+      
     </md-step>
   
 </md-stepper> 
