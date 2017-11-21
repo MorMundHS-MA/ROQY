@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.1.3/mustache.js"></script>
+    <script src="app.js"></script>
+    <script id="block-template" type="x-tmpls-mustache">
+        <div class="block" id="blk-{{blockID}}">
+            <p>Block id : {{blockID}}</p>
+            <input class="cord" placeholder="x" id="posX-{{blockID}}" />
+            <input class="cord" placeholder="y" id="posY-{{blockID}}" />
+            <button id="mov-{{blockID}}" onclick="move(event)">Move</button>
+            <div id="list-{{blockID}}"></div>
+            <button id="btn-{{blockID}}" onclick="addNewOption(event)">New</button>
+        </div>
+    </script>
+    <script id="option-template" type="x-tmpls-mustache">
+        <div>
+            <input class="option" placeholder="Frage" id="inp-{{blockID}}-{{optID}}" />
+            <input class="option" placeholder="Antwort" id="inp-{{blockID}}-{{optID}}-B" />
+            <span class="connector disconnected out" id="con-{{blockID}}-{{optID}}" onclick="connect(event)">*</span>
+        </div>
+    </script>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <div id="wrapper">
+        <canvas id="can" width="1700" height="600"></canvas>
+    </div>
+    <div id="toolbar">
+            <button class="toolbar" onclick="addNewBlock()">New block</button>
+            <button class="toolbar" onclick="addNewStart()">Start</button>
+    </div>
+</body>
+</html>
