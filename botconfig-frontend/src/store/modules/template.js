@@ -1,24 +1,25 @@
 import data from '../../api/templateData'
 import * as types from '../mutation-types'
+import foto from '../../assets/bot.png'
 
 // initial state
 const state = {
   templates: [
     {
       name: 'Welcome-Bot',
-      image: '',
-      description: ''
+      image: foto,
+      description: 'Ich leite nur weiter...'
 
     },
     {
       name: 'FAQ-Bot',
-      image: '',
-      description: ''
+      image: foto,
+      description: 'Man nennt mich auch LUIS'
     },
     {
       name: 'Ravenclaw-Bot',
-      image: '',
-      description: ''
+      image: foto,
+      description: 'Ich kann einfach alles!'
     }
   ]
 }

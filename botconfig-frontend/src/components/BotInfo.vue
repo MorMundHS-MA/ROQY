@@ -5,7 +5,7 @@
       <md-card-header>
 
         <md-card-header-text>
-        <div class="md-subhead"></h5>{{botData.template}}</h5></div>
+        <div class="md-subhead"></h5>{{botData.botType}}</h5></div>
         </md-card-header-text>
 
         <md-switch></md-switch>
