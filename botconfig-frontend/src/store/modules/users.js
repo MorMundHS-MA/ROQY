@@ -1,47 +1,46 @@
 import data from '../../api/account'
 import * as types from '../mutation-types'
 
-
 const state = {
-    user = {},
-    succesfull: false
+  user: {},
+  successful: false
 }
 
 const getters = {
-    getUser: () => state.user,
-    checkout: () => state.succesfull
+  getUser: () => state.user,
+  checkout: () => state.successful
 }
 
 const mutations = {
-    [types.LOG_IN] (state, account) {
-        state.user = account
-        state.succesfull = true
-    },
-    loginError (state) {
-        state.succesfull = false
-    },
-    resetState (state) {
-        state.user = {},
-        state.succesfull =false
-    }
+  [types.LOG_IN] (state, account) {
+    state.user = account
+    state.successful = true
+  },
+  loginError (state) {
+    state.successful = false
+  },
+  resetState (state) {
+    state.user = {}
+    state.successful = false
+  }
 }
 
 const actions = {
-    logIn ({commit}, accont) {
-        data.logIn(
-            accont,
-            commit(types.LOG_IN, { accont }),
-            commit('loginError')
-        )
-    },
-    reset ({commit}) {
-        commit('resetState')
-    }
+  logIn ({commit}, accont) {
+    data.logIn(
+      accont,
+      commit(types.LOG_IN, { accont }),
+      commit('loginError')
+    )
+  },
+  reset ({commit}) {
+    commit('resetState')
+  }
 }
 
 export default {
-    state,
-    getters,
-    mutations,
-    actions
+  state,
+  getters,
+  mutations,
+  actions
 }
