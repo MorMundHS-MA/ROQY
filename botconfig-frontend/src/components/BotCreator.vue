@@ -22,18 +22,43 @@
         <div class="textarea"><label><b>{{$lang.translate.creator.template}}</b></label></div>
       </div>
 
+      <div class="inputwrapper">
 
-      <md-input-container>
-            <label for="templates">{{$lang.translate.creator.question2}}</label>
-            <md-select name="option=" id="option="  v-model="item" :selected="item" required>
-              <md-option v-for="(option, index) in templates"
-                :key="index"
-                :value="option.name">
-                {{option.name}}
-              </md-option>
-            </md-select>
-          </md-input-container>
-    
+          <md-layout class="row" style="margin:20px;">
+          <md-layout md-flex-xsmall="100" md-flex-small="100" md-flex-medium="33" md-flex-large="25"  md-flex-xlarge="20"
+          class="row" v-for="(template, templates) in templates" :key="template.name">
+          <md-card md-with-hover v-on:click="selectTemplate(template)">
+
+          <div id="imgwrapper">
+            <img src="../assets/bot.png" :alt="template.name">
+          </div>
+          
+          <md-card-header-text>
+            <div class="md-subhead"><b>{{template.name}}</b></div>
+          </md-card-header-text>
+
+          <md-card-content>
+            {{template.description}}
+          </md-card-content>
+  
+          </md-card>
+          </md-layout>
+          </md-layout>
+      
+      </div>
+  
+    <md-input-container>
+      <label for="templates">{{$lang.translate.creator.question2}}</label>
+        <md-select name="option=" id="option="  v-model="item" :selected="item" required>
+        <md-option v-for="(option, index) in templates"
+            :key="index"
+            :value="option.name">
+            {{option.name}}
+        </md-option>
+      </md-select>
+    </md-input-container>
+
+
     </md-step>
     
     <md-step :md-label="$lang.translate.creator.step3" :md-editable="true" :md-continue="true" 
@@ -44,13 +69,16 @@
       
     </md-step>
   
-</md-stepper> 
- </md-layout>
- </md-layout>
+    </md-stepper> 
+  </md-layout>
+</md-layout>
 
 </template>
 
 <script>
+
+import 'vue-material/dist/vue-material.css'
+
 export default {
   data () {
     return {
@@ -107,6 +135,12 @@ export default {
       this.botname = ''
       this.description = ''
       this.item = ''
+    },
+    selectTemplate (template) {
+      this.item = template
+      this.selected = true
+      console.log(template)
+      this.validInput()
     }
   }
 }
@@ -134,5 +168,27 @@ export default {
   }
   .marginleft{
     margin-left: 50px;
+  }
+  .md-card{
+    min-width: 60px;
+    min-height: 160px;
+    max-width: 160px;
+    max-height: 260px;
+    word-wrap:break-word;
+    margin: 20px;
+  }
+  .md-card-content{
+    word-wrap:break-word;
+  }
+  .md-title{
+    text-align: left;
+    margin: 10px;
+  }
+  img{
+    width: 148px;
+    height: 148px;
+  }
+  #imgwrapper{
+    text-align: center;
   }
 </style>
