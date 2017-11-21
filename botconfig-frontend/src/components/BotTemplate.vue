@@ -7,23 +7,17 @@
           <md-card md-with-hover>
             <md-card-header>
 
-              <md-card-header-text>
-              <div class="md-subhead" md-align="center"></h3>{{template.name}}</h3></div>
-              </md-card-header-text>
+              <div id="imgwrapper">
+                <img :src="template.image" :alt="template.name">
+              </div>
+ 
+              <div id="right-text">
+                <div id="template-name"></h3>{{template.name}}</h3></div>
+                <div id="template-title"><h5>{{template.name}}</h5></div>
+                <div id="template-desc">{{template.description}}</div>
+              </div>
               
             </md-card-header>
-
-            <div id="imgwrapper">
-              <img :src="template.image" :alt="template.name">
-            </div>
-
-            <md-card-header-text>
-              <div class="md-title"><h5>{{template.name}}</h5></div>
-            </md-card-header-text>
-
-            <md-card-content>
-              {{template.description}}
-            </md-card-content>
           </md-card>
       </md-layout>
     </md-layout>
@@ -44,25 +38,41 @@ export default {
 
 <style scoped>
   .md-card{
-    min-width: 260px;
-    min-height: 360px;
-    max-width: 260px;
-    max-height: 360px;
+    min-width: 550px;
+    min-height: 235px;
+    max-width: 550px;
+    max-height: 235px;
     word-wrap:break-word;
-    margin: 20px;
+    margin-top: 25px;
+    margin-bottom: 25px;
+    margin-right: 30px;
+    margin-left: 30px;
   }
   .md-card-content{
     word-wrap:break-word;
   }
-  .md-title{
-    text-align: left;
+  #template-title{
+    text-align: ;
     margin: 10px;
   }
   img{
-    width: 148px;
-    height: 148px;
+    width: 150px;
+    height: 150px;
+    float: left;
   }
   #imgwrapper{
-    text-align: center;
+    text-align: left;
+  }
+  #right-text{
+    text-align: right;
+  }
+  #template-name{
+
+  }
+  #template-title{
+
+  }
+  #template-desc{
+
   }
 </style>
