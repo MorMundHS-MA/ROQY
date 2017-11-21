@@ -2,7 +2,7 @@
 <template>
   <div>
     <md-toolbar class="md-dense md-accent">
-      <img class="logo" src="../assets/ROQY.png" :alt="ROQY">
+      <img class="logo" src="../assets/ROQY.png" alt="ROQY">
       <!--TODO "md-title" dient nur als Platzhalter zwischen Logo und DE|EN.
           Platzhalter entfernen und Logo + Sprachauswahl richtig einordnen!-->
       <h1 class="md-title"></h1>
