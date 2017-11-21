@@ -395,7 +395,6 @@ router.delete("/bot/:id", function (req, clientResponse) {
         json: true
     };
     let userData = req.body;
-    console.log(userData);
     if(userData.test !== undefined){
         dbcon.deleteFromDB({
             botId:id
@@ -403,7 +402,7 @@ router.delete("/bot/:id", function (req, clientResponse) {
             if(success){
                 responseToClient(clientResponse, 200, false, messages.botDeleted);
             }else{
-                responseToClient(clientResponse, 500, true, messages.deleteDBError);
+                responseToClient(clientResponse, 404, true, messages.botNotFound);
             }
         });
     }else {
@@ -420,7 +419,7 @@ router.delete("/bot/:id", function (req, clientResponse) {
                         if(success){
                             responseToClient(clientResponse, 200, false, messages.botDeleted);
                         }else{
-                            responseToClient(clientResponse, 500, true, messages.deleteDBError);
+                            responseToClient(clientResponse, 404, true, messages.botNotFound);
                         }
                     });
                 }).catch(err => {
@@ -471,7 +470,7 @@ router.put('/bot/:id', function(req, clientResponse){
             if(success){
                 responseToClient(clientResponse, 200, false, messages.botUpdated, res);
             }else{
-                responseToClient(clientResponse, 500, true, messages.writeDBError);
+                responseToClient(clientResponse, 404, true, messages.botNotFound);
             }
         });
     })
@@ -526,7 +525,7 @@ router.put('/bot/:id/privacy', function(req, clientResponse){
                 if(success){
                     responseToClient(clientResponse, 200, false, messages.privacyUpdated);
                 }else{
-                    responseToClient(clientResponse, 500, true, messages.writeDBError);
+                    responseToClient(clientResponse, 500, true, messages.botNotFound);
                 }
             })
         }
@@ -563,7 +562,7 @@ router.put('/bot/:id/start', function(req, clientResponse){
                 if(success){
                     responseToClient(clientResponse, 200, false, messages.botHasBeenStarted);
                 }else{
-                    responseToClient(clientResponse, 500, true, messages.writeDBError);
+                    responseToClient(clientResponse, 500, true, messages.botNotFound);
                 }
             });
 
@@ -603,7 +602,7 @@ router.put('/bot/:id/stop', function(req, clientResponse){
                 if(success){
                     responseToClient(clientResponse, 200, false, messages.botHasBeenStopped);
                 }else{
-                    responseToClient(clientResponse, 500, true, messages.writeDBError);
+                    responseToClient(clientResponse, 500, true, messages.botNotFound);
                 }
             });
         }
