@@ -16,18 +16,22 @@ const _acconts = [
 
 export default {
   logIn (account, cb, cbError) {
-    setTimeout(() => {
-      if (findUser(account) !== undefined) {
-        cb(account)
-      } else {
-        cbError()
+    return new Promise(
+      (resolve, reject) => {
+        if (findUser(account) !== undefined) {
+          console.log(cb(account))
+          resolve(cb(account))
+        } else {
+          console.log(cbError())
+          reject(cbError())
+        }
       }
-    }, 100)
+    )
   }
 }
 
 function findUser (account) {
-  _acconts.find((e) => {
+  return _acconts.filter((e) => {
     return e.username === account.username && e.password === account.password
   })
 }

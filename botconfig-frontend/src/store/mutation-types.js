@@ -10,3 +10,5 @@ export const RECEIVE_TEMPLATES = 'RECEIVE_TEMPLATES'
 export const ADD_NEW_TEMPALTE = 'ADD_NEW_TEMPLATE'
 
 export const LOG_IN = 'LOG_IN'
+export const LOG_IN_ERROR = 'LOG_IN_ERROR'
+export const RESET_STATE = 'RESET_STATE'
