@@ -59,7 +59,6 @@
       </md-dialog-actions>
     </md-dialog>
 
-
     <md-dialog md-open-from="#renameconfirm" md-close-to="#renameconfirm" ref='dialog2'>
       <md-dialog-title>{{$lang.translate.info.renameTitle}}</md-dialog-title>
 
@@ -74,6 +73,16 @@
         <md-button class="md-primary" :disabled='!isValid' v-on:click="renameItem(botData)">{{$lang.translate.info.rename}}</md-button>
       </md-dialog-actions>
     </md-dialog>
+
+    <md-dialog md-open-from="#marketplace" md-close-to="#marketplace" ref='dialog3'>
+      <md-dialog-title>{{$lang.translate.info.marketplaceInnerBubble}}</md-dialog-title>
+
+      <md-dialog-actions>
+        <md-button class="md-primary" v-on:click="closeDialog(confirm.ref3)">{{$lang.translate.info.cancel}}</md-button>
+        <md-button class="md-primary" v-on:click="uploadBot(botData)">{{$lang.translate.info.upload}}</md-button>
+      </md-dialog-actions>
+    </md-dialog>
+
   </div>
       
 </template>
