@@ -9,7 +9,6 @@ const state = {
       name: 'Welcome-Bot',
       image: foto,
       description: 'Ich leite nur weiter...'
-
     },
     {
       name: 'FAQ-Bot',

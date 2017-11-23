@@ -34,6 +34,8 @@ module.exports = {
     cancel: 'Abbrechen',
     running: 'Aktiv',
     stopped: 'Inaktiv',
+    marketplace: 'Hochladen',
+    marketplaceInnerBubble: 'Soll der Bot hochgelagen werden?',
     upload: 'Auf Marktplatz hochladen'
   },
   overview: {
