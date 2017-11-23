@@ -1,7 +1,7 @@
 <template>
 
 <md-layout md-align="center">
- <md-layout md-flex md-column md-flex="70" md-flex-medium="70" md-flex-small="60" md-flex-xsmall="90"  >
+ <md-layout md-column md-flex="70" md-flex-medium="70" md-flex-small="60" md-flex-xsmall="90"  >
    <md-stepper @completed="create" href="/">
     <md-step :md-label="$lang.translate.creator.step1" :md-editable="true"  :md-continue="allValid" 
     :md-button-continue="$lang.translate.creator.next" :md-button-back="$lang.translate.creator.back">
