@@ -4,9 +4,9 @@ module.exports = {
     my_bots: 'Meine Bots',
     bot_template: 'Bot Templates',
     bot_marketplace: 'Marktplatz',
-    bot_login: 'Anmelden'
+    bot_login: 'Abmelden'
   },
-  creater: {
+  creator: {
     name: 'Name',
     description: 'Beschreibung',
     question1: 'Möchten Sie den Bot erstellen?',
@@ -14,7 +14,13 @@ module.exports = {
     next: 'Weiter',
     cancel: 'Abbrechen',
     back: 'Zurück',
-    create: 'Erstellen'
+    create: 'Erstellen',
+    char: 'max. 160 Zeichen',
+    title: 'Erstelle deinen Bot',
+    template: 'Wähle ein Template',
+    step1: 'Bot erstellen',
+    step2: 'Konfiguration',
+    step3: 'Übersicht'
   },
   info: {
     rename: 'Umbenennen',
@@ -31,5 +37,10 @@ module.exports = {
   },
   overview: {
     create: 'BOT ERSTELLEN'
+  },
+  login: {
+    tittle: 'Anmelden',
+    username: 'Benutzername',
+    password: 'Kenntwort'
   }
 }

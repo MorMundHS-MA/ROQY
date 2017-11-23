@@ -710,7 +710,7 @@ router.options("/auth", function(req, clientResponse){
 });
 
 router.options("/bot", function(req, clientResponse){
-    clientResponse.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+    clientResponse.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT");
     clientResponse.header("Access-Control-Allow-Origin", "*");
     clientResponse.header("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
     clientResponse.header("Acces-Control-Max-Age", 86400);
