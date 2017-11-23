@@ -8,12 +8,18 @@
 
 <script>
 import 'vue-material/dist/vue-material.css'
+import blockConfig from './Config/BlockConfig.vue'
+import blockView from './Config/BlockView.vue'
+import groupView from './Config/GroupView.vue'
 
 export default {
   computed: {
     bot () {
       return this.$store.gettters.getBot
     }
+  },
+  components: {
+    blockConfig, blockView, groupView
   }
 }
 </script>

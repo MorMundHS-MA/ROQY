@@ -6380,6 +6380,10 @@ vuejs-localization@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/vuejs-localization/-/vuejs-localization-1.0.2.tgz#b33ea3daf5616c423d65c9873e7cc21795bcc4e2"
 
+vuelidate@^0.6.1:
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/vuelidate/-/vuelidate-0.6.1.tgz#c52c9fd2b48f974613485e2cf51c182e84bcf747"
+
 vuetify@^0.16.9:
   version "0.16.9"
   resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-0.16.9.tgz#fd61f219e4a40d7afe5e24a803df5658a40b38e4"
