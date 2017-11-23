@@ -119,6 +119,16 @@ export default {
     },
     closeDialog (ref) {
       this.$refs[ref].close()
+    },
+    uploadBot (item) {
+      this.$store.dispatch('addNewMarketplace', {
+        name: this.botname,
+        image: '../assets/bot.png',
+        status: 'offline',
+        description: this.description
+      })
+      this.$router.push('/marketplace')
+      this.closeDialog(this.ref3)
     }
   }
 }
