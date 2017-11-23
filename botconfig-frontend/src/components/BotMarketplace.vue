@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h3>Marketplace</h3>
     <md-layout class='row' style='margin:20px'>
       <md-layout md-flex-xsmall="100" md-flex-small="100" md-flex-medium="33" md-flex-large="25"  md-flex-xlarge="20"
         class="row" v-for="(bot, botsforMarketplace) in botsforMarketplace" :key="bot.id">
