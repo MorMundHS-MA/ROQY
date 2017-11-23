@@ -13,28 +13,29 @@ const getters = {
 const actions = {
   getAllmarketplaceBots ({commit}) {
     data.getmarketplaceBots(marketplaceBots => {
-      commit(types.RECEIVE_marketplaceBots, { marketplaceBots })
+      commit(types.MARKETPLACE_RECEIVEBOT, { marketplaceBots })
     })
   },
   addNewMarketplace ({commit}, marketplace) {
     data.addNewMarketplace(marketplacebot => {
-      commit(types.ADD_NEW_BOT, {marketplace})
+      commit(types.MARKETPLACE_ADDNEWBOT, {marketplace})
     }, marketplace)
   },
   deleteBot ({commit}, marketplace) {
     data.deleteBot(marketplace => {
-      commit(types.DETELE_BOT, { marketplace })
+      commit(types.MARKETPLACE_DELETEBOT, { marketplace })
     }, marketplace)
   }
 }
+
 const mutations = {
-  [types.RECEIVE_marketplaceBots] (state, { marketplaceBots }) {
+  [types.MARKETPLACE_RECEIVEBOT] (state, { marketplaceBots }) {
     state.marketplaceBots = marketplaceBots
   },
-  [types.ADD_NEW_BOT] (state, { marketplace }) {
+  [types.MARKETPLACE_ADDNEWBOT] (state, { marketplace }) {
     state.marketplaceBots.push(marketplace)
   },
-  [types.DETELE_BOT] (state, { marketplace }) {
+  [types.MARKETPLACE_DELETEBOT] (state, { marketplace }) {
     state.marketplaceBots.splice(state.marketplaceBots.indexOf(marketplace), 1)
   }
 }

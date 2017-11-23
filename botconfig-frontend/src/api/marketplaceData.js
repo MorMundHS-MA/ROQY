@@ -1,12 +1,12 @@
 import axios from 'axios'
 
-axios.defaults.baseURL = 'http://141.19.142.7:3000/marketplace'
+axios.defaults.baseURL = 'http://141.19.142.7:3000/'
 
 export default {
 
   getmarketplaceBots (cb) {
     setTimeout(function () {
-      axios.get('/bot', { headers: { Authorization: 'ed2ff1a97f924b8e8a1402e6700a8bf4' } })
+      axios.get('/bot/public')
             .then(function (response) {
               cb(response.data.extra)
             })
