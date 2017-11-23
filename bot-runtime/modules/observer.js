@@ -7,15 +7,32 @@ let observer = {};
 const refreshTime = 5000;
 
 observer.start = function(runtime, botId) {
-    const rtm = runtime;
-
-    setInterval(function(){
+    function toUpdate(){
+        console.log("Update");
         dbConnector.readFromDB({
             botId:botId
         }).then(res => {
             runtime.update(res);
         })
-    }, refreshTime);
+    }
+    const rtm = runtime;
+    if(botId === 0)return;
+    toUpdate();
+    setInterval(toUpdate, refreshTime);
+};
+
+observer.saveBot = function(bot){
+    delete bot._id;
+    if(bot.id === undefined){
+
+    }else{
+        return dbConnector.writeToDB({
+            botId:bot.id,
+            data:bot
+        }).then(success => {
+            console.log("Bot saved " + success);
+        });
+    }
 };
 
 module.exports = observer;
