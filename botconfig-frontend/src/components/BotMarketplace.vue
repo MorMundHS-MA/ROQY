@@ -1,15 +1,53 @@
 <template>
+  <div>
     <h3>Marketplace</h3>
+    <md-layout class='row' style='margin:20px'>
+      <md-layout md-flex-xsmall="100" md-flex-small="100" md-flex-medium="33" md-flex-large="25"  md-flex-xlarge="20"
+        class="row" v-for="(bot, botsforMarketplace) in botsforMarketplace" :key="bot.id">
+        <bot-info :botData="bot"></bot-info>
+      </md-layout>
+    </md-layout>
+  </div>
 </template>
 
 
 <script>
+import botInfo from './BotInfo.vue'
+import 'vue-material/dist/vue-material.css'
 
-
+export default {
+  computed: {
+    botsforMarketplace () {
+      return this.$store.getters.getMarketplaceBots
+    }
+  },
+  components: {
+    botInfo
+  }
+}
 </script>
 
 
 <style scoped>
+  .row {
+    padding: auto;
+    margin-top:0.4%;
+  }
 
-
+  .add {
+    border: dashed 1px orange;
+    text-align:center; 
+    min-width:auto; 
+  }
+  .rounded {
+      border-radius:50%;
+      margin:30%;
+      text-align:center
+  }
+  .md-warn {
+    border: dashed 1px #FF6600;
+    border-radius:40px;
+    font-family:'verdana';
+    font-weight:600;
+  }
 </style>

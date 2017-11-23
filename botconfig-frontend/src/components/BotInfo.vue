@@ -128,7 +128,7 @@ export default {
         description: this.description
       })
       this.$router.push('/marketplace')
-      this.closeDialog(this.ref3)
+      this.closeDialog(this.confirm.ref3)
     }
   }
 }
