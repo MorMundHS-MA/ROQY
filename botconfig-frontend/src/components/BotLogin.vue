@@ -39,20 +39,19 @@ export default {
   }),
   methods: {
     sendUser () {
-      /* if (this.form.username !== '' && this.form.password !== '') {
+      if (this.form.username !== '' && this.form.password !== '') {
         this.$store.dispatch('logIn', {
           username: this.form.username,
           password: this.form.password
         }).then(function (result) {
           console.log(result)
-          this.clearForm()
         }).catch(function (error) {
           console.log(error.message)
         })
+        console.log(this.$store.getters.getUser)
       } else {
         console.log('-1.2')
-      } */
-      this.$router.push('/bots')
+      }
     },
     clearForm () {
       this.form.username = ''
