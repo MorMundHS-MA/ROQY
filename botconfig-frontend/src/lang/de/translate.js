@@ -38,7 +38,7 @@ module.exports = {
   },
   overview: {
     create: 'Bot erstellen',
-    sortby: 'Sortieren',
+    sortby: 'sortieren',
     date: 'Datum',
     type: 'Typ',
     search: 'Suche'
