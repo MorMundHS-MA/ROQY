@@ -2,8 +2,7 @@ import data from '../../api/account'
 import * as types from '../mutation-types'
 
 const state = {
-  user: {},
-  successful: false
+  user: null
 }
 
 const getters = {
@@ -14,27 +13,29 @@ const getters = {
 const mutations = {
   [types.LOG_IN] (state, account) {
     state.user = account
-    state.successful = true
   },
-  loginError (state) {
-    state.successful = false
+  [types.RESET_STATE] (state) {
+    state.user = null
   },
-  resetState (state) {
-    state.user = {}
-    state.successful = false
+  [types.LOG_IN_ERROR] (state) {
+    state.user = null
+    return Promise.reject(new Error('Fehler'))
   }
 }
 
 const actions = {
-  logIn ({commit}, accont) {
+  logIn ({commit}, account) {
     data.logIn(
-      accont,
-      commit(types.LOG_IN, { accont }),
-      commit('loginError')
+      account,
+     (account) => commit(types.LOG_IN, { account }),
+     () => commit(types.LOG_IN_ERROR)
     )
   },
   reset ({commit}) {
-    commit('resetState')
+    commit(types.RESET_STATE)
+  },
+  logOut ({commit}) {
+    commit(types.RESET_STATE)
   }
 }
 

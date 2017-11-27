@@ -6,15 +6,14 @@
       <!--TODO "md-title" dient nur als Platzhalter zwischen Logo und DE|EN.
           Platzhalter entfernen und Logo + Sprachauswahl richtig einordnen!-->
       <h1 class="md-title"></h1>
-      <router-link class="lg" 
-      style="background-color: white "
-      tag="md-button" to="/login" active-class="active">{{$lang.translate.header.bot_login}}</router-link>
+      
       <div class="lg">
         <div>
             <span @click="changeLang('de')" class="de" >DE</span>
             <span @click="changeLang('en')">EN</span> 
         </div>
       </div>
+      <span @click="logout()" style="margin-left:10px">{{$lang.translate.header.bot_login}}</span>
     </md-toolbar>
     <md-toolbar class=" md-dense " style="background-color:#F2F1EF; color: #ff720b;">
       <div id="route">
@@ -41,6 +40,10 @@ export default {
   methods: {
     changeLang (lg) {
       this.$lang.setLang(lg)
+    },
+    logout () {
+      this.$store.dispatch('logOut')
+      this.$router.push('/')
     }
   }
 }
