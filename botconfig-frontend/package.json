@@ -5,14 +5,13 @@
   "author": "MorMund-HSMA <1611229@stud.hs-mannheim.de>",
   "private": true,
   "scripts": {
-    "dev": "node build/dev-server.js",
+    "dev": "yarn lint && node build/dev-server.js",
     "start": "npm run dev",
     "build": "node build/build.js",
     "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
     "e2e": "node test/e2e/runner.js",
     "test": "npm run unit && npm run e2e",
-    "lint": "eslint --ext .js,.vue src test/unit/specs test/e2e/specs",
-    "lintfix": "eslint --fix components/BotConfig.vue components/BotCreator.vue components/BotHeader.vue components/BotInfo.vue"
+    "lint": "eslint --ext .js,.vue src test/unit/specs test/e2e/specs"
   },
   "dependencies": {
     "axios": "^0.17.0",

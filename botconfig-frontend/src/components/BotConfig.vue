@@ -1,8 +1,6 @@
 <template>
   <div class="conf-wrapper">
     <h3>Config UI</h3>
-    <iframe class="conf-frame" src="static/botconfig/index.html">
-    </iframe>
   </div>
 </template>
 

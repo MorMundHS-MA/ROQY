@@ -33,10 +33,15 @@ module.exports = {
     ok: 'Löschen',
     cancel: 'Abbrechen',
     running: 'Aktiv',
-    stopped: 'Inaktiv'
+    stopped: 'Inaktiv',
+    upload: 'Auf Marktplatz hochladen'
   },
   overview: {
-    create: 'BOT ERSTELLEN'
+    create: 'Bot erstellen',
+    sortby: 'Sortieren',
+    date: 'Datum',
+    type: 'Typ',
+    search: 'Suche'
   },
   login: {
     tittle: 'Anmelden',

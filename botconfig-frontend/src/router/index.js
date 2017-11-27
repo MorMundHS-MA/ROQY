@@ -38,13 +38,9 @@ export default new Router({
       component: config
     },
     {
-      path: '/login',
+      path: '/',
       name: 'login',
       component: login
-    },
-    {
-      path: '/',
-      redirect: '/bots'
     }
   ]
 })

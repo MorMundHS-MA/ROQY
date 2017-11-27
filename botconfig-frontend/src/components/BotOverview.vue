@@ -1,21 +1,30 @@
 <template>
   <div>
-
-    <md-layout  md-gutter="13" style="margin-top:1%;margin-bottom:1%;">
-      <md-layout md-align="end" >
-        <md-layout md-row md-flex-xsmall="100" md-flex-small="100" md-flex-medium="33" md-flex="25">
-          <router-link tag="md-button" to="/newBot" class=" md-warn" >{{$lang.translate.overview.create}}</router-link>
-        </md-layout>
-      </md-layout>
-    </md-layout>
-
-    <md-layout class="row" style="margin:20px;" >
-      <md-layout md-flex-xsmall="100" md-flex-small="100" md-flex-medium="33" md-flex-large="25"  md-flex-xlarge="20"
-        class="row" v-for="(bot, bots) in bots" :key="bot.id">
+    <div class="md-toolbar">
+      <span style="margin-right:5px">{{$lang.translate.overview.sortby}}</span>      
+      <md-field class="toolbar-input">
+        <md-select>
+            <md-option value="date">{{$lang.translate.overview.date}}</md-option>
+            <md-option value="type">{{$lang.translate.overview.type}}</md-option>
+        </md-select>
+      </md-field>
+      <md-field class="toolbar-input">
+         <md-input :placeholder="$lang.translate.overview.search" style="padding:5px;"></md-input>
+      </md-field>
+      <router-link tag="md-button" to="/newBot" class="md-raised md-primary">{{$lang.translate.overview.create}}</router-link>
+    </div>
+    <md-layout class="overview-wrapper">
+      <md-layout style="flex:unset;" v-for="(bot, bots) in bots" :key="bot.id">
         <bot-info :botData="bot"></bot-info>
       </md-layout>
+      <md-layout style="flex:unset;">
+        <div class="inline-newbot">
+          <router-link tag="div" to="/newBot" class="inline-newbot-btn">
+            <span class="inline-newbot-plus">+</span>
+          </router-link>
+        </div>
+      </md-layout>
     </md-layout>
-
   </div>
 </template>
 
@@ -35,27 +44,51 @@ export default {
 }
 </script scoped>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped >
-  .row {
-    padding: auto;
-    margin-top:0.4%;
+<style scoped>
+  .overview-wrapper{
+    text-align: center;
+    max-width: 1152px;
+    margin: 0 auto;
   }
 
-  .add {
-    border: dashed 1px orange;
-    text-align:center; 
-    min-width:auto; 
-  }
-  .rounded {
-      border-radius:50%;
-      margin:30%;
-      text-align:center
-  }
   .md-warn {
     border: dashed 1px #FF6600;
     border-radius:40px;
     font-family:'verdana';
     font-weight:600;
   }
+
+  div.md-toolbar {
+    justify-content: flex-end;
+    align-items: center;
+  }
+
+  .toolbar-input {
+    background-color: white;
+    margin: 10px;
+  }
+
+  .inline-newbot {
+     min-width: 260px;
+    min-height: 360px;
+    max-width: 260px;
+    max-height: 360px;
+    display: inline-flex;
+    align-items: center;
+  }
+  
+ .inline-newbot-btn {
+    width: 64px;
+    height: 64px;
+    background-color: orange;
+    border-radius: 32px;
+    margin: auto;
+    cursor: pointer;
+ }
+
+ .inline-newbot-plus {
+    font-size: 40px;
+    line-height: 64px;
+    cursor: pointer;
+ }
 </style>
