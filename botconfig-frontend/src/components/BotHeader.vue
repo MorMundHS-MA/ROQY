@@ -13,7 +13,7 @@
             <span @click="changeLang('en')">EN</span> 
         </div>
       </div>
-      <router-link tag="span" to="/login" style="margin-left:10px">{{$lang.translate.header.bot_login}}</router-link>
+      <span @click="logout()" style="margin-left:10px">{{$lang.translate.header.bot_login}}</span>
     </md-toolbar>
     <md-toolbar class=" md-dense " style="background-color:#F2F1EF; color: #ff720b;">
       <div id="route">
@@ -40,6 +40,10 @@ export default {
   methods: {
     changeLang (lg) {
       this.$lang.setLang(lg)
+    },
+    logout () {
+      this.$store.dispatch('logOut')
+      this.$router.push('/')
     }
   }
 }

@@ -19,11 +19,10 @@ export default {
     return new Promise(
       (resolve, reject) => {
         if (findUser(account) !== undefined) {
-          console.log(cb(account))
-          resolve(cb(account))
+          resolve(account)
+          cb(account)
         } else {
-          console.log(cbError())
-          reject(cbError())
+          reject(new Error('Fehler'))
         }
       }
     )

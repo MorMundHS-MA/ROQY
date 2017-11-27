@@ -13,14 +13,13 @@ const getters = {
 const mutations = {
   [types.LOG_IN] (state, account) {
     state.user = account
-    return state.user
   },
   [types.RESET_STATE] (state) {
     state.user = null
   },
   [types.LOG_IN_ERROR] (state) {
     state.user = null
-    return new Error('fehler')
+    return Promise.reject(new Error('Fehler'))
   }
 }
 
@@ -28,11 +27,14 @@ const actions = {
   logIn ({commit}, account) {
     data.logIn(
       account,
-     () => commit(types.LOG_IN, { account }),
+     (account) => commit(types.LOG_IN, { account }),
      () => commit(types.LOG_IN_ERROR)
     )
   },
   reset ({commit}) {
+    commit(types.RESET_STATE)
+  },
+  logOut ({commit}) {
     commit(types.RESET_STATE)
   }
 }
