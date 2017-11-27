@@ -45,12 +45,10 @@
           <button class="button" @click="createBot()">{{$lang.translate.creator.create}}</button>
         </div>
       </div>
-    </div>
-    
+    </div>    
     </div>
   </div>
   </div>
-
 </div>
 
 
