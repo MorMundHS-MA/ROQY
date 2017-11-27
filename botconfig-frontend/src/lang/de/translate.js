@@ -47,5 +47,8 @@ module.exports = {
     tittle: 'Anmelden',
     username: 'Benutzername',
     password: 'Kenntwort'
+  },
+  template: {
+    delete: 'löschen'
   }
 }

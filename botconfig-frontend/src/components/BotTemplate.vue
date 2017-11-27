@@ -18,21 +18,50 @@
       <md-layout  v-for="(template, templates) in templates" :key="template.name">    
       
       <md-card>
-            <md-card-header>
-              <div id="imgwrapper">
-                <img src="../assets/bot.png" :alt="template.name">
-              </div>
-              <div id="right-text">
-                <div id="template-name"></h3>{{template.name}}</h3></div>
-                <div id="template-title"><h5>{{template.name}}</h5></div>
-                <div id="template-desc">{{template.description}}</div>
-              </div>
-            </md-card-header> 
+        <md-card-header>
+          <div>
+            
+            <md-menu  md-direction="bottom right">
+
+            <md-button style="padding:0;margin-top:-10px;" class="md-icon-button header-menu-btn" md-menu-trigger>
+              <md-icon>more_vert</md-icon>
+            </md-button>
+
+            <md-menu-content>
+              <md-menu-item id="delete" v-on:click="openDialog(confirm.ref1)">
+                <span >{{$lang.translate.template.delete}}</span>
+              </md-menu-item>
+            </md-menu-content>
+
+            </md-menu>
+          </div>
+
+          <div id="imgwrapper">
+            <img src="../assets/bot.png" :alt="template.name">
+          </div>
+            <div id="right-text">
+              <div id="template-name"></h3>{{template.name}}</h3></div>
+              <div id="template-title"><h5>{{template.name}}</h5></div>
+              <div id="template-desc">{{template.description}}</div>
+            </div>
+        </md-card-header> 
       </md-card>
       </md-layout>
-    </md-layout>
+  </md-layout>
+
+  <md-dialog md-open-from="#confirm" md-close-to="#confirm" ref='dialog1'>
+    <md-dialog-title>{{$lang.translate.info.titel}}</md-dialog-title>
+
+    <md-dialog-content>{{$lang.translate.info.contentHtml}}</md-dialog-content>
+
+    <md-dialog-actions>
+      <md-button class="md-primary" v-on:click="closeDialog(confirm.ref1)"> {{$lang.translate.info.cancel}}</md-button>
+      <md-button class="md-primary" v-on:click="deleteItem(botData)" >{{$lang.translate.info.ok}}</md-button>
+    </md-dialog-actions>
+  </md-dialog>
 
   </div>
+
 </template>
 <script>
 import 'vue-material/dist/vue-material.css'
@@ -41,6 +70,18 @@ export default {
   computed: {
     templates () {
       return this.$store.getters.getTemplates
+    }
+  },
+  methods: {
+    deleteItem (item) {
+      this.$store.dispatch('deleteBot', item)
+      this.closeDialog(this.confirm.ref1)
+    },
+    openDialog (ref) {
+      this.$refs[ref].open()
+    },
+    closeDialog (ref) {
+      this.$refs[ref].close()
     }
   }
 }
@@ -53,10 +94,10 @@ export default {
     max-width: 550px;
     max-height: 235px;
     word-wrap:break-word;
-    margin-top: 25px;
-    margin-bottom: 25px;
-    margin-right: 30px;
-    margin-left: 30px;
+    margin-top: 12.5px;
+    margin-bottom: 12.5px;
+    margin-right: 15px;
+    margin-left: 15px;
   }
   .md-card-content{
     word-wrap:break-word;
@@ -98,7 +139,7 @@ export default {
   }
   .overview-wrapper{
     text-align: center;
-    max-width: 2152px;
+    max-width: 1160px;
     margin: 0 auto;
   }
 </style>
