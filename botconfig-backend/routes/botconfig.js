@@ -36,6 +36,9 @@ const messages = {
     "deleteDBError":"Error while deleting from DB"
 };
 
+const maxCallsOnLUIS = 5;
+const waitTimeForLUIS = 1500/maxCallsOnLUIS;
+
 const LUISKEY = "ed2ff1a97f924b8e8a1402e6700a8bf4";
 let LUISClient;
 
@@ -205,17 +208,24 @@ router.post('/bot', function (req, clientResponse) {
             .then(res => {
                 appId = res;
                 options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + appId + "/versions/" + initVersion + "/intents";
-                for (let i = 0; i < userData.intents.length; i++) {
+                let i = 0;
+                let intentInterval = setInterval( () => {
+
+                    if(i >= userData.intents.length){
+                        clearInterval(intentInterval);
+                        return;
+                    }
                     let currentIntent = userData.intents[i];
                     options.body = {
                         name: userData.intents[i].name
                     };
                     requestPromise(options);
-                }
+                    i++;
+                }, waitTimeForLUIS);
                 return new Promise(ret => {
                     ret();
                 })
-            }).delay(500)
+            }).delay(waitTimeForLUIS * userData.intents.length * 1.5)
             .then(res => {
                 options.method = "GET";
                 return new Promise(function (resolve) {
@@ -227,30 +237,35 @@ router.post('/bot', function (req, clientResponse) {
                                     resolve(res);
                                 }
                             })
-                    }, 500)
+                    }, waitTimeForLUIS)
                 })
-            }).delay(500)
+            }).delay(waitTimeForLUIS)
             .then(res => {
                 console.log("Intents done");
                 options.method = "POST";
                 options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + appId + "/versions/" + initVersion + "/examples";
-                for (let i = 0; i < userData.intents.length; i++) {
+                let i = 0;
+                let questionInterval = setInterval(() => {
+                    if(i >= userData.intents.length){
+                        clearInterval(questionInterval);
+                        return;
+                    }
                     let currentIntent = userData.intents[i];
                     options.body = [];
-                    for (let j = 0; j < userData.intents.length; j++) {
+                    for (let j = 0; j < currentIntent.questions.length; j++) {
                         options.body.push({
                             "text": currentIntent.questions[j],
                             "intentName": currentIntent.name,
                             "entityLabels": []
                         });
+
                         numberOfQuestions++;
                     }
                     requestPromise(options);
-                }
-                return new Promise(ret => {
-                    ret();
-                })
-            }).delay(500)
+
+                    i++;
+                }, waitTimeForLUIS);
+            }).delay(waitTimeForLUIS * userData.intents.length *1.5)
             .then(res => {
                 console.log("Questions done");
                 options.method = "GET";
@@ -265,10 +280,11 @@ router.post('/bot', function (req, clientResponse) {
                                     resolve(res);
                                 }
                             })
-                    }, 500)
+                    }, waitTimeForLUIS)
                 })
-            }).delay(500)
+            }).delay(waitTimeForLUIS*4)
             .then(() => requestPromise(options))
+            .delay(waitTimeForLUIS)
             .then(res => {
                 console.log("Start Training");
                 options.method = "GET";
@@ -299,28 +315,33 @@ router.post('/bot', function (req, clientResponse) {
                                     resolve(res);
                                 }
                             })
-                    }, 500)
+                    }, waitTimeForLUIS)
                 })
             })
+            .delay(waitTimeForLUIS)
             .then(() => requestPromise(options))
+            .delay(waitTimeForLUIS)
             .then(res => {
                 userData.id = appId;
                 userData.status = "running";
-                dbcon.writeToDB({
-                    "data": userData
-                });
-            }).then(success => {
-            if(success){
-                res.botId = appId;
-                // TODO Start Docker Image with appId from here!
-                console.log("Successfully wrote to DB!");
-                responseToClient(clientResponse, 201, false, messages.botHasBeenCreated, res);
-            }else{
-                responseToClient(clientResponse, 500, true, messages.writeDBError);
-                console.log("Error occured while writing into mongodb!");
-            }
+            })
+            .then(() =>dbcon.writeToDB({
+                "data": userData
+            }))
+            .then(success => {
+                if(success){
+                    let res = {
+                        botId:appId
+                    };
+                    // TODO Start Docker Image with appId from here!
+                    console.log("Successfully wrote to DB!");
+                    responseToClient(clientResponse, 201, false, messages.botHasBeenCreated, res);
+                }else{
+                    responseToClient(clientResponse, 500, true, messages.writeDBError);
+                    console.log("Error occured while writing into mongodb!");
+                }
 
-        })
+            })
             .catch(err => {
                     console.log(err.statusCode);
                     console.log(err.message);
@@ -343,6 +364,7 @@ router.post('/bot', function (req, clientResponse) {
         dbcon.writeToDB({
             data: userData
         }).then(success => {
+            console.log("Test")
             if(success){
                 responseToClient(clientResponse, 200, false, "Test Erfolgreich", {botId: userData.id});
             }else {
@@ -688,7 +710,7 @@ router.options("/auth", function(req, clientResponse){
 });
 
 router.options("/bot", function(req, clientResponse){
-    clientResponse.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+    clientResponse.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT");
     clientResponse.header("Access-Control-Allow-Origin", "*");
     clientResponse.header("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
     clientResponse.header("Acces-Control-Max-Age", 86400);
