@@ -8,10 +8,10 @@
             <md-option value="type">{{$lang.translate.overview.type}}</md-option>
         </md-select>
       </md-field>
-      <md-field class="toolbar-input">
-         <md-input :placeholder="$lang.translate.overview.search" style="padding:5px;"></md-input>
+      <md-field style="border-radius:16px;" class="toolbar-input">
+         <md-input :placeholder="$lang.translate.overview.search" style="padding:5px;padding-left:20px;"></md-input>
       </md-field>
-      <router-link tag="md-button" to="/newBot" class="md-raised md-primary">{{$lang.translate.overview.create}}</router-link>
+      <router-link style="color:white;border-radius:46px;" tag="md-button" to="/newBot" class="md-raised md-primary">{{$lang.translate.overview.create}}</router-link>
     </div>
     <md-layout class="overview-wrapper">
       <md-layout style="flex:unset;" v-for="(bot, bots) in bots" :key="bot.id">
@@ -90,5 +90,7 @@ export default {
     font-size: 40px;
     line-height: 64px;
     cursor: pointer;
+    color: white;
+    font-weight: 200;
  }
 </style>

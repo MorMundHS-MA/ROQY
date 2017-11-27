@@ -1,11 +1,11 @@
 <template>
   <div class="card-wrapper">
-    <md-card md-with-hover >
+    <md-card style="border-radius:6px;" class="md-with-hover" >
       <div>
         <div class="header">
           <md-switch style="margin: 10px 0 0 0" class="md-primary"></md-switch>
           <md-menu  md-direction="bottom left">
-            <md-button style="padding:0;margin-top:-10px;" class="md-icon-button header-menu-btn" md-menu-trigger>
+            <md-button style="padding:0;margin-top:-10px;color: 7F7F7F" class="md-icon-button header-menu-btn" md-menu-trigger>
               <md-icon>more_vert</md-icon>
             </md-button>
 
