@@ -6,6 +6,7 @@ import template from '@/components/BotTemplate'
 import marketplace from '@/components/BotMarketplace'
 import config from '@/components/BotConfig'
 import login from '@/components/BotLogin'
+import test from '@/components/BotTest'
 
 import {store} from '../store'
 
@@ -45,6 +46,12 @@ export default new Router({
       beforeEnter: requireAuth,
       props: true
 
+    },
+    {
+      path: '/bot/:id/config/test',
+      name: 'test',
+      component: test,
+      props: true
     },
     {
       path: '/',

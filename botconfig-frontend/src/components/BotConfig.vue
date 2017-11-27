@@ -336,6 +336,29 @@ export default {
 .group-wrapper {
   height: 80%;
 }
+#group-wrapper {
+  height: 80%;
+  padding: 25px;
+}
+
+.block-config-wrapper {
+  height: 100%;
+  flex: 1;
+}
+
+.block-wrapper {
+  height: 20%;
+}
+
+#leftside {
+  width: 66%;
+  height: 100%;
+}
+
+.wrapper {
+  background-color: white;
+  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.2), 0px 2px 2px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0, 0.12)
+}
 
 .block-config-wrapper {
   height: 100%;

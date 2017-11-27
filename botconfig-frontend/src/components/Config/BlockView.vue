@@ -29,6 +29,7 @@ export default {
     display: inline-block;
     padding: 7px;
     margin: 5px;
+    cursor: grab;
   }
 
   .rounded {
@@ -40,6 +41,16 @@ export default {
     width: 100%;
     padding: 5px;
     margin: 5px;
+  }
+
+  .default-btn {
+    background-color: orange;
+    border-radius: 16px;
+    padding: 5px;
+    margin: 10px;
+    color: white;
+    font-family: Roboto;
+    font-size: 14px;
   }
 
   .default-btn {

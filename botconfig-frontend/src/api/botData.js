@@ -94,12 +94,12 @@ export default {
             })
     }, 100)
   },
-  getBot (cb, bot) {
+  getBot (cb, id) {
     setTimeout(() => {
-      axios.get('/bot/' + bot.id, {
-      })
+      axios.get('/bot/' + id, { headers: { Authorization: 'ed2ff1a97f924b8e8a1402e6700a8bf4' } })
       .then(function (response) {
-        cb(bot)
+        console.log(response.data.extra)
+        cb(response.data.extra)
       })
       .catch(function (error) {
         console.log(error)

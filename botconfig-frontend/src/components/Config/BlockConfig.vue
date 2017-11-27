@@ -188,8 +188,8 @@ input :focus {
 .default-btn {
   background-color: orange;
   border-radius: 16px;
-  padding: 2% 6%;
-  margin-bottom:1%;
+  padding: 2px 4px;
+  margin-bottom:3px;
   color: white;
   font-family: Roboto;
   font-size: 14px;
