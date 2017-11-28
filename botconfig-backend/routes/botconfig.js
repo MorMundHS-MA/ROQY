@@ -361,7 +361,7 @@ router.get('/bot/public', function(req, clientResponse){
         let retval = [];
         for(let i = 0; i<res.length; i++){
             if(res[i].privacy === "public"){
-                retval += res[i];
+                retval.push(res[i]);
             }
         }
         responseToClient(clientResponse, 200, false, messages.botsFound, retval);
