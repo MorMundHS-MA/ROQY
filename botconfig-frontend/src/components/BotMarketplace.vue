@@ -1,11 +1,15 @@
 <template>
-  <div>
-    <md-layout class='row' style='margin:20px'>
-      <md-layout md-flex-xsmall="100" md-flex-small="100" md-flex-medium="33" md-flex-large="25"  md-flex-xlarge="20"
-        class="row" v-for="(bot, botsforMarketplace) in botsforMarketplace" :key="bot.id">
-        <bot-info :botData="bot"></bot-info>
-      </md-layout>
-    </md-layout>
+  <div id="marketplace">
+    <div class="row">
+      <div v-for="(marketplacebot, botsforMarketplace) in botsforMarketplace" :key="marketplace.name">
+        <div class="bot-wrapper">
+          <div class="card-horizontal">
+          </div>
+          <div class="card-vertical">
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -15,6 +19,7 @@ import botInfo from './BotInfo.vue'
 import 'vue-material/dist/vue-material.css'
 
 export default {
+  name: 'marketplace',
   computed: {
     botsforMarketplace () {
       return this.$store.getters.getMarketplaceBots

@@ -7,6 +7,7 @@ export default {
     setTimeout(function () {
       axios.get('/bot', { headers: { Authorization: 'ed2ff1a97f924b8e8a1402e6700a8bf4' } })
             .then(function (response) {
+              console.log(response.data.extra)
               cb(response.data.extra)
             })
             .catch(function (error) {

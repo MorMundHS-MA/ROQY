@@ -8,8 +8,7 @@ export default {
     setTimeout(function () {
       axios.get('/bot/public')
             .then(function (response) {
-              console.log('teste bot erstellen')
-              console.log(JSON.stringify(response.data))
+              console.log(response)
               cb(response.data.extra)
             })
             .catch(function (error) {
