@@ -20,26 +20,24 @@
       <md-card>
         <md-card-header>
 
-          <div>
-            <md-menu clas md-direction="bottom right">
-
-            <md-button class="md-icon-button header-menu-btn menüpunkt" md-menu-trigger>
-              <md-icon>more_vert</md-icon>
-            </md-button>
-
-            <md-menu-content>
-              <md-menu-item v-on:click="openDialog(ref1)">
-                <span>{{$lang.translate.template.delete}}</span>
-              </md-menu-item>
-            </md-menu-content>
-
-            </md-menu>
-          </div>
-
           <div id="imgwrapper">
             <img src="../assets/bot.png" :alt="template.name">
           </div>
             <div id="right-text">
+
+              <div class="auswahlmenü">
+                <md-menu clas md-direction="bottom right">
+                <md-button class="md-icon-button header-menu-btn" md-menu-trigger>
+                  <md-icon>more_vert</md-icon>
+                </md-button>
+                <md-menu-content>
+                  <md-menu-item v-on:click="openDialog(ref1)">
+                    <span>{{$lang.translate.template.delete}}</span>
+                  </md-menu-item>
+                </md-menu-content>
+                </md-menu>
+              </div>
+
               <div id="template-name">{{template.name}}</div>
               <div id="template-title">{{template.name}}</div>
               <div id="template-desc">{{template.description}}</div>
@@ -145,7 +143,8 @@ export default {
     max-width: 1160px;
     margin: 0 auto;
   }
-  .menüpunkt{
-    
+  .auswahlmenü{
+    text-align: right;
+    float: right;
   }
 </style>
