@@ -2,11 +2,33 @@
  * Created by manuel.schwalm on 14.11.17.
  */
 
+/*
+Features to implement:
+FAQ Bot Conversation
+When should we forward to another bot?
+Function: forwardToAgent()
+Function: assignSkill(String botId)
+
+Questions for Liveperson:
+Wenn ein Bot auf der Oberfläche erstellt wird, wie erhält er beispielsweise einen Skill, dass er für password_recovery
+zuständig ist? Gibt es eine API um Skills & Agents in LiveEngage zu erstellen?
+
+
+
+ */
+
 const Agent = require('node-agent-sdk').Agent;
 const config = require('dotenv').config;
-const FAQBot = require('./GeneralBot');
+const GeneralBot = require('./Bots/GeneralBot');
+const WelcomeBot = require('./Bots/WelcomeBot');
+const FAQBot = require('./Bots/FAQBot');
 const APPKEY = "ed2ff1a97f924b8e8a1402e6700a8bf4";
 const LUISClient = require('luis-node-sdk');
+
+const botType = {
+    welcome:"welcome",
+    faq:"faq"
+}
 
 let agent;
 config();
@@ -21,7 +43,8 @@ const state = {
 
 
 let runtime = {};
-let bot = {};
+let bot = undefined;
+
 /*let bot = {
     "name":"botTester1ForLUIS",
     "description":"I am a bot Test",
@@ -136,12 +159,26 @@ runtime.start = function (botId) {
         verbose:true
     });
     observer.start(runtime, botId);
+
+};
+
+runtime.init = function(botId) {
     log("Runtime mit der Bot ID " + botId + " wurde gestartet!");
-    agent = new FAQBot({
-        accountId:process.env.LP_ACCOUNT,
-        username: process.env.LP_USER,
-        password: process.env.LP_PASS
-    }, runtime);
+    const credentials = {
+        accountId:23625217,
+        username: bot.name,
+        password: "ROFLTEST"
+    };
+    console.log(credentials);
+    if(bot.botType === botType.welcome){
+        agent = new WelcomeBot(credentials, runtime, bot.originIntentState.answer);
+    }else if(bot.botType === botType.faq){
+        agent = new FAQBot(credentials, runtime, bot.originIntentState.answer);
+    }else{
+        agent = new GeneralBot(credentials, runtime, bot.originIntentState.answer);
+        console.error("Warning: General Bot is not for Productivity!");
+    }
+
     agent.on('GeneralBot.ContentEvnet',(contentEvent)=>{
         let conv = bot.conversations[contentEvent.dialogId];
         if(conv === undefined){
@@ -153,11 +190,13 @@ runtime.start = function (botId) {
             return;
         }
         let response = "Sorry, I could not understand you :(.";
-        queryResponse(contentEvent.message, conv).then(nextIntent => {
+        agent.queryResponse(contentEvent.message, conv).then(nextIntent => {
             if(nextIntent !== undefined){
                 conv.intentState = nextIntent;
                 response = nextIntent.answer;
             }
+            if(nextIntent.forwardTo !== undefined)
+                agent.assignSkill(nextIntent.forwardTo, contentEvent.dialogId);
             agent.publishEvent({
                 dialogId:contentEvent.dialogId,
                 event: {
@@ -169,56 +208,37 @@ runtime.start = function (botId) {
         });
 
     });
-};
-
-function queryResponse(message, conv){
-
-    return new Promise(function(resolve){
-        runtime.LUISClient.predict(message, {
-            onSuccess: function(response){
-                let avialableIntents = [];
-
-                for(let i = 0; i<conv.intentState.nextIntents.length; i++){
-                    for(let j = 0; j<conv.config.intents.length; j++){
-                        if(conv.config.intents[j].id === conv.intentState.nextIntents[i]){
-                            avialableIntents.push(conv.config.intents[j]);
-                        }
-                    }
-                }
-
-                let topIntent = {
-                    score:0
-                };
-                for(let i = 0; i<avialableIntents.length; i++){
-                    for(let j = 0; j<response.intents.length; j++){
-                        if(avialableIntents[i].name === response.intents[j].intent && response.intents[j].score > topIntent.score && response.intents[j].score >= 0.1){
-                            topIntent = avialableIntents[i];
-                            topIntent.score = response.intents[j].score;
-                        }
-                    }
-                }
-                if(response.topScoringIntent === 'None'){
-                    resolve(undefined);
-                }else{
-                    delete topIntent.score;
-                    resolve(topIntent);
-                }
-            },
-            onFailure: function(response)
-            {
-                console.log(response);
-            }
-        })
-
-    });
 }
 
 runtime.update = function (updatedBot) {
+    if(bot === undefined){
+        bot = updatedBot;
+        runtime.init(updatedBot.id);
+    }
     if(bot.conversations !== undefined)
     updatedBot.conversations = bot.conversations;
     bot = updatedBot;
     observer.saveBot(bot);
 };
+
+runtime.checkSyntax = function (bot) {
+    let initState = bot.id && bot.status && bot.intents && bot.originIntentState;
+    if(bot.status === undefined){
+        observer.error("Bot status must be set!", bot.id);
+    }
+    else if(bot.status !== "running" || bot.status !== "stopped" || bot.status !== "error"){
+        observer.error("Bot status is invalid: " + bot.status, bot.id);
+    }
+    else if(bot.intents === undefined){
+        observer.error("Intents must be set, or at least an array!", bot.id);
+    }
+    else if(bot.status === undefined){
+        observer.error("Bot status must be set!", bot.id);
+    }
+
+
+}
+
 
 function log(out, err, resp){
     err = err || "";

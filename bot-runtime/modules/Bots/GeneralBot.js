@@ -13,18 +13,49 @@
  */
 
 const Agent = require('node-agent-sdk').Agent;
+const dbConnector = require('../dbconnector');
 let runtime;
-
 class GeneralBot extends Agent {
-    constructor(conf, rtm) {
-        runtime = rtm;
+
+    constructor(conf, rtm, welcome) {
         super(conf);
+        runtime = rtm;
         this.conf = conf;
-        this.init();
+        this.init(welcome);
         this.CONTENT_NOTIFICATION = 'GeneralBot.ContentEvnet';
     }
 
-    init() {
+
+    assignSkill(botId, convId){
+        dbConnector.readFromDB({
+            botId:botId
+        }).then(res => {
+            console.log("Forward to another bot");
+            console.log(JSON.stringify(res));
+            console.log(res.skill);
+            this.updateConversationField({
+                conversationId: convId,
+                conversationField: [
+                    {
+                        field: 'Skill',
+                        type: 'UPDATE',
+                        skill: res.skill
+                    },
+                    {
+                        field: 'ParticipantsChange',
+                        type: 'REMOVE',
+                        role: 'ASSIGNED_AGENT',
+                        userId: this.__oldAgentId
+                    }]
+            }, function(err, res){
+                console.log(err);
+                console.log(res);
+            })
+        })
+
+    }
+
+    init(welcome) {
         let openConvs = {};
         console.log("init");
         this.on('connected', msg => {
@@ -72,7 +103,7 @@ class GeneralBot extends Agent {
                             event: {
                                 type: 'ContentEvent',
                                 contentType: 'text/plain',
-                                message: `HI! I'm a Welcome Bot, how may I help you? I'm specialized for questions about program from sky and about weather.`
+                                message: welcome
                             }
                         });
                     });
@@ -124,7 +155,10 @@ class GeneralBot extends Agent {
         // Tracing
         //this.on('notification', msg => console.log('got message', msg));
         this.on('error', err => console.log('got an error', err));
-        this.on('closed', data => console.log('socket closed', data));
+        this.on('closed', data => {
+            console.log('socket closed', data)
+            this.reconnect();
+        });
     }
 }
 

@@ -35,4 +35,27 @@ observer.saveBot = function(bot){
     }
 };
 
+observer.error = function(message, botId){
+    dbConnector.readFromDB({
+        botId:botId
+    }).then(res => {
+        res.status = "error";
+        res.errorMessage = message;
+        dbConnector.writeToDB({
+            botId:botId,
+            data:res
+        });
+    })
+}
+
+observer.getSkill = function(botId){
+    return new Promise(resolve => {
+        dbConnector.readFromDB({
+            botId:botId
+        }).then(res => {
+            resolve(res.skill);
+        })
+    })
+}
+
 module.exports = observer;
