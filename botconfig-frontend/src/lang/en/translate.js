@@ -4,9 +4,9 @@ module.exports = {
     my_bots: 'My Bots',
     bot_template: 'Bot Templates',
     bot_marketplace: 'Marketplace',
-    bot_login: 'Log In'
+    bot_login: 'Log Out'
   },
-  creater: {
+  creator: {
     name: 'Name',
     description: 'Description',
     question1: 'Do you want to create it?',
@@ -14,7 +14,13 @@ module.exports = {
     next: 'Next',
     cancel: 'Cancel',
     back: 'Back',
-    create: 'Create'
+    create: 'Create',
+    char: 'max. 160 characters',
+    title: 'Create your Bot',
+    template: 'Pick a Template',
+    step1: 'Create a Bot',
+    step2: 'Configuration',
+    step3: 'Overview'
   },
   info: {
     rename: 'Rename',
@@ -27,9 +33,19 @@ module.exports = {
     ok: 'Delete',
     cancel: 'Cancel',
     running: 'Active',
-    stopped: 'Inactive'
+    stopped: 'Inactive',
+    upload: 'Upload to marketplace'
   },
   overview: {
-    create: 'CREATE NEW BOT'
+    create: 'create new bot',
+    sortby: 'sort by',
+    date: 'Date',
+    type: 'Type',
+    search: 'Search'
+  },
+  login: {
+    tittle: 'Login',
+    username: 'Username',
+    password: 'Password'
   }
 }

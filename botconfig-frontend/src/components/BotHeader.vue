@@ -1,24 +1,25 @@
 
 <template>
   <div>
-    <md-toolbar class="md-dense md-accent">
-      <img class="logo" src="../assets/ROQY.png" :alt="ROQY">
+    <md-toolbar class="md-dense" style="color: white; background-color: #414040;">
+      <img class="logo" src="../assets/ROQY.png" alt="ROQY">
       <!--TODO "md-title" dient nur als Platzhalter zwischen Logo und DE|EN.
           Platzhalter entfernen und Logo + Sprachauswahl richtig einordnen!-->
       <h1 class="md-title"></h1>
+      
       <div class="lg">
         <div>
             <span @click="changeLang('de')" class="de" >DE</span>
             <span @click="changeLang('en')">EN</span> 
         </div>
       </div>
+      <span @click="logout()" style="margin-left:10px">{{$lang.translate.header.bot_login}}</span>
     </md-toolbar>
-    <md-toolbar class=" md-dense " style="background-color:#F2F1EF; color: #ff720b;">
+    <md-toolbar class=" md-dense " style="background-color:white; color: #ff720b;">
       <div id="route">
           <router-link tag="md-button" to="/bots" active-class="active">{{$lang.translate.header.my_bots}}</router-link>
           <router-link tag="md-button" to="/template" active-class="active">{{$lang.translate.header.bot_template}}</router-link>
           <router-link tag="md-button" to="/marketplace" active-class="active">{{$lang.translate.header.bot_marketplace}}</router-link>
-          <router-link tag="md-button" to="/login" active-class="active">{{$lang.translate.header.bot_login}}</router-link>
       </div>
     </md-toolbar>
     <router-view />
@@ -38,12 +39,17 @@ export default {
   methods: {
     changeLang (lg) {
       this.$lang.setLang(lg)
+    },
+    logout () {
+      this.$store.dispatch('logOut')
+      this.$router.push('/')
     }
   }
 }
 </script>
 
 <style scoped>
+
 .md-button {
   color:black;  
   font-weight:600;
@@ -72,8 +78,7 @@ span.de {
   animation: none !important;
 }
 .logo {
-  width: 191px;
-  height: 50px;
+  height: 35px;
 }
 .lg {
   text-align: right;

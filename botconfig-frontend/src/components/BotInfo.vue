@@ -1,52 +1,42 @@
 <template>
+  <div class="card-wrapper">
+    <md-card style="border-radius:6px;" class="md-with-hover" >
+      <div>
+        <div class="header">
+          <md-switch style="margin: 10px 0 0 0" class="md-primary"></md-switch>
+          <md-menu  md-direction="bottom left">
+            <md-button style="padding:0;margin-top:-10px;color: 7F7F7F" class="md-icon-button header-menu-btn" md-menu-trigger>
+              <md-icon>more_vert</md-icon>
+            </md-button>
 
-  <div>
-    <md-card md-with-hover >
-      <md-card-header>
-
-        <md-card-header-text>
-        <div class="md-subhead"></h5>{{botData.template}}</h5></div>
-        </md-card-header-text>
-
-        <md-switch></md-switch>
-
-        <md-menu  md-direction="bottom left">
-          <md-button class="md-icon-button" md-menu-trigger>
-            <md-icon>more_vert</md-icon>
-          </md-button>
-
-          <md-menu-content>
-
-            <md-menu-item id="#renameconfirm"  v-on:click="openDialog(confirm.ref2)">
-              <span >{{$lang.translate.info.rename}}</span>
-            </md-menu-item>
-
-            <md-menu-item id="confirm" v-on:click="openDialog(confirm.ref1)">
-              <span >{{$lang.translate.info.delete}}</span>
-            
-            </md-menu-item>
-
-            <router-link tag="md-menu-item"   :to="{ path: '/config/bot', query: { id: botData._id }}">
-              <span>{{$lang.translate.info.setting}}</span>
-            </router-link>
-          </md-menu-content>  
-          
-        </md-menu>
-        
-      </md-card-header>
-
+            <md-menu-content>
+                <md-menu-item disabled>
+                <span >{{$lang.translate.info.upload}}</span>
+              </md-menu-item>
+              <md-menu-item id="#renameconfirm"  v-on:click="openDialog(confirm.ref2)">
+                <span >{{$lang.translate.info.rename}}</span>
+              </md-menu-item>
+              <md-menu-item id="confirm" v-on:click="openDialog(confirm.ref1)">
+                <span >{{$lang.translate.info.delete}}</span>            
+              </md-menu-item>
+              <router-link tag="md-menu-item"   :to="{ path: '/config/bot', query: { id: botData._id }}">
+                <span>{{$lang.translate.info.setting}}</span>
+              </router-link>
+            </md-menu-content>
+          </md-menu>
+        </div>
+      </div>
       <div id="imgwrapper">
         <img src="../assets/bot.png" :alt="botData.name">
       </div>
 
-      <md-card-header-text>
-        <div class="md-title"><h5>{{botData.name}}</h5></div>
-        <div class="md-subhead">{{botData.template}}</div>
-      </md-card-header-text>
-
-      <md-card-content>
-        {{botData.description}}
-      </md-card-content>
+      <div class="info-wrapper">
+        <h6 style="font-size:16px;font-weight:400;">{{botData.name}}</h6>
+        <span style="font-size:10px;color: purple;display: block;">!!Placeholder!! {{botData.template}}</span>
+        <span>
+          {{botData.description}}
+        </span>
+      </div>
     </md-card>
 
 
@@ -135,21 +125,32 @@ export default {
 </script>
 
 <style scoped>
+  .card-wrapper{
+    display: inline;
+    margin: 14px;
+  }
+
+  .header{
+    float: right;
+  }
+
   .md-card{
     min-width: 260px;
     min-height: 360px;
     max-width: 260px;
     max-height: 360px;
     word-wrap:break-word;
-    margin: 20px;
   }
+
   .md-card-content{
     word-wrap:break-word;
   }
-  .md-title{
+
+  .info-wrapper{
     text-align: left;
-    margin: 10px;
+    padding: 15px 15px 0 15px;
   }
+
   img{
     width: 148px;
     height: 148px;
@@ -157,6 +158,4 @@ export default {
   #imgwrapper{
     text-align: center;
   }
-
-
 </style>

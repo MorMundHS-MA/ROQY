@@ -5,14 +5,13 @@
   "author": "MorMund-HSMA <1611229@stud.hs-mannheim.de>",
   "private": true,
   "scripts": {
-    "dev": "node build/dev-server.js",
+    "dev": "yarn lint && node build/dev-server.js",
     "start": "npm run dev",
     "build": "node build/build.js",
     "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
     "e2e": "node test/e2e/runner.js",
     "test": "npm run unit && npm run e2e",
-    "lint": "eslint --ext .js,.vue src test/unit/specs test/e2e/specs",
-    "lintfix": "eslint --fix components/BotConfig.vue components/BotCreator.vue components/BotHeader.vue components/BotInfo.vue"
+    "lint": "eslint --ext .js,.vue src test/unit/specs test/e2e/specs"
   },
   "dependencies": {
     "axios": "^0.17.0",
@@ -20,6 +19,7 @@
     "vue-material": "^0.8.1",
     "vue-router": "^3.0.1",
     "vuejs-localization": "^1.0.2",
+    "vuelidate": "^0.6.1",
     "vuetify": "^0.16.9",
     "vuex": "^3.0.0"
   },
@@ -31,6 +31,7 @@
     "babel-minify-webpack-plugin": "^0.2.0",
     "babel-plugin-istanbul": "^4.1.1",
     "babel-plugin-transform-runtime": "^6.22.0",
+    "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.3.2",
     "babel-preset-stage-2": "^6.22.0",
     "babel-register": "^6.22.0",
