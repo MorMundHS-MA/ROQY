@@ -160,6 +160,7 @@ router.post('/bot', function (req, clientResponse) {
     console.log("Create Bots");
     let appId = "";
     let userData = req.body;
+    userData.account = auth;
     if(userData.description === undefined){
         responseToClient(clientResponse, 406, true, messages.noDescrption);
         return;
@@ -329,7 +330,8 @@ router.post('/bot', function (req, clientResponse) {
             .then(() => createLivepersonUser(userData, auth))
             .then(response => {
                 if(response !== undefined)
-                console.log("User with ID " + response + " has been created!");
+                    console.log("User with Skill ID " + response + " has been created!");
+                    userData.skill = response;
             })
             .then(() =>dbcon.writeToDB({
                 "data": userData
@@ -339,6 +341,7 @@ router.post('/bot', function (req, clientResponse) {
                     let res = {
                         botId:appId
                     };
+                    ncmd.run('docker run -e BOT_ID="' + appId + '" runtime');
                     // TODO Start Docker Image with appId from here!
                     console.log("Successfully wrote to DB!");
                     responseToClient(clientResponse, 201, false, messages.botHasBeenCreated, res);
@@ -381,11 +384,13 @@ router.post('/bot', function (req, clientResponse) {
 });
 
 
+router.get("/test", function(req, res){
+    createLivepersonUser({"name":"welcomeTest", "botType":"welcome"}, 23625217);
+})
+
 function createLivepersonUser(bot, auth){
     return new Promise(resolve => {
-        if(bot.botType === "welcome"){
-            return resolve(undefined);
-        }
+        let skillId= -1;
         const livePersonLoginDomain = "https://lo.agentvep.liveperson.net/api/account/" + auth + "/login?v=1.3";
         const livePersonAccountDomain = "https://lo.ac.liveperson.net/api/account/" + auth + "/configuration/le-users/users";
         const livePersonSkillDomain = "https://lo.ac.liveperson.net/api/account/" + auth + "/configuration/le-users/skills"
@@ -398,7 +403,7 @@ function createLivepersonUser(bot, auth){
             "email": "bot@sep-ravenclaw.de",
             "passwordSh": "ROFLTEST",
             "memberOf": {"agentGroupId": "-1", "assignmentDate": "2015-06-22 19:20:03"},
-            "permissionGroups":["-1"],
+            "permissionGroups":[1],
             "profileIds": [968980532, 968980832, 968980732, 968980632],
             "isApiUser": false,
             "userTypeId": "2"
@@ -427,22 +432,36 @@ function createLivepersonUser(bot, auth){
             },
             "json":true
         };
-
-        requestPromise(options)
-            .then(response => {
-                options.headers.Authorization = "Bearer " + response.bearer;
-                options.uri = livePersonSkillDomain;
-                options.body = skillPayload;
-                requestPromise(options).then(response => {
-                    createUserPayload.skillIds = [response.id];
+        if(bot.botType === "welcome"){
+            requestPromise(options)
+                .then(response => {
+                    options.headers.Authorization = "Bearer " + response.bearer;
                     options.uri = livePersonAccountDomain;
                     options.body = createUserPayload;
-                    requestPromise(options)
-                        .then(response => {
-                            resolve(response.id);
-                        })
+                    requestPromise(options).then(response => {
+                                resolve(response.id);
+
+                    })
                 })
-            })
+        }else {
+            requestPromise(options)
+                .then(response => {
+                    options.headers.Authorization = "Bearer " + response.bearer;
+                    options.uri = livePersonSkillDomain;
+                    options.body = skillPayload;
+                    requestPromise(options).then(response => {
+                        createUserPayload.skillIds = [response.id];
+                        skillId = response.id;
+                        options.uri = livePersonAccountDomain;
+                        options.body = createUserPayload;
+                        requestPromise(options)
+                            .then(response => {
+                                resolve(skillId);
+                            })
+                    })
+                })
+        }
+
 
     })
 }
@@ -723,19 +742,20 @@ router.get('/bot/:id/query/:query', function (req, clientResponse) {
         responseToClient(clientResponse, 401, true, messages.unauthorized);
         return;
     }
-    res.header("Access-Control-Allow-Origin", "*");
+    clientResponse.header("Access-Control-Allow-Origin", "*");
     const id = req.params.id;
     const query = req.params.query;
 
     existsAgent(id).then(res => {
         if(res.exists){
-            LUISClient = LUISClient({
+            LUISClient = ILuis({
                 appId:id,
                 appKey:APPKEY,
                 verbose:true
             });
             LUISClient.predict(query, {
                 onSuccess: function(response){
+                    console.log(response);
                     dbcon.readFromDB({
                         botId: id
                     }).then(bot => {
@@ -745,6 +765,9 @@ router.get('/bot/:id/query/:query', function (req, clientResponse) {
                             }
                         }
                     })
+                },
+                onFailure: function(res){
+                    console.log(res);
                 }
             })
         } else {
