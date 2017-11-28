@@ -37,7 +37,7 @@ const messages = {
 };
 
 const maxCallsOnLUIS = 5;
-const waitTimeForLUIS = 1500/maxCallsOnLUIS;
+const waitTimeForLUIS = 2000/maxCallsOnLUIS;
 
 const LUISKEY = "ed2ff1a97f924b8e8a1402e6700a8bf4";
 let LUISClient;
@@ -324,6 +324,12 @@ router.post('/bot', function (req, clientResponse) {
             .then(res => {
                 userData.id = appId;
                 userData.status = "running";
+
+            })
+            .then(() => createLivepersonUser(userData, auth))
+            .then(response => {
+                if(response !== undefined)
+                console.log("User with ID " + response + " has been created!");
             })
             .then(() =>dbcon.writeToDB({
                 "data": userData
@@ -364,7 +370,7 @@ router.post('/bot', function (req, clientResponse) {
         dbcon.writeToDB({
             data: userData
         }).then(success => {
-            console.log("Test")
+            console.log("Test");
             if(success){
                 responseToClient(clientResponse, 200, false, "Test Erfolgreich", {botId: userData.id});
             }else {
@@ -373,6 +379,73 @@ router.post('/bot', function (req, clientResponse) {
         });
     }
 });
+
+
+function createLivepersonUser(bot, auth){
+    return new Promise(resolve => {
+        if(bot.botType === "welcome"){
+            return resolve(undefined);
+        }
+        const livePersonLoginDomain = "https://lo.agentvep.liveperson.net/api/account/" + auth + "/login?v=1.3";
+        const livePersonAccountDomain = "https://lo.ac.liveperson.net/api/account/" + auth + "/configuration/le-users/users";
+        const livePersonSkillDomain = "https://lo.ac.liveperson.net/api/account/" + auth + "/configuration/le-users/skills"
+        const createUserPayload = {
+            "loginName": bot.name,
+            "fullName": bot.name,
+            "nickname": bot.name,
+            "isEnabled": true,
+            "maxChats": -1,
+            "email": "bot@sep-ravenclaw.de",
+            "passwordSh": "ROFLTEST",
+            "memberOf": {"agentGroupId": "-1", "assignmentDate": "2015-06-22 19:20:03"},
+            "permissionGroups":["-1"],
+            "profileIds": [968980532, 968980832, 968980732, 968980632],
+            "isApiUser": false,
+            "userTypeId": "2"
+        };
+        const authPayload = {
+            "username":"BotMaster",
+            "password":"masterOfBots"
+        };
+        const skillPayload = {
+            "name":bot.name + "Skill",
+            "skillRoutingConfiguration":[
+                {
+                    "priority":1,
+                    "splitPercentage":10,
+                    "agentGroupId":-1
+                }
+            ]
+        };
+
+        let options = {
+            "uri":livePersonLoginDomain,
+            "method":"POST",
+            "body":authPayload,
+            "headers":{
+                "Content-Type":"application/json"
+            },
+            "json":true
+        };
+
+        requestPromise(options)
+            .then(response => {
+                options.headers.Authorization = "Bearer " + response.bearer;
+                options.uri = livePersonSkillDomain;
+                options.body = skillPayload;
+                requestPromise(options).then(response => {
+                    createUserPayload.skillIds = [response.id];
+                    options.uri = livePersonAccountDomain;
+                    options.body = createUserPayload;
+                    requestPromise(options)
+                        .then(response => {
+                            resolve(response.id);
+                        })
+                })
+            })
+
+    })
+}
 
 
 router.get('/bot/public', function(req, clientResponse){
