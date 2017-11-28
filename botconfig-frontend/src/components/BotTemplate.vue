@@ -19,17 +19,17 @@
       
       <md-card>
         <md-card-header>
-          <div>
-            
-            <md-menu  md-direction="bottom right">
 
-            <md-button style="padding:0;margin-top:-10px;" class="md-icon-button header-menu-btn" md-menu-trigger>
+          <div>
+            <md-menu clas md-direction="bottom right">
+
+            <md-button class="md-icon-button header-menu-btn menüpunkt" md-menu-trigger>
               <md-icon>more_vert</md-icon>
             </md-button>
 
             <md-menu-content>
-              <md-menu-item id="delete" v-on:click="openDialog(confirm.ref1)">
-                <span >{{$lang.translate.template.delete}}</span>
+              <md-menu-item v-on:click="openDialog(ref1)">
+                <span>{{$lang.translate.template.delete}}</span>
               </md-menu-item>
             </md-menu-content>
 
@@ -40,8 +40,8 @@
             <img src="../assets/bot.png" :alt="template.name">
           </div>
             <div id="right-text">
-              <div id="template-name"></h3>{{template.name}}</h3></div>
-              <div id="template-title"><h5>{{template.name}}</h5></div>
+              <div id="template-name">{{template.name}}</div>
+              <div id="template-title">{{template.name}}</div>
               <div id="template-desc">{{template.description}}</div>
             </div>
         </md-card-header> 
@@ -50,13 +50,11 @@
   </md-layout>
 
   <md-dialog md-open-from="#confirm" md-close-to="#confirm" ref='dialog1'>
-    <md-dialog-title>{{$lang.translate.info.titel}}</md-dialog-title>
-
+    <md-dialog-title>{{$lang.translate.info.title}}</md-dialog-title>
     <md-dialog-content>{{$lang.translate.info.contentHtml}}</md-dialog-content>
-
     <md-dialog-actions>
-      <md-button class="md-primary" v-on:click="closeDialog(confirm.ref1)"> {{$lang.translate.info.cancel}}</md-button>
-      <md-button class="md-primary" v-on:click="deleteItem(botData)" >{{$lang.translate.info.ok}}</md-button>
+      <md-button class="md-primary" v-on:click="closeDialog(ref1)"> {{$lang.translate.info.cancel}}</md-button>
+      <md-button class="md-primary" v-on:click="deleteItem(botData)" disabled>{{$lang.translate.info.ok}}</md-button>
     </md-dialog-actions>
   </md-dialog>
 
@@ -67,6 +65,11 @@
 import 'vue-material/dist/vue-material.css'
 
 export default {
+  data () {
+    return {
+      ref1: 'dialog1'
+    }
+  },
   computed: {
     templates () {
       return this.$store.getters.getTemplates
@@ -141,5 +144,8 @@ export default {
     text-align: center;
     max-width: 1160px;
     margin: 0 auto;
+  }
+  .menüpunkt{
+    
   }
 </style>
