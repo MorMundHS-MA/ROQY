@@ -42,7 +42,7 @@ export default {
     botInfo
   }
 }
-</script scoped>
+</script>
 
 <style scoped>
   .overview-wrapper{

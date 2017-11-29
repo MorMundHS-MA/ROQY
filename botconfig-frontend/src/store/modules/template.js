@@ -20,6 +20,16 @@ const state = {
       name: 'Ravenclaw-Bot',
       image: foto,
       description: 'Ich kann einfach alles!'
+    },
+    {
+      name: 'Ravenclaw-Bot',
+      image: foto,
+      description: 'Ich kann einfach alles!'
+    },
+    {
+      name: 'Ravenclaw-Bot',
+      image: foto,
+      description: 'Ich kann einfach alles!'
     }
   ]
 }
