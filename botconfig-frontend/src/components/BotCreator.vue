@@ -28,7 +28,7 @@
           <div class="row">
             <div v-for="(template, templates) in templates" :key="template.name">
                 <div class="card-wraper">
-                  <div class="card" @click="selectTemplate(template)">
+                  <div class="card" @click="selectTemplate(template)" :class="{'selected': isSelected(template)}">
                   <img src="../assets/bot.png" :alt="template.name">
                   <div class="container">
                     <h4><b>{{template.name}}</b></h4>
@@ -109,7 +109,7 @@ export default {
       }
     },
     validInput () {
-      if (this.botnameValid === true && this.descriptionValid === true && this.selected === true) {
+      if (this.botnameValid && this.descriptionValid && this.selected) {
         this.allValid = true
       }
     },
@@ -122,6 +122,11 @@ export default {
       this.template = template
       this.selected = true
       this.validInput()
+    },
+    isSelected (template) {
+      if (this.selected) {
+        return this.template === template
+      }
     }
   },
   components: {
@@ -195,12 +200,9 @@ export default {
     word-wrap:break-word;
     float: left;
   }
-  card:focus{
-    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-    border: 1px solid orange;
-    background-color: yellow;
+  .selected {
+    border: 3px solid orange;
   }
-  
   .container {
     margin-top: 5%;
     padding: 2px 10px;
@@ -233,5 +235,20 @@ export default {
     font-size: 16px;
     cursor: pointer;
     width: 90px;
+  }
+  @media only screen and (max-width: 650px) {
+  .card-wraper {
+    display: inline;
+    min-width: 33%;
+    max-height: 250px;
+    min-height: 250px;
+    max-width: 33%;
+  }
+  .card {
+    min-width: 32%;
+    max-height: 220px;
+    min-height: 220px;
+    max-width: 32%;
+  }
   }
 </style>
