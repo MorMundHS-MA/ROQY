@@ -69,7 +69,7 @@ export default {
   }
 
   .inline-newbot {
-     min-width: 260px;
+    min-width: 260px;
     min-height: 360px;
     max-width: 260px;
     max-height: 360px;
