@@ -8,7 +8,6 @@ export default {
     setTimeout(function () {
       axios.get('/bot/public')
             .then(function (response) {
-              console.log(response)
               cb(response.data.extra)
             })
             .catch(function (error) {
@@ -18,7 +17,7 @@ export default {
   },
   addNewMarketplace (cb, bot) {
     setTimeout(function () {
-      axios.put('/bot', {
+      axios.put('/bot/:' + bot.id + '/privacy', {
         'name': bot.name,
         'description': bot.description,
         'intents': [],
