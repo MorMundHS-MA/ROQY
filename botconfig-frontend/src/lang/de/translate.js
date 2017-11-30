@@ -38,7 +38,7 @@ module.exports = {
   },
   overview: {
     create: 'Bot erstellen',
-    sortby: 'Sortieren',
+    sortby: 'sortieren',
     date: 'Datum',
     type: 'Typ',
     search: 'Suche'
@@ -47,5 +47,8 @@ module.exports = {
     tittle: 'Anmelden',
     username: 'Benutzername',
     password: 'Kenntwort'
+  },
+  template: {
+    delete: 'löschen'
   }
 }
