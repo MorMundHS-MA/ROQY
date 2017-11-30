@@ -9,8 +9,8 @@
             <md-option value="type">{{$lang.translate.overview.type}}</md-option>
         </md-select>
       </md-field>
-      <md-field class="toolbar-input">
-         <md-input :placeholder="$lang.translate.overview.search" style="padding:5px;"></md-input>
+      <md-field style="border-radius:16px;" class="toolbar-input">
+         <md-input :placeholder="$lang.translate.overview.search" style="padding:5px;padding-left:20px;"></md-input>
       </md-field>
     </div>
 
