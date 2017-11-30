@@ -21,7 +21,7 @@
       </md-card-content>
 
       <md-card-actions>
-        <md-button  @click="sendUser">{{$lang.translate.login.tittle}}</md-button>
+        <md-button  @click="sendUser()">{{$lang.translate.login.title}}</md-button>
       </md-card-actions>
     </md-layout>
   </md-layout>
@@ -47,12 +47,11 @@ export default {
           console.log(result)
         }).catch(function (error) {
           console.log(error.message)
-        })
-        */
+        }) */
         this.$router.push('/bots')
         console.log(this.$store.getters.getUser)
       } else {
-        this.$router.push('/bots')
+        console.log('-1.2')
       }
     },
     clearForm () {

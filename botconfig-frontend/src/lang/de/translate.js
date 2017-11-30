@@ -44,7 +44,7 @@ module.exports = {
     search: 'Suche'
   },
   login: {
-    tittle: 'Anmelden',
+    title: 'Anmelden',
     username: 'Benutzername',
     password: 'Kenntwort'
   },
