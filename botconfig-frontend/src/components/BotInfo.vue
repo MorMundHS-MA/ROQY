@@ -41,13 +41,13 @@
 
 
     <md-dialog md-open-from="#confirm" md-close-to="#confirm" ref='dialog1'>
-      <md-dialog-title>{{confirm.title}}</md-dialog-title>
+      <md-dialog-title>{{$lang.translate.info.title}}</md-dialog-title>
 
-      <md-dialog-content>{{confirm.contentHtml}}</md-dialog-content>
+      <md-dialog-content>{{$lang.translate.info.contentHtml}}</md-dialog-content>
 
       <md-dialog-actions>
-        <md-button class="md-primary" v-on:click="closeDialog(confirm.ref1)"> {{confirm.cancel}}</md-button>
-        <md-button class="md-primary" v-on:click="deleteItem(botData)" >{{confirm.ok}}</md-button>
+        <md-button class="md-primary" v-on:click="closeDialog(confirm.ref1)"> {{$lang.translate.info.cancel}}</md-button>
+        <md-button class="md-primary" v-on:click="deleteItem(botData)">{{$lang.translate.info.ok}}</md-button>
       </md-dialog-actions>
     </md-dialog>
 
@@ -62,8 +62,8 @@
       </md-dialog-content>
 
       <md-dialog-actions>
-        <md-button class="md-primary" v-on:click="closeDialog(confirm.ref2)"> {{confirm.cancel}}</md-button>
-        <md-button class="md-primary" :disabled='!isValid' v-on:click="renameItem(botData)" >{{confirm.rename}}</md-button>
+        <md-button class="md-primary" v-on:click="closeDialog(confirm.ref2)">{{$lang.translate.info.cancel}}</md-button>
+        <md-button class="md-primary" :disabled='!isValid' v-on:click="renameItem(botData)">{{$lang.translate.info.rename}}</md-button>
       </md-dialog-actions>
     </md-dialog>
   </div>
