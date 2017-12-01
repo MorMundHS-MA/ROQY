@@ -10,7 +10,7 @@
             </md-button>
 
             <md-menu-content>
-                <md-menu-item disabled>
+                <md-menu-item>
                 <span >{{$lang.translate.info.upload}}</span>
               </md-menu-item>
               <md-menu-item id="#renameconfirm"  v-on:click="openDialog(confirm.ref2)">
