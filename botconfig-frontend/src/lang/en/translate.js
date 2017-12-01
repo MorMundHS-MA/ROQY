@@ -34,7 +34,9 @@ module.exports = {
     cancel: 'Cancel',
     running: 'Active',
     stopped: 'Inactive',
-    upload: 'Upload to marketplace'
+    marketplace: 'Upload',
+    marketplaceInnerBubble: 'Do you really want to upload this bot?',
+    upload: 'Upload to Marketplace'
   },
   overview: {
     create: 'create new bot',

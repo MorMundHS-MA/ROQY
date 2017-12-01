@@ -22,7 +22,7 @@ export default {
         'intents': [],
         'test': 'true',
         'botType': 'faq',
-        'privacy': 'public'
+        'privacy': 'private'
       },
         {
           headers: {

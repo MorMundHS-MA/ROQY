@@ -15,6 +15,7 @@ export default {
   },
   created () {
     this.$store.dispatch('getAllBots')
+    this.$store.dispatch('getAllmarketplaceBots')
     // this.$store.dispatch('getTemplates')
   }
 }
