@@ -1,7 +1,7 @@
 <template>
   <div id="marketplace">
     <div class="row">
-      <div v-for="(marketplacebot, botsforMarketplace) in botsforMarketplace" :key="marketplace.name">
+      <div v-for="(marketplacebot, botsforMarketplace) in botsforMarketplace" :key="marketplacebot.name">
         <div class="bot-wrapper">
           <div class="card-horizontal">
           </div>
