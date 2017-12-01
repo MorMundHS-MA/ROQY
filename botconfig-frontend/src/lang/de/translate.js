@@ -52,5 +52,8 @@ module.exports = {
   },
   template: {
     delete: 'löschen'
+  },
+  config: {
+    unnamedBlock: 'Unbennanter Block'
   }
 }

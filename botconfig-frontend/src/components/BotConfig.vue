@@ -2,7 +2,7 @@
   <div id="conf-wrapper">
     <div id="leftside">
       <div id="group-wrapper">
-        <tree-view :row="index" v-for="(group,index) in subGroups" :rowSelect="rowSelect" :key="group.block" v-on:selection-changed="selectSubTree(index,$event)" :group="group.children" :blocks="blocks" :selected="group.selection" class="wrapper"></tree-view>
+        <tree-view :row="index" v-for="(group,index) in subGroups" :rowSelect="rowSelect" :key="group.block" v-on:selection-changed="selectSubTree(index,$event)" v-on:addNew="addNewBlock(index)" :group="group.children" :blocks="blocks" :selected="group.selection" class="wrapper"></tree-view>
       </div>
       <div class="block-wrapper wrapper">
         <block-view :blocks="blocks"></block-view>
@@ -26,6 +26,7 @@ export default {
     return {
       rowSelect: -1,
       rootSelect: 2,
+      blockIDCount: 3,
       blocks: [
         {
           id: 0,
@@ -124,6 +125,11 @@ export default {
       } else {
         this.subGroups[groupID].selection = blockID
       }
+    },
+    addNewBlock (groupID) {
+      let block = {title: this.$lang.translate.config.unnamedBlock, id: this.blockIDCount++}
+      console.log(block)
+      this.blocks.push(block)
     }
   }
 }

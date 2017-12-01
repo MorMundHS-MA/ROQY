@@ -3,6 +3,9 @@
     <div @click="select(index)" class="block-container" :class="{'selected' : isSelected(index), 'primary' : isPrimarySelection(index)}" v-for="(block, index) in group" :key="block.id">
       <span>{{blocks[block.block].title}}</span>
     </div>
+    <div v-if="hasNewButton()" @click="addNew()" class="block-container">
+      <span style="color: green;">New block</span>
+    </div>
   </div>
 </template>
 
@@ -18,6 +21,12 @@ export default {
     },
     isPrimarySelection (index) {
       return this.rowSelect === this.row
+    },
+    hasNewButton () {
+      return this.rowSelect === this.row || this.rowSelect + 1 === this.row
+    },
+    addNew () {
+      this.$emit('addNew')
     }
   }
 }
