@@ -17,7 +17,7 @@ chai.use(chaiHttp);
 describe('/POST botconfig', () => {
    
     beforeEach( function () {
-        server = require('../botconfig.js')
+        server = require('../botconfig')
     })
     it('should insert a bot', (done) => {
 
@@ -41,7 +41,7 @@ describe('/POST botconfig', () => {
 describe('/GET botconfig', () => {
 
     beforeEach( function () {
-        server = require('../botconfig.js')  
+        server = require('../botconfig')  
     })
     it('should return an array of bots', (done) => {
         
@@ -63,7 +63,7 @@ describe('/DELETE botconfig', () => {
 
     beforeEach( function () {
         let testBot = ( { name : 'Martina Schulz' } )
-        server = require('../botconfig.js')
+        server = require('../botconfig')
 
         mongo.connect(url, function (err, db) {
             if (err) console.log('Can not connect to the mongo DB in /GET botconfig')
@@ -85,5 +85,16 @@ describe('/DELETE botconfig', () => {
             res.should.have.status(200)
         })
         done();
+    })
+})
+
+/**
+ * Test for updating the Name from a bot which already exists in the database
+ */
+describe('/UPDATE botconfig', () => {
+
+    beforeEach( function () {
+        let testBot = { 'name' : 'Kevin' }
+        server = require('../botconfig')
     })
 })
