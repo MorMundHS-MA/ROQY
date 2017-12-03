@@ -40,14 +40,10 @@ export default {
   methods: {
     sendUser () {
       if (this.form.username !== '' && this.form.password !== '') {
-        /* this.$store.dispatch('logIn', {
+        this.$store.dispatch('logIn', {
           username: this.form.username,
           password: this.form.password
-        }).then(function (result) {
-          console.log(result)
-        }).catch(function (error) {
-          console.log(error.message)
-        }) */
+        })
         this.$router.push('/bots')
         console.log(this.$store.getters.getUser)
       } else {
