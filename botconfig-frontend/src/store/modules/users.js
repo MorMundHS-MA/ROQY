@@ -1,9 +1,9 @@
-import data from '../../api/account'
+// import data from '../../api/account'
 import * as types from '../mutation-types'
 
 const state = {
   user: null,
-  isSuccess: true
+  isSuccess: false
 }
 
 const getters = {
@@ -24,11 +24,13 @@ const mutations = {
 
 const actions = {
   logIn ({commit}, account) {
-    data.logIn(
+    /* data.logIn(
       account,
       () => {
         commit(types.LOG_IN, { account })
       })
+      */
+    state.isSuccess = true
   },
   logOut ({commit}) {
     commit(types.LOG_OUT)

@@ -47,8 +47,7 @@ export default new Router({
     {
       path: '/',
       name: 'login',
-      component: login,
-      beforeEnter: requireAuth
+      component: login
     }
   ]
 })

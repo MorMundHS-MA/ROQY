@@ -1,16 +1,19 @@
 <template>
   <div id="app">
-    <app-login></app-login>
+    <app-header v-if="this.$store.getters.checkout"></app-header>
+    <app-login v-else></app-login>
   </div>
 </template>
 
 <script>
+import header from './components/BotHeader.vue'
 import login from './components/BotLogin.vue'
 import 'vue-material/dist/vue-material.css'
 
 export default {
   name: 'app',
   components: {
+    'app-header': header,
     'app-login': login
   },
   created () {
