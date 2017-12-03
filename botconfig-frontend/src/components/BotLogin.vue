@@ -1,9 +1,9 @@
 <template>
   <div id="login">
   <md-layout md-tag="form" novalidate md-align="center">
-    <md-layout md-tag="md-card" md-column md-flex="30" md-flex-medium="40" md-flex-small="60" md-flex-xsmall="90" class="md-primary">
+    <md-layout md-tag="md-card" md-column md-flex="30" md-flex-medium="50" md-flex-small="60" md-flex-xsmall="90">
       <md-card-header>
-        <div class="md-title">{{$lang.translate.login.tittle}}</div>
+        <div class="md-title"><img class="logo" src="../assets/ROQY.png" alt="ROQY"></div>
       </md-card-header>
 
       <md-card-content>
@@ -40,11 +40,13 @@ export default {
   methods: {
     sendUser () {
       if (this.form.username !== '' && this.form.password !== '') {
-        this.$store.dispatch('logIn', {
+        /* this.$store.dispatch('logIn', {
           username: this.form.username,
           password: this.form.password
         })
+        */
         this.$router.push('/bots')
+        this.clearForm()
       }
     },
     clearForm () {
@@ -57,7 +59,10 @@ export default {
 
 <style scoped>
 #login {
-    margin-top: 10px;
+    text-align: center;
+    margin-top: 100px;
 }
-
+.logo {
+  height: 35px;
+}
 </style>
