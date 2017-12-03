@@ -3,7 +3,7 @@ import * as types from '../mutation-types'
 
 const state = {
   user: null,
-  isSuccess: false
+  isSuccess: true
 }
 
 const getters = {

@@ -45,9 +45,6 @@ export default {
           password: this.form.password
         })
         this.$router.push('/bots')
-        console.log(this.$store.getters.getUser)
-      } else {
-        console.log('-1.2')
       }
     },
     clearForm () {
