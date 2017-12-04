@@ -4,12 +4,14 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import vueMaterial from 'vue-material'
+import localStorage from 'vue-localstorage'
 
 import {store} from './store'
 var lang = require('vuejs-localization')
 lang.requireAll(require.context('./lang', true, /\.js$/))
 
 Vue.use(vueMaterial)
+Vue.use(localStorage)
 
 Vue.material.registerTheme('default', {
   primary: 'orange',

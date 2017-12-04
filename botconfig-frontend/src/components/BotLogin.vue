@@ -44,15 +44,22 @@ export default {
           username: this.form.username,
           password: this.form.password
         })
-        if (this.$store.getters.checkout) {
-          this.$router.push('/bots')
-          this.clearForm()
-        }
+        this.$router.push('/bots')
+        this.saveUserLocalStorage()
       }
     },
     clearForm () {
       this.form.username = ''
       this.form.password = ''
+    },
+    saveUserLocalStorage () {
+      console.log(this.form.username)
+      console.log(this.form.password)
+      setTimeout(() => {
+        let user = JSON.stringify({username: 'a', password: 's'})
+        this.$localStorage.set('user', user)
+      }, 1000)
+      this.clearForm()
     }
   }
 }

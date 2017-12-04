@@ -42,6 +42,10 @@ export default {
     logout () {
       this.$store.dispatch('logOut')
       this.$router.push('/')
+      this.clearLocalStorage()
+    },
+    clearLocalStorage () {
+      this.$localStorage.remove('user')
     }
   }
 }

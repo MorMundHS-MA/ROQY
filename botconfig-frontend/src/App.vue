@@ -17,6 +17,10 @@ export default {
     'app-login': login
   },
   created () {
+    setTimeout(() => {
+      let user = JSON.parse(this.$localStorage.get('user'))
+      this.$store.dispatch('logIn', user)
+    }, 1000)
     this.$store.dispatch('getAllBots')
     this.$store.dispatch('getAllmarketplaceBots')
     // this.$store.dispatch('getTemplates')
