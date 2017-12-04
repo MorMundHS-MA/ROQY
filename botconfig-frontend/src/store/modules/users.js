@@ -30,7 +30,9 @@ const actions = {
         commit(types.LOG_IN, { account })
       })
       */
-    state.isSuccess = true
+    if (account.username !== '' && account.password !== '') {
+      state.isSuccess = true
+    }
   },
   logOut ({commit}) {
     commit(types.LOG_OUT)

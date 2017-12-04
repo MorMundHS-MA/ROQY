@@ -53,13 +53,12 @@ export default {
       this.form.password = ''
     },
     saveUserLocalStorage () {
-      console.log(this.form.username)
-      console.log(this.form.password)
       setTimeout(() => {
-        let user = JSON.stringify({username: 'a', password: 's'})
-        this.$localStorage.set('user', user)
-      }, 1000)
-      this.clearForm()
+        let user = {username: this.form.username, password: this.form.password}
+        console.log(user)
+        this.$localStorage.set('user', JSON.stringify(user))
+        this.clearForm()
+      }, 100)
     }
   }
 }

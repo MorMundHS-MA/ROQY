@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <app-header v-if="this.$store.getters.checkout"></app-header>
-    <app-login v-else></app-login>
+    <app-header v-if="check === true"></app-header>
+    <app-login v-show="check === false"></app-login>
   </div>
 </template>
 
@@ -20,10 +20,15 @@ export default {
     setTimeout(() => {
       let user = JSON.parse(this.$localStorage.get('user'))
       this.$store.dispatch('logIn', user)
-    }, 1000)
+    }, 200)
     this.$store.dispatch('getAllBots')
     this.$store.dispatch('getAllmarketplaceBots')
     // this.$store.dispatch('getTemplates')
+  },
+  computed: {
+    check () {
+      return this.$store.getters.checkout
+    }
   }
 }
 </script>
