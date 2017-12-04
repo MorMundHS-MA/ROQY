@@ -99,6 +99,7 @@ function existsAgent(id) {
  */
 router.get("/auth", function(req, clientResponse){
     // TODO Real authorization --> Liveperson!
+    clientResponse.header("Access-Control-Allow-Origin", "*");
     let username = req.param("username");
     let password = req.param("password");
     console.log(username + " " + password);
