@@ -43,8 +43,13 @@ export default {
     setTimeout(function () {
       if (bot.status === 'running') {
         axios.put('/bot/' + bot.id + '/stop', {
-          'status': bot.status
-        })
+          'status': 'stopped'
+        },
+          {
+            headers: {
+              Authorization: 'ed2ff1a97f924b8e8a1402e6700a8bf4'
+            }
+          })
         .then(function (response) {
           stop(bot)
         })
@@ -53,8 +58,13 @@ export default {
         })
       } else {
         axios.put('/bot/' + bot.id + '/start', {
-          'status': bot.status
-        })
+          'status': 'running'
+        },
+          {
+            headers: {
+              Authorization: 'ed2ff1a97f924b8e8a1402e6700a8bf4'
+            }
+          })
         .then(function (response) {
           start(bot)
         })

@@ -3,7 +3,7 @@
     <md-card style="border-radius:6px;" class="md-with-hover" >
       <div>
         <div class="header">
-          <md-switch style="margin: 10px 0 0 0" class="md-primary"></md-switch>
+          <md-switch style="margin: 10px 0 0 0" class="md-primary" v-on:change="changeBot(botData)" v-model="botData.status === 'running'"></md-switch>
           <md-menu  md-direction="bottom left">
             <md-button style="padding:0;margin-top:-10px;color: 7F7F7F" class="md-icon-button header-menu-btn" md-menu-trigger>
               <md-icon>more_vert</md-icon>
@@ -110,6 +110,11 @@ export default {
       aktiv: false
     }
   },
+  computed: {
+    isRunning () {
+      return this.botData.status === 'R unning'
+    }
+  },
   watch: {
     newName () {
       if (this.newName.length !== 0) {
@@ -141,6 +146,7 @@ export default {
     uploadBot (item) {
       this.$store.dispatch('addNewMarketplace', item)
       this.closeDialog(this.confirm.ref3)
+      this.$router.push('/marketplace')
     }
   }
 }
