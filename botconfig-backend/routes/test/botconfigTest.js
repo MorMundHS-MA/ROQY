@@ -98,3 +98,23 @@ describe('/UPDATE botconfig', () => {
         server = require('../botconfig')
     })
 })
+
+describe('/PUT intentname', () => {
+
+    let testBot = { 'name' : 'botMitNamenlosenIntents' };
+    let intentRequest = { 'data' : { 'intents' : { 'name' : ''}}}
+    let botID
+
+    
+    beforeEach( function () {
+            if (err) console.log("No connection to mongo on: " + url)
+            db.collection('botAgents').insertOne(testBot)
+            server = require('../botconfig')
+        })
+
+    it('should deny the request to put a nameless intent to testBot', (done) => {
+        chai.request(server) 
+        .put()
+    })
+    
+})
