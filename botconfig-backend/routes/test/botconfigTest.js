@@ -11,17 +11,18 @@ const livePersonPw = 'd"w3}~T^gVyHhFnM';
 
 chai.use(chaiHttp);
 
+beforeEach(function () {
+    server = require('../botconfig');
+})
 /**
  * Test for the post method to insert a bot
  */
 describe('/POST botconfig', () => {
-   
-    beforeEach( function () {
-        server = require('../botconfig')
-    })
+
     it('should insert a bot', (done) => {
 
-        let testBot = { name : 'pinkSparkles' };
+        let testBot = { name: 'pinkSparkles', 
+        botType : "faq" };
 
         chai.request(server)
             .post('/bot')
@@ -31,7 +32,7 @@ describe('/POST botconfig', () => {
                 console.log(res.body)
                 res.should.have.status(404)
             });
-            done();
+        done();
     })
 })
 
@@ -40,16 +41,13 @@ describe('/POST botconfig', () => {
  */
 describe('/GET botconfig', () => {
 
-    beforeEach( function () {
-        server = require('../botconfig')  
-    })
     it('should return an array of bots', (done) => {
-        
+
         chai.request(server)
-        .get('/bot')
-        .end((err, res) => {
-            res.should.have.status(200)
-        })
+            .get('/bot')
+            .end((err, res) => {
+                res.should.have.status(200)
+            })
         done();
     })
 })
@@ -61,9 +59,9 @@ describe('/DELETE botconfig', () => {
 
     let botId;
 
-    beforeEach( function () {
-        let testBot = ( { name : 'Martina Schulz' } )
-        server = require('../botconfig')
+    beforeEach(function () {
+        let testBot = ({ name: 'Martina Schulz', 
+        botType : 'faq' })
 
         mongo.connect(url, function (err, db) {
             if (err) console.log('Can not connect to the mongo DB in /GET botconfig')
@@ -79,11 +77,12 @@ describe('/DELETE botconfig', () => {
     it('should ban Martina out of mongo', (done) => {
 
         chai.request(server)
-        .delete('/bot/:' + botId)
-        .end((err, res) => {
-            console.log(res);
-            res.should.have.status(200)
-        })
+            .delete('/bot/:' + botId)
+            .send()
+            .end((err, res) => {
+                console.log(res);
+                res.should.have.status(200)
+            })
         done();
     })
 })
@@ -93,28 +92,55 @@ describe('/DELETE botconfig', () => {
  */
 describe('/UPDATE botconfig', () => {
 
-    beforeEach( function () {
-        let testBot = { 'name' : 'Kevin' }
-        server = require('../botconfig')
+    beforeEach(function () {
+        let testBot = { 'name': 'Kevin',
+        botType = 'faq' }
     })
 })
 
 describe('/PUT intentname', () => {
 
-    let testBot = { 'name' : 'botMitNamenlosenIntents' };
-    let intentRequest = { 'data' : { 'intents' : { 'name' : ''}}}
-    let botID
+    let testBot = { 'name': 'botMitNamenlosenIntents' };
+    let intentRequest = { 'data': { 'intents': { 'name': '' } } }
+    let botId
 
-    
-    beforeEach( function () {
-            if (err) console.log("No connection to mongo on: " + url)
-            db.collection('botAgents').insertOne(testBot)
-            server = require('../botconfig')
-        })
 
-    it('should deny the request to put a nameless intent to testBot', (done) => {
-        chai.request(server) 
-        .put()
+    beforeEach(function () {
+        chai.request(server)
+            .post('/bot')
+            .send(testBot)
+        console.log('I got this far! :)')
+            .end((err, res) => {
+                //TODO: Fix this:
+                //Error right here: Cannot read property of end
+                console.log('And now this far! :D')
+                botId = res.body.Id;
+            });
     })
-    
+    return new Promise(function (fullfill, reject) {
+        it('should deny the request to put a nameless intent to testBot', (done) => {
+            chai.request(server)
+                .put('/bot/:' + botId)
+                .send(intentRequest)
+                .end((err, res) => {
+                    console.log(res);
+                    res.should.not.have.status(200);
+                    resolve();
+                });
+        })
+    }).then(function () {
+        chai.request(server)
+            .delete('/bot/:' + botId)
+            .send()
+            .end(err, res);
+    })
+    done();
 })
+
+describe('PUT start/stop', () => {
+    let TestBot = { name : 'startStopBot' }
+})
+
+describe('GET status', () => {
+    let 
+}) 
