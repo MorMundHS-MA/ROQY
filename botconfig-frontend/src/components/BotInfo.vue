@@ -10,7 +10,7 @@
             </md-button>
 
             <md-menu-content>
-                <md-menu-item disabled>
+                <md-menu-item v-on:click="openDialog(confirm.ref3)">
                 <span >{{$lang.translate.info.upload}}</span>
               </md-menu-item>
               <md-menu-item id="#renameconfirm"  v-on:click="openDialog(confirm.ref2)">
@@ -39,7 +39,15 @@
       </div>
     </md-card>
 
+    <md-dialog md-open-from="#confirm" md-close-to="#confirm" ref='dialog3'>
+      <md-dialog-title>{{$lang.translate.info.marketplaceInnerBubble}}</md-dialog-title>
 
+      <md-dialog-actions>
+        <md-button class="md-primary" v-on:click="closeDialog(confirm.ref3)"> {{$lang.translate.info.cancel}}</md-button>
+        <md-button class="md-primary" v-on:click="uploadBot(botData)">{{$lang.translate.info.upload}}</md-button>
+      </md-dialog-actions>
+    </md-dialog>
+    
     <md-dialog md-open-from="#confirm" md-close-to="#confirm" ref='dialog1'>
       <md-dialog-title>{{$lang.translate.info.title}}</md-dialog-title>
 
@@ -86,7 +94,8 @@ export default {
         rename: 'Rename',
         cancel: 'Cancel',
         ref1: 'dialog1',
-        ref2: 'dialog2'
+        ref2: 'dialog2',
+        ref3: 'dialog3'
       },
       isValid: false,
       aktiv: false
@@ -119,6 +128,16 @@ export default {
     },
     closeDialog (ref) {
       this.$refs[ref].close()
+    },
+    uploadBot (item) {
+      this.$store.dispatch('addNewMarketplace', {
+        name: this.botname,
+        image: '../assets/bot.png',
+        status: 'offline',
+        description: this.description
+      })
+      this.$router.push('/marketplace')
+      this.closeDialog(this.confirm.ref3)
     }
   }
 }

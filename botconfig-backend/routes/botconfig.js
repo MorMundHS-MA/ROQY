@@ -37,7 +37,9 @@ const messages = {
 };
 
 const maxCallsOnLUIS = 5;
-const waitTimeForLUIS = 2000/maxCallsOnLUIS;
+
+const waitTimeForLUIS = 5000/maxCallsOnLUIS;
+
 
 const LUISKEY = "ed2ff1a97f924b8e8a1402e6700a8bf4";
 let LUISClient;
@@ -509,6 +511,7 @@ function deleteLivepersonUser(bot, auth){
             });
     })
 }
+
 
 router.get('/bot/public', function(req, clientResponse){
     clientResponse.header("Access-Control-Allow-Origin", "*");

@@ -9,22 +9,11 @@ const state = {
       name: 'Welcome-Bot',
       image: foto,
       description: 'Ich leite nur weiter...'
-
     },
     {
       name: 'FAQ-Bot',
       image: foto,
       description: 'Man nennt mich auch LUIS'
-    },
-    {
-      name: 'Ravenclaw-Bot',
-      image: foto,
-      description: 'Ich kann einfach alles!'
-    },
-    {
-      name: 'Ravenclaw-Bot',
-      image: foto,
-      description: 'Ich kann einfach alles!'
     },
     {
       name: 'Ravenclaw-Bot',

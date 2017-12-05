@@ -34,7 +34,9 @@ module.exports = {
     cancel: 'Abbrechen',
     running: 'Aktiv',
     stopped: 'Inaktiv',
-    upload: 'Auf Marktplatz hochladen'
+    marketplace: 'Hochladen',
+    marketplaceInnerBubble: 'Soll der Bot hochgelagen werden?',
+    upload: 'Hochladen'
   },
   overview: {
     create: 'Bot erstellen',
@@ -44,11 +46,14 @@ module.exports = {
     search: 'Suche'
   },
   login: {
-    tittle: 'Anmelden',
+    title: 'Anmelden',
     username: 'Benutzername',
     password: 'Kenntwort'
   },
   template: {
     delete: 'löschen'
+  },
+  config: {
+    unnamedBlock: 'Unbennanter Block'
   }
 }
