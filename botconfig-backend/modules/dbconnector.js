@@ -170,6 +170,25 @@ exports.writeConfig = function (body, id) {
     })
 }
 
+exports.setPrivacy = function (botID, privacy) {
+    return new Promise(function (resolve) {
+        MongoClient.connect(url, function (err, db) {
+
+            let bot = db.collection('botAgents').update({ id: botID }, {
+                $set: {
+                    privacy: privacy
+                }
+            }).catch(function (err) {
+                if (err) {
+                    console.log('Update did not work.')
+                    reject();
+                }
+            })
+        })
+        resolve();
+    })
+}
+
 /**
  * This method is for deleting a bot from the Database
  * @param { *JSON-Object } request
