@@ -2,8 +2,7 @@ import data from '../../api/marketplaceData'
 import * as types from '../mutation-types'
 
 const state = {
-  marketplaceBots: [],
-  marketplace: {}
+  marketplaceBots: []
 }
 
 const getters = {
@@ -16,10 +15,10 @@ const actions = {
       commit(types.MARKETPLACE_RECEIVEBOT, { marketplaceBots })
     })
   },
-  addNewMarketplace ({commit}, marketplace) {
-    data.addNewMarketplace(marketplacebot => {
-      commit(types.MARKETPLACE_ADDNEWBOT, {marketplace})
-    }, marketplace)
+  addNewMarketplace ({commit}, bot) {
+    data.addNewMarketplace(bot => {
+      commit(types.MARKETPLACE_ADDNEWBOT, { bot })
+    }, bot)
   },
   deleteBot ({commit}, marketplace) {
     data.deleteBot(marketplace => {
@@ -32,8 +31,8 @@ const mutations = {
   [types.MARKETPLACE_RECEIVEBOT] (state, { marketplaceBots }) {
     state.marketplaceBots = marketplaceBots
   },
-  [types.MARKETPLACE_ADDNEWBOT] (state, { marketplace }) {
-    state.marketplaceBots.push(marketplace)
+  [types.MARKETPLACE_ADDNEWBOT] (state, { bot }) {
+    state.marketplaceBots.push(bot)
   },
   [types.MARKETPLACE_DELETEBOT] (state, { marketplace }) {
     state.marketplaceBots.splice(state.marketplaceBots.indexOf(marketplace), 1)
