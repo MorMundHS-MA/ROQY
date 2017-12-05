@@ -636,7 +636,6 @@ router.put('/bot/:id', function(req, clientResponse){
             }
         });
     })
-
 });
 
 /**
@@ -659,6 +658,20 @@ router.get('/bot/:id', function(req, clientResponse){
             responseToClient(clientResponse, 404, true, messages.botNotFound)
         }        
     })
+})
+/**
+ * Config
+ * This endpoint is for getting a request to save config-files into the database.
+ */
+router.put('/bot/:id/config', function(req, clientResponse){
+    let auth = req.header("Authorization");
+    if(auth === undefined){
+        responseToClient(clientResponse, 401, true, messages.unauthorized);
+    }
+    let id = req.params.id;
+    let body = req.body;
+    dbcon.writeConfig(body, id);
+    responseToClient(clientResponse, 200, false, messages.botUpdated);
 })
 
 /**
@@ -884,6 +897,13 @@ router.options("/bot", function(req, clientResponse){
 });
 router.options("/bot/:id", function(req, clientResponse){
     clientResponse.header("Access-Control-Allow-Methods", "DELETE, PUT, OPTIONS");
+    clientResponse.header("Access-Control-Allow-Origin", "*");
+    clientResponse.header("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+    clientResponse.header("Acces-Control-Max-Age", 86400);
+    clientResponse.end();
+});
+router.options("/bot/:id/config", function(req, clientResponse){
+    clientResponse.header("Access-Control-Allow-Methods", "PUT, OPTIONS");
     clientResponse.header("Access-Control-Allow-Origin", "*");
     clientResponse.header("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
     clientResponse.header("Acces-Control-Max-Age", 86400);

@@ -54,6 +54,14 @@ module.exports = {
     delete: 'löschen'
   },
   config: {
-    unnamedBlock: 'Unbennanter Block'
+    unnamedBlock: 'Unbennanter Block',
+    favoriteBlocks: 'Block Favoriten',
+    question: 'Wenn der Benutzer fragt:',
+    answer: 'Bot antwortet mit?',
+    add: 'Item hinzufügen...',
+    test: 'Test',
+    save: 'Speichern',
+    favorite: 'Favoriten',
+    delete: 'Löschen'
   }
 }
