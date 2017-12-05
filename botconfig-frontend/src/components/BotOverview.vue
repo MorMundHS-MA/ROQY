@@ -1,5 +1,6 @@
 <template>
   <div>
+    <headermenu></headermenu>
     <div class="md-toolbar">
       <span style="margin-right:5px">{{$lang.translate.overview.sortby}}</span>      
       <md-field class="toolbar-input">
@@ -31,6 +32,7 @@
 <script>
 import botInfo from './BotInfo.vue'
 import 'vue-material/dist/vue-material.css'
+import headermenu from './Header.vue'
 
 export default {
   computed: {
@@ -39,7 +41,8 @@ export default {
     }
   },
   components: {
-    botInfo
+    botInfo,
+    headermenu
   },
   created () {
     this.$store.dispatch('getAllBots')
