@@ -6,7 +6,10 @@
             <h3 id="title">bot name</h3>
       </div>
       <div id="card-content">
-        <div v-for="(message, messages) in messages" :class="{'message-right': isUser(message.sender), 'message-left': !isUser(message.sender)}">
+        <div 
+        v-for="(message, messages) in messages" 
+        :key="message.message"
+        :class="{'message-right': isUser(message.sender), 'message-left': !isUser(message.sender)}">
           <span>{{message.message}}</span>
         </div>
       </div>
