@@ -19,8 +19,7 @@
           <button class="button" @click="addMessage()">send</button>
         </div>
       </div>
-    </div>
-    
+    </div>    
   </div>
 </template>
 
@@ -32,14 +31,14 @@ export default {
     return {
       message: null,
       messages: [],
-      bot: null
+      bot: null,
+      currentNode: null
     }
   },
   created () {
     this.$store.dispatch('getBotById', this.id)
     setTimeout(() => {
       this.bot = this.$store.getters.getBot
-      console.log(this.bot)
     }, 1000)
   },
   methods: {
@@ -52,25 +51,51 @@ export default {
         this.messages.push(mess)
         this.message = null
         this.scrollToEnd()
-        setTimeout(() => {
-          this.getmessage()
-        }, 300)
+        this.getmessage(mess.message)
       }
     },
     scrollToEnd () {
       var container = this.$el.querySelector('#card-content')
       container.scrollTop = container.clientHeight
     },
-    getmessage () {
+    getmessage (userMsg) {
       let mess = {
         sender: 'agent',
-        message: 'asfagfs'
+        message: ''
       }
+
+      let config = this.bot.config
+      if (this.currentNode === null) {
+        this.currentNode = config.groups
+      }
+
+      mess.message = this.selectNextNode(userMsg)
+
       this.messages.push(mess)
       this.scrollToEnd()
     },
     isUser (sender) {
       return sender === 'user'
+    },
+    getBlockById (id) {
+      for (const block of this.bot.config.blocks) {
+        if (block.id === id) {
+          return block
+        }
+      }
+
+      return null
+    },
+    selectNextNode (usrMsg) {
+      for (const child of this.currentNode) {
+        let block = this.getBlockById(child.block)
+        for (const question of block.questions) {
+          if (question.toLowerCase() === usrMsg.toLowerCase()) {
+            this.currentNode = child.children
+            return block.answer
+          }
+        }
+      }
     }
   }
 }
