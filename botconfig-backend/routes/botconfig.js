@@ -18,6 +18,7 @@ const messages = {
     "botDeleted": "The bot has been deleted successfully!",
     "botHasBeenCreated": "The bot has been created successfully.",
     "botsFound": "All bots has been returned.",
+    "botFound": "The bot has been returned",
     "errorWhileCreating": "Error while creating the bot, please try again.",
     "botHasBeenStarted":"The bot has been successfully started!",
     "botHasBeenStopped":"The bot has been successfully stopped!",
@@ -636,6 +637,28 @@ router.put('/bot/:id', function(req, clientResponse){
     })
 
 });
+
+/**
+ * Returns a bot by ID 
+ */
+router.get('/bot/:id', function(req, clientResponse){
+    let auth = req.header("Authorization");
+    clientResponse.header("Access-Control-Allow-Origin", "*");
+    if(auth === undefined){
+        responseToClient(clientResponse, 401, true, messages.unauthorized);
+        return;
+    }
+    let id = req.params.id;
+    dbcon.readFromDB({
+        botId:id
+    }).then(res => {
+        if (Object.getOwnPropertyNames(res).length !== 0) {
+            responseToClient(clientResponse, 200, false, messages.botFound, res)
+        } else {
+            responseToClient(clientResponse, 404, true, messages.botNotFound)
+        }        
+    })
+})
 
 /**
  * Status
