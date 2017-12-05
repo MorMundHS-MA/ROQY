@@ -261,15 +261,13 @@ export default {
         {
           rowSelect: this.rowSelect,
           rootSelect: this.rootSelect,
-          block: this.blocks,
+          blocks: this.blocks,
           groups: this.groups
         }
 
-      let conf = JSON.stringify(saveObj)
-      console.log(conf)
       axios.put(
         '/bot/' + this.id + '/config/',
-        conf,
+        saveObj,
         {
           headers: {Authorization: 'ed2ff1a97f924b8e8a1402e6700a8bf4'}
         })
