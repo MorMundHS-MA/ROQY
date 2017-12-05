@@ -686,6 +686,7 @@ router.get('/bot/:id/status', function(req, clientResponse){
 });
 
 router.put('/bot/:id/privacy', function(req, clientResponse){
+    clientResponse.header("Access-Control-Allow-Origin", "*");
     let auth = req.header("Authorization");
     let id = req.params.id;
     if(auth === undefined){
