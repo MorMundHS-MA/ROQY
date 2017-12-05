@@ -58,6 +58,16 @@ export default {
   components: {
     blockConfig, blockView, treeView
   },
+  created () {
+    this.$store.dispatch('getBotById', this.id)
+    setTimeout(() => {
+      let bot = this.$store.getters.getBot.config
+      console.log(bot)
+      if (bot !== null && bot !== undefined) {
+        this.loadConfig(bot)
+      }
+    }, 1000)
+  },
   computed: {
     /**
      * Returns all groups that are currently selected in the tree
@@ -239,8 +249,8 @@ export default {
     /**
      * Load the config data from a json string
      */
-    loadConfig (string) {
-      let json = JSON.parse(string)
+    loadConfig (json) {
+      console.log('Loading config')
       this.rowSelect = json.rowSelect
       this.rootSelect = json.rootSelect
       this.blocks = json.blocks

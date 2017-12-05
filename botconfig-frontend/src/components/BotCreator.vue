@@ -97,9 +97,8 @@ export default {
       if (this.allValid) {
         this.$store.dispatch('addNewBot', {
           name: this.botname,
-          image: '../assets/bot.png',
-          status: 'offline',
-          description: this.description
+          description: this.description,
+          template: this.template.name
         })
         this.$router.push('/bots')
       }

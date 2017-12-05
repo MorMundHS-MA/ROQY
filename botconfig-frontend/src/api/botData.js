@@ -21,8 +21,9 @@ export default {
         'description': bot.description,
         'intents': [],
         'test': 'true',
-        'botType': 'faq',
-        'privacy': 'private'
+        'botType': bot.template,
+        'privacy': 'private',
+        'config': null
       },
         {
           headers: {
