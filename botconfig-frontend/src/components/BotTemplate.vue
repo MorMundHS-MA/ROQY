@@ -1,6 +1,6 @@
 <template>
   <div>
-
+  <headermenu></headermenu>
     <div class="md-toolbar">
       <span style="margin-right:5px">{{$lang.translate.overview.sortby}}</span>      
       <md-field class="toolbar-input">
@@ -61,6 +61,7 @@
 </template>
 <script>
 import 'vue-material/dist/vue-material.css'
+import headermenu from './Header.vue'
 
 export default {
   data () {
@@ -72,6 +73,9 @@ export default {
     templates () {
       return this.$store.getters.getTemplates
     }
+  },
+  components: {
+    headermenu
   },
   methods: {
     deleteItem (item) {
