@@ -34,7 +34,9 @@ module.exports = {
     cancel: 'Cancel',
     running: 'Active',
     stopped: 'Inactive',
-    upload: 'Upload to marketplace'
+    marketplace: 'Upload',
+    marketplaceInnerBubble: 'Do you really want to upload this bot?',
+    upload: 'Upload'
   },
   overview: {
     create: 'create new bot',
@@ -44,8 +46,14 @@ module.exports = {
     search: 'Search'
   },
   login: {
-    tittle: 'Login',
+    title: 'Login',
     username: 'Username',
     password: 'Password'
+  },
+  template: {
+    delete: 'delete'
+  },
+  config: {
+    unnamedBlock: 'Unnamed Block'
   }
 }
