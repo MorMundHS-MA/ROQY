@@ -54,6 +54,15 @@ module.exports = {
     delete: 'delete'
   },
   config: {
-    unnamedBlock: 'Unnamed Block'
+    unnamedBlock: 'Unnamed Block',
+    favoriteBlocks: 'Favorite Blocks',
+    favoriteHint: 'Drag and Drop your favorite blocks into the bot structure',
+    question: 'If user says something similar to:',
+    answer: 'Bot replies with?',
+    add: 'Add new item...',
+    test: 'Test',
+    save: 'Save',
+    favorite: 'favorite',
+    delete: 'delete'
   }
 }
