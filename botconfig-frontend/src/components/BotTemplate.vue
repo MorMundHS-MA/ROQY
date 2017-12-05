@@ -26,12 +26,12 @@
             <div id="right-text">
 
               <div class="auswahlmenü">
-                <md-menu clas md-direction="bottom right">
+                <md-menu clas md-direction="bottom left">
                 <md-button class="md-icon-button header-menu-btn" md-menu-trigger>
                   <md-icon>more_vert</md-icon>
                 </md-button>
                 <md-menu-content>
-                  <md-menu-item v-on:click="openDialog(ref1)">
+                  <md-menu-item v-on:click="openDialog(ref1, template)">
                     <span>{{$lang.translate.template.delete}}</span>
                   </md-menu-item>
                 </md-menu-content>
@@ -44,7 +44,7 @@
             </div>
         </md-card-header> 
       </md-card>
-      </md-layout>
+    </md-layout>
   </md-layout>
 
   <md-dialog md-open-from="#confirm" md-close-to="#confirm" ref='dialog1'>
@@ -52,7 +52,7 @@
     <md-dialog-content>{{$lang.translate.info.contentHtml}}</md-dialog-content>
     <md-dialog-actions>
       <md-button class="md-primary" v-on:click="closeDialog(ref1)"> {{$lang.translate.info.cancel}}</md-button>
-      <md-button class="md-primary" v-on:click="deleteItem(botData)" disabled>{{$lang.translate.info.ok}}</md-button>
+      <md-button class="md-primary" @click="deleteItem()" >{{$lang.translate.info.ok}}</md-button>
     </md-dialog-actions>
   </md-dialog>
 
@@ -66,7 +66,8 @@ import headermenu from './Header.vue'
 export default {
   data () {
     return {
-      ref1: 'dialog1'
+      ref1: 'dialog1',
+      selectedTemplate: null
     }
   },
   computed: {
@@ -78,15 +79,17 @@ export default {
     headermenu
   },
   methods: {
-    deleteItem (item) {
-      this.$store.dispatch('deleteBot', item)
-      this.closeDialog(this.confirm.ref1)
+    deleteItem () {
+      this.$store.dispatch('deleteTemplate', this.selectedTemplate)
+      this.closeDialog(this.ref1)
     },
-    openDialog (ref) {
+    openDialog (ref, template) {
       this.$refs[ref].open()
+      this.selectedTemplate = template
     },
     closeDialog (ref) {
       this.$refs[ref].close()
+      this.selectedTemplate = null
     }
   },
   created () {
@@ -99,13 +102,14 @@ export default {
   .md-card{
     min-width: 550px;
     min-height: 235px;
-    max-width: 550px;
-    max-height: 235px;
+    max-width: 500px;
+    max-height: 200px;
     word-wrap:break-word;
     margin-top: 12.5px;
     margin-bottom: 12.5px;
     margin-right: 15px;
     margin-left: 15px;
+    padding: 2px;
   }
   .md-card-content{
     word-wrap:break-word;
@@ -115,8 +119,8 @@ export default {
     margin: 10px;
   }
   img{
-    width: 150px;
-    height: 150px;
+    width: 120px;
+    height: 120px;
     float: left;
   }
   #imgwrapper{
@@ -125,7 +129,6 @@ export default {
     text-align: left;
   }
   #right-text{
-    text-align: left;
     padding-left: 50.5px;
   }
   #template-name{
