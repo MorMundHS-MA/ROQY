@@ -51,6 +51,7 @@ export default new Router({
       path: '/bot/:id/config/test',
       name: 'test',
       component: test,
+      beforeEnter: requireAuth,
       props: true
     },
     {
