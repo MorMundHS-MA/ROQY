@@ -59,14 +59,9 @@ export default {
     blockConfig, blockView, treeView
   },
   created () {
-    this.$store.dispatch('getBotById', this.id)
-    setTimeout(() => {
-      let bot = this.$store.getters.getBot.config
-      console.log(bot)
-      if (bot !== null && bot !== undefined) {
-        this.loadConfig(bot)
-      }
-    }, 1000)
+    if (this.id !== undefined) {
+      this.loadBot()
+    }
   },
   computed: {
     /**
@@ -312,6 +307,16 @@ export default {
       console.log('complete drag : ' + this.favDrag)
       this.subGroups[this.rowSelect].children.push(this.favDrag)
       this.favDrag = null
+    },
+    loadBot () {
+      this.$store.dispatch('getBotById', this.id)
+      setTimeout(() => {
+        let bot = this.$store.getters.getBot.config
+        console.log(bot)
+        if (bot !== null && bot !== undefined) {
+          this.loadConfig(bot)
+        }
+      }, 1000)
     }
   }
 }
