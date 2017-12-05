@@ -88,6 +88,9 @@ export default {
     closeDialog (ref) {
       this.$refs[ref].close()
     }
+  },
+  created () {
+    this.$store.dispatch('getTemplates')
   }
 }
 </script>

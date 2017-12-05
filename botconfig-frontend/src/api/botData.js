@@ -21,8 +21,9 @@ export default {
         'description': bot.description,
         'intents': [],
         'test': 'true',
-        'botType': 'faq',
-        'privacy': 'private'
+        'botType': bot.template,
+        'privacy': 'private',
+        'config': null
       },
         {
           headers: {
@@ -94,12 +95,11 @@ export default {
             })
     }, 100)
   },
-  getBot (cb, bot) {
+  getBot (cb, id) {
     setTimeout(() => {
-      axios.get('/bot/' + bot.id, {
-      })
+      axios.get('/bot/' + id, { headers: { Authorization: 'ed2ff1a97f924b8e8a1402e6700a8bf4' } })
       .then(function (response) {
-        cb(bot)
+        cb(response.data.extra)
       })
       .catch(function (error) {
         console.log(error)

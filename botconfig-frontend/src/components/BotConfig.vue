@@ -58,6 +58,11 @@ export default {
   components: {
     blockConfig, blockView, treeView
   },
+  created () {
+    if (this.id !== undefined) {
+      this.loadBot()
+    }
+  },
   computed: {
     /**
      * Returns all groups that are currently selected in the tree
@@ -239,8 +244,8 @@ export default {
     /**
      * Load the config data from a json string
      */
-    loadConfig (string) {
-      let json = JSON.parse(string)
+    loadConfig (json) {
+      console.log('Loading config')
       this.rowSelect = json.rowSelect
       this.rootSelect = json.rootSelect
       this.blocks = json.blocks
@@ -261,15 +266,13 @@ export default {
         {
           rowSelect: this.rowSelect,
           rootSelect: this.rootSelect,
-          block: this.blocks,
+          blocks: this.blocks,
           groups: this.groups
         }
 
-      let conf = JSON.stringify(saveObj)
-      console.log(conf)
       axios.put(
         '/bot/' + this.id + '/config/',
-        conf,
+        saveObj,
         {
           headers: {Authorization: 'ed2ff1a97f924b8e8a1402e6700a8bf4'}
         })
@@ -304,6 +307,16 @@ export default {
       console.log('complete drag : ' + this.favDrag)
       this.subGroups[this.rowSelect].children.push(this.favDrag)
       this.favDrag = null
+    },
+    loadBot () {
+      this.$store.dispatch('getBotById', this.id)
+      setTimeout(() => {
+        let bot = this.$store.getters.getBot.config
+        console.log(bot)
+        if (bot !== null && bot !== undefined) {
+          this.loadConfig(bot)
+        }
+      }, 1000)
     }
   }
 }
@@ -335,6 +348,29 @@ export default {
 }
 .group-wrapper {
   height: 80%;
+}
+#group-wrapper {
+  height: 80%;
+  padding: 25px;
+}
+
+.block-config-wrapper {
+  height: 100%;
+  flex: 1;
+}
+
+.block-wrapper {
+  height: 20%;
+}
+
+#leftside {
+  width: 66%;
+  height: 100%;
+}
+
+.wrapper {
+  background-color: white;
+  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.2), 0px 2px 2px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0, 0.12)
 }
 
 .block-config-wrapper {
