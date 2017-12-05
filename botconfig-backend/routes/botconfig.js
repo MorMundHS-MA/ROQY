@@ -100,8 +100,9 @@ function existsAgent(id) {
 /**
  *
  */
-router.get("/auth", function(req, clientResponse){
+router.post("/auth", function(req, clientResponse){
     // TODO Real authorization --> Liveperson!
+    clientResponse.header("Access-Control-Allow-Origin", "*");
     let username = req.param("username");
     let password = req.param("password");
     console.log(username + " " + password);
@@ -867,7 +868,7 @@ router.options("/bot/public", function(req, clientResponse){
 });
 
 router.options("/auth", function(req, clientResponse){
-    clientResponse.header("Access-Control-Allow-Methods", "GET, OPTIONS");
+    clientResponse.header("Access-Control-Allow-Methods", "POST, OPTIONS");
     clientResponse.header("Access-Control-Allow-Origin", "*");
     clientResponse.header("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
     clientResponse.header("Acces-Control-Max-Age", 86400);
