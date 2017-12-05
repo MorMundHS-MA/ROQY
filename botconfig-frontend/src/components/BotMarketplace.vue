@@ -1,5 +1,6 @@
 <template>
   <div id="marketplace">
+    <headermenu></headermenu>
     <div class="row">
       <div v-for="(marketplacebot, botsforMarketplace) in botsforMarketplace" :key="marketplacebot.name">
         <div class="bot-wrapper">
@@ -17,6 +18,7 @@
 <script>
 import botInfo from './BotInfo.vue'
 import 'vue-material/dist/vue-material.css'
+import headermenu from './Header.vue'
 
 export default {
   name: 'marketplace',
@@ -26,7 +28,8 @@ export default {
     }
   },
   components: {
-    botInfo
+    botInfo,
+    headermenu
   },
   created () {
     this.$store.dispatch('getAllmarketplaceBots')
