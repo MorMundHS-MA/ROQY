@@ -664,6 +664,7 @@ router.get('/bot/:id', function(req, clientResponse){
  * This endpoint is for getting a request to save config-files into the database.
  */
 router.put('/bot/:id/config', function(req, clientResponse){
+    clientResponse.header("Access-Control-Allow-Origin", "*");
     let auth = req.header("Authorization");
     if(auth === undefined){
         responseToClient(clientResponse, 401, true, messages.unauthorized);
