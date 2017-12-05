@@ -465,7 +465,50 @@ function createLivepersonUser(bot, auth){
 
     })
 }
-
+function deleteLivepersonUser(bot, auth){
+    return new Promise(resolve => {
+        const livePersonLoginDomain = "https://lo.agentvep.liveperson.net/api/account/" + auth + "/login?v=1.3";
+        const livePersonAccountDomain = "https://lo.ac.liveperson.net/api/account/" + auth + "/configuration/le-users/users";
+        const livePersonSkillDomain = "https://lo.ac.liveperson.net/api/account/" + auth + "/configuration/le-users/skills";
+        const authPayload = {
+            "username":"BotMaster",
+            "password":"masterOfBots"
+        };
+        let options = {
+            "uri":livePersonLoginDomain,
+            "method":"POST",
+            "body":authPayload,
+            "headers":{
+                "Content-Type":"application/json"
+            },
+            "json":true
+        };
+        requestPromise(options)
+            .then(response => {
+                options.headers.Authorization = "Bearer " + response.bearer;
+                options.uri = livePersonAccountDomain;
+                options.method = "GET";
+            }).then(() => requestPromise(options))
+            .then(response => {
+                let accountId = undefined;
+                for(let i = 0; i<response.length && accountId === undefined; i++){
+                    if(response[i].loginName === bot.name){
+                        accountId = response[i].id;
+                    }
+                }
+                options.method = "DELETE";
+                options.body = [accountId];
+            })
+            .then(() => requestPromise(options))
+            .then(response => {
+                delete options.body;
+                options.uri = livePersonSkillDomain + "/" +  bot.skill;
+            }).then(requestPromise(options))
+            .then(response => {
+                resolve(response);
+            });
+    })
+}
 
 router.get('/bot/public', function(req, clientResponse){
     clientResponse.header("Access-Control-Allow-Origin", "*");
