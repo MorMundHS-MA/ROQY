@@ -51,7 +51,7 @@ const actions = {
         )
   },
   getBotById ({commit}, id) {
-    data.getBot(bot => {
+    data.getBot((bot) => {
       commit(types.RECEIVE_BOT_BY_ID, { bot })
     }, id)
   }
@@ -77,7 +77,8 @@ const mutations = {
     state.bots[state.bots.indexOf(bot)].status = 'Stopped'
   },
   [types.RECEIVE_BOT_BY_ID] (state, { bot }) {
-    return bot
+    console.log(bot)
+    state.bot = bot
   }
 }
 export default {

@@ -3,7 +3,7 @@
     <div id="test-card">
       <div class="card-header">
             <img src="../assets/bot.png"/>
-            <h3 id="title">bot name</h3>
+            <h3 id="title">{{bot.name}}</h3>
       </div>
       <div id="card-content">
         <div 
@@ -31,13 +31,16 @@ export default {
   data () {
     return {
       message: null,
-      messages: []
+      messages: [],
+      bot: null
     }
   },
-  computed: {
-    bot () {
-      return this.$store.dispatch('getBotById', '1512396066014id')
-    }
+  created () {
+    this.$store.dispatch('getBotById', this.id)
+    setTimeout(() => {
+      this.bot = this.$store.getters.getBot
+      console.log(this.bot)
+    }, 1000)
   },
   methods: {
     addMessage () {

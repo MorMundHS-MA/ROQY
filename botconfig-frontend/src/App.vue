@@ -20,10 +20,7 @@ export default {
     setTimeout(() => {
       let user = JSON.parse(this.$localStorage.get('user'))
       this.$store.dispatch('logIn', user)
-    }, 200)
-    this.$store.dispatch('getAllBots')
-    this.$store.dispatch('getAllmarketplaceBots')
-    // this.$store.dispatch('getTemplates')
+    }, 100)
   },
   computed: {
     check () {
