@@ -139,13 +139,7 @@ export default {
       this.$refs[ref].close()
     },
     uploadBot (item) {
-      this.$store.dispatch('addNewMarketplace', {
-        name: this.botname,
-        image: '../assets/bot.png',
-        status: 'offline',
-        description: this.description
-      })
-      this.$router.push('/marketplace')
+      this.$store.dispatch('addNewMarketplace', item)
       this.closeDialog(this.confirm.ref3)
     }
   }

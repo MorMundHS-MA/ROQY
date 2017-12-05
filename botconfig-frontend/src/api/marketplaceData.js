@@ -18,11 +18,6 @@ export default {
   addNewMarketplace (cb, bot) {
     setTimeout(function () {
       axios.put('/bot/' + bot.id + '/privacy', {
-        'name': bot.name,
-        'description': bot.description,
-        'intents': [],
-        'test': 'true',
-        'botType': 'faq',
         'privacy': 'public'
       },
         {
@@ -41,7 +36,6 @@ export default {
   },
   deleteBot (cb, bot) {
     setTimeout(function () {
-      console.log(bot)
       axios.delete('/bot/' + bot.id, {
         headers: {
           Authorization: 'ed2ff1a97f924b8e8a1402e6700a8bf4'
