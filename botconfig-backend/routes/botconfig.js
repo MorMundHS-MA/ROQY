@@ -711,22 +711,12 @@ router.put('/bot/:id/privacy', function(req, clientResponse){
         responseToClient(clientResponse, 406, true, messages.privacyNotAcceptable);
         return;
     }
-    dbcon.readFromDB({
-        botId:id
-    }).then(res => {
-        if(res !== {}) {
-            res.privacy = privacy;
-            dbcon.writeToDB({
-                botId: id,
-                data: res
-            }).then(success => {
-                if(success){
-                    responseToClient(clientResponse, 200, false, messages.privacyUpdated);
-                }else{
-                    responseToClient(clientResponse, 500, true, messages.botNotFound);
-                }
-            })
-        }
+    dbcon.setPrivacy(id, privacy)
+    .then(function () {
+        responseToClient(clientResponse, 200, false, messages.privacyUpdated);
+    })
+    .catch(function () {
+        responseToClient(clientResponse, 500, true, messages.botNotFound);
     })
 });
 
