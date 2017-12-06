@@ -52,7 +52,7 @@ export default {
     this.$store.dispatch('getBotById', this.id)
     setTimeout(() => {
       this.bot = this.$store.getters.getBot
-    }, 100)
+    }, 1000)
   },
   methods: {
     addMessage () {
