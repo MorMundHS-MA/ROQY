@@ -36,7 +36,7 @@ export default {
       setTimeout(() => {
         this.$store.dispatch('logOut')
         this.$router.push('/')
-      }, 100)
+      }, 1000)
       this.clearLocalStorage()
     },
     clearLocalStorage () {

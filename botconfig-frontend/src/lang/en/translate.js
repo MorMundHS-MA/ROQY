@@ -64,10 +64,5 @@ module.exports = {
     save: 'Save',
     favorite: 'favorite',
     delete: 'delete'
-  },
-  test: {
-    back: 'go back',
-    forward: 'looks good!',
-    title: 'Testing'
   }
 }
