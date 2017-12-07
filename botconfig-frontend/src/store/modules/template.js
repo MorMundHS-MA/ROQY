@@ -6,19 +6,14 @@ import foto from '../../assets/bot.png'
 const state = {
   templates: [
     {
-      name: 'welcome',
+      name: 'Welcome Bot',
       image: foto,
       description: 'Ich leite nur weiter...'
     },
     {
-      name: 'faq',
+      name: 'Faq Bot',
       image: foto,
       description: 'Man nennt mich auch LUIS'
-    },
-    {
-      name: 'Ravenclaw-Bot',
-      image: foto,
-      description: 'Ich kann einfach alles!'
     }
   ]
 }
@@ -35,6 +30,9 @@ const mutations = {
 
   [types.RECEIVE_TEMPLATES] (state, { templates }) {
     state.templates = templates
+  },
+  [types.DELETE_TEMPLATE] (state, { template }) {
+    state.templates.splice(state.templates.indexOf(template), 1)
   }
 }
 
@@ -48,6 +46,9 @@ const actions = {
     data.addNewTemplate(teamplate => {
       commit(types.ADD_NEW_TEMPALTE, { template })
     }, template)
+  },
+  deleteTemplate ({commit}, template) {
+    commit(types.DELETE_TEMPLATE, { template })
   }
 }
 
