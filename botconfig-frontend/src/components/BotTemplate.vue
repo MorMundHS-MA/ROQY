@@ -23,25 +23,25 @@
           <div id="imgwrapper">
             <img src="../assets/bot.png" :alt="template.name">
           </div>
-            <div id="right-text">
 
-              <div class="auswahlmenü">
-                <md-menu clas md-direction="bottom left">
-                <md-button class="md-icon-button header-menu-btn" md-menu-trigger>
-                  <md-icon>more_vert</md-icon>
-                </md-button>
-                <md-menu-content>
-                  <md-menu-item v-on:click="openDialog(ref1, template)">
-                    <span>{{$lang.translate.template.delete}}</span>
-                  </md-menu-item>
-                </md-menu-content>
-                </md-menu>
-              </div>
+          <div class="auswahlmenü">
+            <md-menu clas md-direction="bottom left">
+            <md-button class="md-icon-button header-menu-btn" md-menu-trigger>
+              <md-icon>more_vert</md-icon>
+            </md-button>
+            <md-menu-content>
+              <md-menu-item v-on:click="openDialog(ref1, template)">
+                <span>{{$lang.translate.template.delete}}</span>
+              </md-menu-item>
+            </md-menu-content>
+            </md-menu>
+          </div>
 
-              <div id="template-name">{{template.name}}</div>
-              <div id="template-title">{{template.name}}</div>
-              <div id="template-desc">{{template.description}}</div>
-            </div>
+          <div id="right-text">
+            <div id="template-name">{{template.name}}</div>
+            <div id="template-title">{{template.name}}</div>
+            <div id="template-desc">{{template.description}}</div>
+          </div>
         </md-card-header> 
       </md-card>
     </md-layout>
@@ -114,10 +114,6 @@ export default {
   .md-card-content{
     word-wrap:break-word;
   }
-  #template-title{
-    text-align: ;
-    margin: 10px;
-  }
   img{
     width: 140px;
     height: 140px;
@@ -130,12 +126,16 @@ export default {
   }
   #right-text{
     padding-left: 50.5px;
+    margin-top: 35px;
+    text-align: left;
+    margin-left: 35%
   }
   #template-name{
     font-size: 10px;
   }
   #template-title{
     font-size: 24px;
+    margin: 12.5px 0px;
   }
   #template-desc{
     font-size: 14px;
