@@ -20,7 +20,7 @@ export default {
     setTimeout(() => {
       let user = JSON.parse(this.$localStorage.get('user'))
       this.$store.dispatch('logIn', user)
-    }, 100)
+    }, 10)
   },
   computed: {
     check () {

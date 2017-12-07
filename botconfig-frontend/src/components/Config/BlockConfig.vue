@@ -40,7 +40,7 @@
       </div>
       
       <div class='block-wrapper'>
-        <textarea v-model="answer"></textarea>
+        <textarea v-model="answer" ></textarea>
       </div>
       </div>
     </div>
@@ -155,7 +155,7 @@ export default {
 .margin {
   margin-top: 6%;
 }
-.block-wrapper {
+.block-wrapper{
   border: 2px solid gray;
   border-radius: 4px;
   padding: 2%;

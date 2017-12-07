@@ -1,5 +1,17 @@
 <template>
   <div id="test">
+
+    <div id="test-header">
+      <div style="margin-right:20px;">
+        <button class="button-top" @click="goback()">{{$lang.translate.test.back}}</button>
+        <button class="button-top" @click="goforward()">{{$lang.translate.test.forward}}</button>
+      </div>
+    </div>
+
+    <div id="test-title">
+      <h2>{{$lang.translate.test.title}}</h2>
+    </div>
+
     <div id="test-card">
       <div class="card-header">
             <img src="../assets/bot.png"/>
@@ -16,8 +28,9 @@
       <div class="card-footer">
         <div class="footer-content">
           <input type="message" placeholder="write a message" v-model="message" @keyup.enter="addMessage()"/>
-          <button class="button" @click="addMessage()">send</button>
+          <button class="button-buttom" @click="addMessage()">send</button>
         </div>
+        <div style="clear:both"></div>
       </div>
     </div>    
   </div>
@@ -39,7 +52,7 @@ export default {
     this.$store.dispatch('getBotById', this.id)
     setTimeout(() => {
       this.bot = this.$store.getters.getBot
-    }, 1000)
+    }, 100)
   },
   methods: {
     addMessage () {
@@ -96,6 +109,12 @@ export default {
           }
         }
       }
+    },
+    goback () {
+      this.$router.push({name: 'config', params: {id: this.id}})
+    },
+    goforward () {
+      this.$router.push('/bots')
     }
   }
 }
@@ -105,11 +124,23 @@ export default {
 #test {
   min-width: 463px;
 }
+#test-header {
+  padding: 3px;
+  display: flex;
+  flex-direction: row-reverse;
+}
+#test-title {
+  text-align: center;
+  font-size: 25px;
+}
+#test-title>h2 {
+  
+}
 #test-card {
   width: 40%;
   min-height: 560px;
   max-height: 560px;
-  margin: 7% auto;
+  margin: 3% auto;
   border: 2px solid grey;
   border-radius: 3px;
   box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.2), 0px 2px 2px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0, 0.12)
@@ -156,12 +187,25 @@ input {
   min-width: 70%;
   overflow-wrap: break-word
 }
-.button {
+.button-top {
   background-color: orange;
   border: 1.5px solid grey;
   color: white;
   padding: 5px 14px;
-  border-radius: 4px;
+  border-radius: 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  cursor: pointer;
+  margin-top: 2px;
+  margin-right: 3px;
+}
+.button-buttom {
+  background-color: orange;
+  border: 1.5px solid grey;
+  color: white;
+  padding: 5px 14px;
+  border-radius: 7px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
@@ -173,7 +217,7 @@ input {
 .message-right {
   background-color: #4f8ff7;
   max-width: 45%;
-  border-radius: 20px;
+  border-radius: 10px;
   padding: 6px 7px;
   margin-bottom: 6px;
   margin-left: auto;
