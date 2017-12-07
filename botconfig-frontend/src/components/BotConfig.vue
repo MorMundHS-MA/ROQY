@@ -282,6 +282,8 @@ export default {
           } else {
             this.$router.push('/bots')
           }
+          this.$store.commit('resetBot')
+          console.log('here' + this.$store.getters.getbot)
         })
         .catch(() => {
           alert('Failed to upload your bot. Please try again.')
@@ -310,13 +312,18 @@ export default {
     },
     loadBot () {
       this.$store.dispatch('getBotById', this.id)
-      setTimeout(() => {
-        let bot = this.$store.getters.getBot.config
-        console.log(bot)
-        if (bot !== null && bot !== undefined) {
+      let bot = null
+      const getBot = setInterval(() => {
+        bot = this.$store.getters.getBot.config
+        if (bot !== null || bot !== undefined) {
           this.loadConfig(bot)
+          stopMe()
         }
-      }, 1000)
+        console.log(bot)
+      }, 100)
+      function stopMe () {
+        clearInterval(getBot)
+      }
     }
   }
 }
@@ -330,7 +337,7 @@ export default {
 #group-wrapper {
   height: 80%;
   padding: 25px;
-  overflow: auto;
+  overflow-x: auto;
 }
 
 .block-wrapper {

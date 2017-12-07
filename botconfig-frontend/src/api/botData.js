@@ -4,26 +4,42 @@ axios.defaults.baseURL = 'http://141.19.142.7:3000'
 
 export default {
   getBots (cb) {
-    setTimeout(function () {
-      axios.get('/bot', { headers: { Authorization: 'ed2ff1a97f924b8e8a1402e6700a8bf4' } })
-            .then(function (response) {
-              cb(response.data.extra)
-            })
-            .catch(function (error) {
-              console.log(error)
-            })
-    }, 100)
+    axios.get('/bot', { headers: { Authorization: 'ed2ff1a97f924b8e8a1402e6700a8bf4' } })
+          .then(function (response) {
+            cb(response.data.extra)
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
   },
   addNewBot (cb, bot) {
-    setTimeout(function () {
-      axios.post('/bot', {
-        'name': bot.name,
-        'description': bot.description,
-        'intents': [],
-        'test': 'true',
-        'botType': bot.template,
-        'privacy': 'private',
-        'config': null
+    axios.post('/bot', {
+      'name': bot.name,
+      'description': bot.description,
+      'intents': [],
+      'test': 'true',
+      'botType': bot.template,
+      'privacy': 'private',
+      'config': null
+    },
+      {
+        headers: {
+          Authorization: 'ed2ff1a97f924b8e8a1402e6700a8bf4'
+        }
+      })
+    .then(function (response) {
+      bot.id = response.data.extra.botId
+      console.log(response.data.extra)
+      cb(bot)
+    })
+    .catch(function (error) {
+      console.log(error)
+    })
+  },
+  changeBotState (bot, start, stop) {
+    if (bot.status === 'running') {
+      axios.put('/bot/' + bot.id + '/stop', {
+        'status': 'stopped'
       },
         {
           headers: {
@@ -31,89 +47,62 @@ export default {
           }
         })
       .then(function (response) {
-        bot.id = response.data.extra.botId
-        cb(bot)
+        stop(bot)
       })
       .catch(function (error) {
         console.log(error)
       })
-    }, 100)
-  },
-  changeBotState (bot, start, stop) {
-    setTimeout(function () {
-      if (bot.status === 'running') {
-        axios.put('/bot/' + bot.id + '/stop', {
-          'status': 'stopped'
-        },
-          {
-            headers: {
-              Authorization: 'ed2ff1a97f924b8e8a1402e6700a8bf4'
-            }
-          })
-        .then(function (response) {
-          stop(bot)
+    } else {
+      axios.put('/bot/' + bot.id + '/start', {
+        'status': 'running'
+      },
+        {
+          headers: {
+            Authorization: 'ed2ff1a97f924b8e8a1402e6700a8bf4'
+          }
         })
-        .catch(function (error) {
-          console.log(error)
-        })
-      } else {
-        axios.put('/bot/' + bot.id + '/start', {
-          'status': 'running'
-        },
-          {
-            headers: {
-              Authorization: 'ed2ff1a97f924b8e8a1402e6700a8bf4'
-            }
-          })
-        .then(function (response) {
-          start(bot)
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
-      }
-    }, 100)
+      .then(function (response) {
+        start(bot)
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+    }
   },
   deleteBot (cb, bot) {
-    setTimeout(function () {
-      axios.delete('/bot/' + bot.id, {
-        headers: {
-          Authorization: 'ed2ff1a97f924b8e8a1402e6700a8bf4'
-        },
-        data: {
-          test: ''
-        }
-      })
-      .then(function (response) {
-        cb(bot)
-      })
-      .catch(function (error) {
-        console.log(error)
-      })
-    }, 100)
+    axios.delete('/bot/' + bot.id, {
+      headers: {
+        Authorization: 'ed2ff1a97f924b8e8a1402e6700a8bf4'
+      },
+      data: {
+        test: ''
+      }
+    })
+    .then(function (response) {
+      cb(bot)
+    })
+    .catch(function (error) {
+      console.log(error)
+    })
   },
   renameBot (cb, bot) {
-    setTimeout(function () {
-      bot[0].name = bot[1].name
-      axios.put('/bot/' + bot[0].id, bot[0], { headers: { Authorization: 'ed2ff1a97f924b8e8a1402e6700a8bf4' } })
-            .then(function (response) {
-              cb(bot)
-            })
-            .catch(function (error) {
-              console.log(error)
-            })
-    }, 100)
+    bot[0].name = bot[1].name
+    axios.put('/bot/' + bot[0].id, bot[0], { headers: { Authorization: 'ed2ff1a97f924b8e8a1402e6700a8bf4' } })
+          .then(function (response) {
+            cb(bot)
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
   },
   getBot (cb, id) {
-    setTimeout(() => {
-      axios.get('/bot/' + id, { headers: { Authorization: 'ed2ff1a97f924b8e8a1402e6700a8bf4' } })
-      .then(function (response) {
-        cb(response.data.extra)
-      })
-      .catch(function (error) {
-        console.log(error)
-      })
-    }, 100)
+    axios.get('/bot/' + id, { headers: { Authorization: 'ed2ff1a97f924b8e8a1402e6700a8bf4' } })
+    .then(function (response) {
+      cb(response.data.extra)
+    })
+    .catch(function (error) {
+      console.log(error)
+    })
   }
 
 }

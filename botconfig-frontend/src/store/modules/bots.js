@@ -79,6 +79,9 @@ const mutations = {
   [types.RECEIVE_BOT_BY_ID] (state, { bot }) {
     console.log(bot)
     state.bot = bot
+  },
+  resetBot (state) {
+    state.bot = null
   }
 }
 export default {

@@ -50,9 +50,19 @@ export default {
   },
   created () {
     this.$store.dispatch('getBotById', this.id)
-    setTimeout(() => {
-      this.bot = this.$store.getters.getBot
-    }, 1000)
+    let bot = null
+
+    const getBot = setInterval(() => {
+      bot = this.$store.getters.getBot
+      if (bot !== null || bot !== undefined) {
+        this.bot = bot
+        stopMe()
+      }
+      console.log(bot)
+    }, 100)
+    function stopMe () {
+      clearInterval(getBot)
+    }
   },
   methods: {
     addMessage () {
