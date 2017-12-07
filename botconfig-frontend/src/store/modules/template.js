@@ -14,11 +14,6 @@ const state = {
       name: 'faq',
       image: foto,
       description: 'Man nennt mich auch LUIS'
-    },
-    {
-      name: 'Ravenclaw-Bot',
-      image: foto,
-      description: 'Ich kann einfach alles!'
     }
   ]
 }
