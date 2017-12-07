@@ -57,7 +57,7 @@ export default {
       if (this.search === '') {
         return true
       } else {
-        return input.includes(this.search)
+        return input.toUpperCase().includes(this.search.toUpperCase())
       }
     }
   }
