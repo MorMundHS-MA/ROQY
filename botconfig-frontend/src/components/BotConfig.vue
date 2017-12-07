@@ -316,7 +316,7 @@ export default {
         if (bot !== null && bot !== undefined) {
           this.loadConfig(bot)
         }
-      }, 100)
+      }, 1000)
     }
   }
 }
