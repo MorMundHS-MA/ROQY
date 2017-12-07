@@ -4,15 +4,15 @@ const url = 'mongodb://141.19.145.166:27017/mydb'
 let mongo = require('mongodb');
 let chai = require('chai');
 let chaiHttp = require('chai-http');
-let should = chai.should;
+let should = chai.should();
 
 let server;
-const livePersonPw = 'd"w3}~T^gVyHhFnM';
+const authKey = 'ed2ff1a97f924b8e8a1402e6700a8bf4';
 
 chai.use(chaiHttp);
 
 beforeEach(function () {
-    server = require('../routes/botconfig');
+    server = require('../app');
 })
 /**
  * Test for the post method to insert a bot
@@ -21,18 +21,17 @@ describe('/POST botconfig', () => {
 
     it('should insert a bot', (done) => {
 
-        let testBot = { name: 'pinkSparkles', 
-        botType : "faq" };
+        let testBot = { name: 'pinkSparkles', description: 'Titty streamer on twitch.tv', test: true, privacy: 'public',  botType : 'faq', intents: [] };
 
         chai.request(server)
             .post('/bot')
-            //.writeHead( { 'Authorization' : livePersonPw } )
+            .set('Authorization', authKey)
             .send(testBot)
             .end((err, res) => {
+                res.should.have.status(200)
                 console.log(res.body)
-                res.should.have.status(404)
-            });
-        done();
+                done();
+            });        
     })
 })
 
@@ -47,8 +46,8 @@ describe('/GET botconfig', () => {
             .get('/bot')
             .end((err, res) => {
                 res.should.have.status(200)
+                done();
             })
-        done();
     })
 })
 
@@ -80,10 +79,9 @@ describe('/DELETE botconfig', () => {
             .delete('/bot/:' + botId)
             .send()
             .end((err, res) => {
-                console.log(res);
                 res.should.have.status(200)
+                done();
             })
-        done();
     })
 })
 
@@ -111,7 +109,7 @@ describe('/PUT intentname', () => {
     let botId
 
 
-    beforeEach(function () {
+    beforeEach(function (done) {
         chai.request(server)
             .post('/bot')
             .send(testBot)
@@ -120,14 +118,17 @@ describe('/PUT intentname', () => {
                 //Error right here: Cannot read property of end
                 console.log('And now this far! :D')
                 botId = res.body.Id;
+                done();
             });
     })
     
-    afterEach(function () {
+    afterEach(function (done) {
         chai.request(server)
-        .delete('/bot/:' + botId)
+        .delete('/bot/' + botId)
         .send()
-        .end();
+        .end((err, res) => {
+            done()
+        });
     })
 
     it('should deny the request to put a nameless intent to testBot', (done) => {
@@ -135,9 +136,8 @@ describe('/PUT intentname', () => {
             .put('/bot/:' + botId)
             .send(intentRequest)
             .end((err, res) => {
-                console.log(res);
                 res.should.not.have.status(200);
-                resolve();
+                done();
             });
     })
 })
@@ -151,26 +151,30 @@ describe('GET status', () => {
     botType : 'faq' }
     let testBotId;
 
-    before(function () {
+    before(function (done) {
         chai.request(server)
         .post('/bot')
         .send(testBot)
         .end((err, res) => {
             if (err) {
                 console.log('Bot with name Statussymbol could not be inserted!');
-                return;
+                fail()
+                done()
             }
             else {
-                it('should have Statuscode 200 and status stopped.')
-                testBotId = res.body.Id;
-                chai.request(server)
-                .get('/bot/' + testBotId + '/status')
-                .send()
-                .end((err, res) => {
-                    res.should.have.status(200)
-                    res.body.status.should.have('stopped')
-                })
+                testBotId = res.body.Id
             }
+        })
+    })
+
+    it('should have Statuscode 200 and status stopped.', (done) => {
+        chai.request(server)
+        .get('/bot/' + testBotId + '/status')
+        .send()
+        .end((err, res) => {
+            res.should.have.status(200)
+            res.body.status.should.have('stopped')
+            done()
         })
     })
 }) 
