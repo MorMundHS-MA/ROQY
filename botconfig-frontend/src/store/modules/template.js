@@ -6,12 +6,12 @@ import foto from '../../assets/bot.png'
 const state = {
   templates: [
     {
-      name: 'welcome',
+      name: 'Welcome Bot',
       image: foto,
       description: 'Ich leite nur weiter...'
     },
     {
-      name: 'faq',
+      name: 'Faq Bot',
       image: foto,
       description: 'Man nennt mich auch LUIS'
     }
