@@ -113,10 +113,9 @@ describe('/PUT intentname', () => {
         chai.request(server)
             .post('/bot')
             .send(testBot)
-        console.log('I got this far! :)')
             .end((err, res) => {
                 //TODO: Fix this:
-                //Error right here: Cannot read property of end
+                //Error right here: Cannot read property 'apply' of undefined
                 console.log('And now this far! :D')
                 botId = res.body.Id;
             });
