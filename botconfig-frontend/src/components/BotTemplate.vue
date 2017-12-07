@@ -100,10 +100,10 @@ export default {
 
 <style scoped>
   .md-card{
-    min-width: 550px;
-    min-height: 235px;
-    max-width: 500px;
-    max-height: 200px;
+    min-width: 500px;
+    min-height: 200px;
+    max-width: 475px;
+    max-height: 250px;
     word-wrap:break-word;
     margin-top: 12.5px;
     margin-bottom: 12.5px;
@@ -119,12 +119,12 @@ export default {
     margin: 10px;
   }
   img{
-    width: 120px;
-    height: 120px;
+    width: 140px;
+    height: 140px;
     float: left;
   }
   #imgwrapper{
-    margin-top: 26.5px;
+    margin-top: 12px;
     margin-left: 26.5px;
     text-align: left;
   }
@@ -150,7 +150,7 @@ export default {
   }
   .overview-wrapper{
     text-align: center;
-    max-width: 1160px;
+    max-width: 1060px;
     margin: 0 auto;
   }
   .auswahlmenü{
