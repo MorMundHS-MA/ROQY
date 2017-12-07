@@ -12,7 +12,7 @@ const livePersonPw = 'd"w3}~T^gVyHhFnM';
 chai.use(chaiHttp);
 
 beforeEach(function () {
-    server = require('../botconfig');
+    server = require('../routes/botconfig');
 })
 /**
  * Test for the post method to insert a bot
@@ -93,8 +93,10 @@ describe('/DELETE botconfig', () => {
 /*describe('/UPDATE botconfig', () => {
 
     beforeEach(function () {
-        let testBot = { 'name': 'Kevin',
-        botType = 'faq' }
+        let testBot = {
+            'name': 'Kevin',
+            'botType': 'faq' 
+        }
     })
 })
 */
@@ -120,24 +122,24 @@ describe('/PUT intentname', () => {
                 botId = res.body.Id;
             });
     })
-    return new Promise(function (fullfill, reject) {
-        it('should deny the request to put a nameless intent to testBot', (done) => {
-            chai.request(server)
-                .put('/bot/:' + botId)
-                .send(intentRequest)
-                .end((err, res) => {
-                    console.log(res);
-                    res.should.not.have.status(200);
-                    resolve();
-                });
-        })
-    }).then(function () {
+    
+    afterEach(function () {
         chai.request(server)
-            .delete('/bot/:' + botId)
-            .send()
-            .end(err, res);
+        .delete('/bot/:' + botId)
+        .send()
+        .end();
     })
-    done();
+
+    it('should deny the request to put a nameless intent to testBot', (done) => {
+        chai.request(server)
+            .put('/bot/:' + botId)
+            .send(intentRequest)
+            .end((err, res) => {
+                console.log(res);
+                res.should.not.have.status(200);
+                resolve();
+            });
+    })
 })
 
 describe('PUT start/stop', () => {
