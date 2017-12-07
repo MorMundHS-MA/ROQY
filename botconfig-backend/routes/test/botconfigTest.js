@@ -146,9 +146,6 @@ describe('PUT start/stop', () => {
 })
 
 describe('GET status', () => {
-<<<<<<< HEAD
-    let 
-=======
     let TestBot = { name : 'Statussymbol',
     botType : 'faq' }
     let testBotId;
@@ -175,5 +172,4 @@ describe('GET status', () => {
             }
         })
     })
->>>>>>> 0155418... get status test implemented, not tested yet
 }) 
