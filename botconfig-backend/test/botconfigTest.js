@@ -90,7 +90,7 @@ describe('/DELETE botconfig', () => {
 /**
  * Test for updating the Name from a bot which already exists in the database
  */
-describe('/UPDATE botconfig', () => {
+/*describe('/UPDATE botconfig', () => {
 
     beforeEach(function () {
         let testBot = {
@@ -99,7 +99,11 @@ describe('/UPDATE botconfig', () => {
         }
     })
 })
+*/
 
+/**
+ * Test for updating the name of an Intent
+ */
 describe('/PUT intentname', () => {
 
     let testBot = { 'name': 'botMitNamenlosenIntents' };
@@ -143,4 +147,30 @@ describe('PUT start/stop', () => {
 })
 
 describe('GET status', () => {
+    let TestBot = { name : 'Statussymbol',
+    botType : 'faq' }
+    let testBotId;
+
+    before(function () {
+        chai.request(server)
+        .post('/bot')
+        .send(testBot)
+        .end((err, res) => {
+            if (err) {
+                console.log('Bot with name Statussymbol could not be inserted!');
+                return;
+            }
+            else {
+                it('should have Statuscode 200 and status stopped.')
+                testBotId = res.body.Id;
+                chai.request(server)
+                .get('/bot/' + testBotId + '/status')
+                .send()
+                .end((err, res) => {
+                    res.should.have.status(200)
+                    res.body.status.should.have('stopped')
+                })
+            }
+        })
+    })
 }) 
