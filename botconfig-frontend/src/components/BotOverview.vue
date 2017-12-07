@@ -10,13 +10,13 @@
         </md-select>
       </md-field>
       <md-field style="border-radius:16px;" class="toolbar-input">
-         <md-input :placeholder="$lang.translate.overview.search" style="padding:5px;padding-left:20px;"></md-input>
+         <input v-model="search" :placeholder="$lang.translate.overview.search" style="padding:5px;padding-left:20px;"></input>
       </md-field>
       <router-link style="color:white;border-radius:46px;" tag="md-button" to="/newBot" class="md-raised md-primary">{{$lang.translate.overview.create}}</router-link>
     </div>
     <md-layout class="overview-wrapper">
       <md-layout style="flex:unset;" v-for="(bot, bots) in bots" :key="bot.id">
-        <bot-info :botData="bot"></bot-info>
+        <bot-info v-if="matchSearch(bot.name)" :botData="bot"></bot-info>
       </md-layout>
       <md-layout style="flex:unset;">
         <div class="inline-newbot">
@@ -35,6 +35,11 @@ import 'vue-material/dist/vue-material.css'
 import headermenu from './Header.vue'
 
 export default {
+  data () {
+    return {
+      search: ''
+    }
+  },
   computed: {
     bots () {
       return this.$store.getters.getbots
@@ -46,6 +51,15 @@ export default {
   },
   created () {
     this.$store.dispatch('getAllBots')
+  },
+  methods: {
+    matchSearch (input) {
+      if (this.search === '') {
+        return true
+      } else {
+        return input.includes(this.search)
+      }
+    }
   }
 }
 </script>
