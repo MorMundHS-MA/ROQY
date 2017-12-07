@@ -10,12 +10,12 @@
         </md-select>
       </md-field>
       <md-field style="border-radius:16px;" class="toolbar-input">
-         <md-input :placeholder="$lang.translate.overview.search" style="padding:5px;padding-left:20px;"></md-input>
+         <input v-model="search" :placeholder="$lang.translate.overview.search" style="padding:5px;padding-left:20px;"></input>
       </md-field>
     </div>
 
     <md-layout class="overview-wrapper">
-      <md-layout  v-for="(template, templates) in templates" :key="template.name">    
+      <md-layout v-if="matchSearch(template.name)" v-for="(template, templates) in templates" :key="template.name">    
       
       <md-card>
         <md-card-header>
@@ -67,7 +67,8 @@ export default {
   data () {
     return {
       ref1: 'dialog1',
-      selectedTemplate: null
+      selectedTemplate: null,
+      search: ''
     }
   },
   computed: {
@@ -90,6 +91,13 @@ export default {
     closeDialog (ref) {
       this.$refs[ref].close()
       this.selectedTemplate = null
+    },
+    matchSearch (input) {
+      if (this.search === '') {
+        return true
+      } else {
+        return input.includes(this.search)
+      }
     }
   },
   created () {
