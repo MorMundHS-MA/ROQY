@@ -40,7 +40,7 @@
       </div>
       
       <div class='block-wrapper'>
-        <textarea v-model="answer" ></textarea>
+        <textarea v-model="answer" cols="30" rows="10"></textarea>
       </div>
       </div>
     </div>

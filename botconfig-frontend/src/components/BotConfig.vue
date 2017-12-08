@@ -258,7 +258,7 @@ export default {
         }
       }
 
-      this.blockIDCount = highestID
+      this.blockIDCount = highestID + 1
     },
     /**
      * Save the config to json string. Routes to bot overview or test if gotoTest is true.
