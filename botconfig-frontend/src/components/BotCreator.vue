@@ -29,7 +29,7 @@
               <div v-for="(template, templates) in templates" :key="template.name">
                   <div class="card-wraper">
                     <div class="card" @click="selectTemplate(template)" :class="{'selected': isSelected(template)}">
-                    <img src="../assets/bot_orange.svg" :alt="template.name">
+                    <img :src="getTemplateImage(template.name)" :alt="template.name">
                     <div class="container">
                       <h4><b>{{template.name}}</b></h4>
                       <p>{{template.description}}</p>
@@ -54,6 +54,8 @@
 
 <script>
 import botConfig from './BotConfig.vue'
+import botWelcome from '../assets/bot_orange.svg'
+import botFaq from '../assets/bot_violett.svg'
 export default {
   name: 'creator',
   data () {
@@ -122,6 +124,9 @@ export default {
       if (this.selected) {
         return this.template === template
       }
+    },
+    getTemplateImage (template) {
+      return template === 'welcome' ? botWelcome : botFaq
     }
   },
   components: {
