@@ -4,7 +4,7 @@
     <div class="md-toolbar">
       <span style="margin-right:5px">{{$lang.translate.overview.sortby}}</span>      
       <md-field class="toolbar-input">
-        <md-select>
+        <md-select v-model="sortBy">
             <md-option value="date">{{$lang.translate.overview.date}}</md-option>
             <md-option value="type">{{$lang.translate.overview.type}}</md-option>
         </md-select>
@@ -68,12 +68,36 @@ export default {
     return {
       ref1: 'dialog1',
       selectedTemplate: null,
-      search: ''
+      search: '',
+      sortBy: ''
     }
   },
   computed: {
     templates () {
-      return this.$store.getters.getTemplates
+      let sortBy = this.sortBy
+      return this.$store.getters.getTemplates.sort(
+        function (a, b) {
+          switch (sortBy) {
+            case 'date':
+              if (a.id > b.id) {
+                return 1
+              }
+              if (a.id < b.id) {
+                return -1
+              }
+              return 0
+
+            case 'type':
+              if (a.type > b.type) {
+                return 1
+              }
+              if (a.type < b.type) {
+                return -1
+              }
+              return 0
+          }
+        }
+      )
     }
   },
   components: {
