@@ -154,7 +154,8 @@ export default {
       this.$refs[ref].close()
     },
     uploadBot (item) {
-      this.$store.dispatch('addNewMarketplace', item)
+      console.log(item.id)
+      this.$store.dispatch('uploadBot', item)
       this.closeDialog(this.confirm.ref3)
       this.$router.push('/marketplace')
     }

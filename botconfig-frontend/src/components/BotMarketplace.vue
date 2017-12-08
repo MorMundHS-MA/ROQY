@@ -16,8 +16,8 @@
     </div>
 
     <div class="row">
-      <div v-if="matchSearch(marketplace.title)" 
-      v-for="(marketplacebot, botsforMarketplace) in botsforMarketplace" :key="marketplacebot.name">
+      <div v-for="(bot, bots) in bots" :key="bot.id">
+        <bot-info v-if="matchSearch(bot.name) && isValidBot(bot)" :botData="bot"></bot-info>
         <div class="bot-wrapper">
           <div class="card-horizontal">
           </div>
@@ -38,15 +38,14 @@ import headermenu from './Header.vue'
 export default {
   data () {
     return {
-      name: 'marketplace',
       search: '',
       sortBy: ''
     }
   },
   computed: {
-    botsforMarketplace () {
+    bots () {
       let sortBy = this.sortBy
-      return this.$store.getters.getMarketplaceBots.sort(
+      return this.$store.getters.getbots.sort(
         function (a, b) {
           switch (sortBy) {
             case 'date':
@@ -75,7 +74,7 @@ export default {
     headermenu
   },
   created () {
-    this.$store.dispatch('getAllmarketplaceBots')
+    this.$store.dispatch('getAllBots')
   },
   methods: {
     matchSearch (input) {
@@ -83,6 +82,13 @@ export default {
         return true
       } else {
         return input.toUpperCase().includes(this.search.toUpperCase())
+      }
+    },
+    isValidBot (input) {
+      if (input.privacy === 'public') {
+        return true
+      } else {
+        return false
       }
     }
   }

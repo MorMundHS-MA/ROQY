@@ -23,6 +23,11 @@ const getters = {
 }
 
 const actions = {
+  uploadBot ({commit}, bot) {
+    data.uploadBot(bot => {
+      commit(types.RECEIVE_BOTS, { bot })
+    }, bot)
+  },
   getAllBots ({commit}) {
     data.getBots(bots => {
       commit(types.RECEIVE_BOTS, { bots })
@@ -58,6 +63,9 @@ const actions = {
 }
 
 const mutations = {
+  [types.UPLOAD_BOT] (state, { bot }) {
+    state.bots.push(bot)
+  },
   [types.RECEIVE_BOTS] (state, { bots }) {
     state.bots = bots
   },
