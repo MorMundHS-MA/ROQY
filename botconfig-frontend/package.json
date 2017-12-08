@@ -1,8 +1,8 @@
 {
-  "name": "vuetest",
+  "name": "roqy",
   "version": "1.0.0",
-  "description": "A Vue.js project",
-  "author": "MorMund-HSMA <1611229@stud.hs-mannheim.de>",
+  "description": "A website for creating chat bots.",
+  "author": "SEP Team Ravenclaw <info@sep-ravenclaw.de>",
   "private": true,
   "scripts": {
     "dev": "npm run lint && node build/dev-server.js",

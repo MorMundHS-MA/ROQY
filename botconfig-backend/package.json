@@ -4,7 +4,8 @@
   "description": "",
   "main": "./bin/www",
   "scripts": {
-    "test": "mocha --timeout 10000"
+    "test": "env MONGO_URI=mongodb://localhost:27017/mydb mocha --exit",
+    "start": "node ./bin/www"
   },
   "author": "",
   "requires": true,

@@ -1,0 +1,28 @@
+version: '3'
+services:
+  frontend:
+    build: botconfig-frontend
+    ports:
+    - "80:8080"
+    env_file: host.env
+    depends_on:
+    - backend
+  backend:
+    build: botconfig-backend
+    ports:
+    - "3000:3000"
+    environment:
+    - MONGO_URI=mongodb://mongodb:27017/mydb
+    links:
+    - mongodb
+    depends_on:
+    - mongodb
+  mongodb:
+    image: mongo:latest
+    container_name: "mongodb"
+    ports:
+    - "27017:27017"
+    volumes:
+    - 'mongo:/data/db'
+volumes:
+  mongo:
