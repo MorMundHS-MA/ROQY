@@ -29,7 +29,7 @@
               <div v-for="(template, templates) in templates" :key="template.name">
                   <div class="card-wraper">
                     <div class="card" @click="selectTemplate(template)" :class="{'selected': isSelected(template)}">
-                    <img src="../assets/bot.png" :alt="template.name">
+                    <img src="../assets/bot_orange.svg" :alt="template.name">
                     <div class="container">
                       <h4><b>{{template.name}}</b></h4>
                       <p>{{template.description}}</p>

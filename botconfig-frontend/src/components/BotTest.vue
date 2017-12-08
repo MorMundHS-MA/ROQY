@@ -14,7 +14,7 @@
 
     <div id="test-card">
       <div class="card-header">
-            <img src="../assets/bot.png"/>
+            <img src="../assets/bot_orange.svg">
             <h3 id="title">{{bot.name}}</h3>
       </div>
       <div id="card-content">
