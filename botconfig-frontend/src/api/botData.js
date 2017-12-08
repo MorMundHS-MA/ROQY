@@ -3,6 +3,23 @@ import axios from 'axios'
 axios.defaults.baseURL = 'http://141.19.142.7:3000'
 
 export default {
+  uploadBot (cb, bot) {
+    axios.put('/bot/' + bot.id + '/privacy', {
+      privacy: 'public'
+    },
+      {
+        headers: {
+          Authorization: 'ed2ff1a97f924b8e8a1402e6700a8bf4'
+        }
+      }
+    )
+    .then(function (response) {
+      cb(bot)
+    })
+    .catch(function (error) {
+      console.log(error)
+    })
+  },
   getBots (cb) {
     axios.get('/bot', { headers: { Authorization: 'ed2ff1a97f924b8e8a1402e6700a8bf4' } })
           .then(function (response) {
