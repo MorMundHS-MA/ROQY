@@ -315,14 +315,18 @@ export default {
     loadBot () {
       this.$store.dispatch('getBotById', this.id)
       let bot = null
+      let retry = 0
       const getBot = setInterval(() => {
-        bot = this.$store.getters.getBot.config
+        if (++retry === 3) {
+          stopMe()
+        }
+        bot = this.$store.getters.getBot
         if (bot !== null || bot !== undefined) {
-          this.loadConfig(bot)
+          this.loadConfig(bot.config)
           stopMe()
         }
         console.log(bot)
-      }, 100)
+      }, 500)
       function stopMe () {
         clearInterval(getBot)
       }
