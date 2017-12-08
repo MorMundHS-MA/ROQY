@@ -21,7 +21,7 @@
         <md-card-header>
 
           <div id="imgwrapper">
-            <img src="../assets/bot.png" :alt="template.name">
+            <img :src="getTemplateImage(template.name)" :alt="template.name">
           </div>
 
           <div class="auswahlmenü">
@@ -61,6 +61,8 @@
 </template>
 <script>
 import 'vue-material/dist/vue-material.css'
+import botWelcome from '../assets/bot_orange.svg'
+import botFaq from '../assets/bot_violett.svg'
 import headermenu from './Header.vue'
 
 export default {
@@ -122,6 +124,9 @@ export default {
       } else {
         return input.toUpperCase().includes(this.search.toUpperCase())
       }
+    },
+    getTemplateImage (template) {
+      return template === 'welcome' ? botWelcome : botFaq
     }
   },
   created () {

@@ -3,7 +3,7 @@
     <md-card style="border-radius:6px;" class="md-with-hover" >
       <div>
         <div class="header">
-          <md-switch style="margin: 10px 0 0 0" class="md-primary" v-on:change="changeBot(botData)" v-model="botData.status === 'running'"></md-switch>
+          <md-switch style="margin: 10px 0 0 0" class="md-primary" v-on:change="changeBot(botData)" v-model="isRunning"></md-switch>
           <md-menu  md-direction="bottom left">
             <md-button style="padding:0;margin-top:-10px;color: 7F7F7F" class="md-icon-button header-menu-btn" md-menu-trigger>
               <md-icon>more_vert</md-icon>
@@ -29,12 +29,12 @@
         </div>
       </div>
       <div id="imgwrapper">
-        <img src="../assets/bot.png" :alt="botData.name">
+        <img style="width:180px" :src="botImage" :alt="botData.name">
       </div>
 
       <div class="info-wrapper">
         <h6 style="font-size:16px;font-weight:400;">{{botData.name}}</h6>
-        <span style="font-size:10px;color: purple;display: block;">!!Placeholder!! {{botData.template}}</span>
+        <span :style="{ color: typeColor}" class="typeText" >{{botData.botType}}</span>
         <span>
           {{botData.description}}
         </span>
@@ -91,6 +91,8 @@
 
 <script>
 import 'vue-material/dist/vue-material.css'
+import botWelcome from '../assets/bot_orange.svg'
+import botFaq from '../assets/bot_violett.svg'
 
 export default {
   props: ['botData'],
@@ -114,7 +116,13 @@ export default {
   },
   computed: {
     isRunning () {
-      return this.botData.status === 'R unning'
+      return this.botData.status.toUpperCase() === 'RUNNING'
+    },
+    botImage () {
+      return this.botData.botType === 'welcome' ? botWelcome : botFaq
+    },
+    typeColor () {
+      return this.botData.botType === 'welcome' ? 'orange' : 'purple'
     }
   },
   watch: {
@@ -187,5 +195,9 @@ export default {
   }
   #imgwrapper{
     text-align: center;
+  }
+  .typeText {
+    font-size:10px;
+    display: block;
   }
 </style>
