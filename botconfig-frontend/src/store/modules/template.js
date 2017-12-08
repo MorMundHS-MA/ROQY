@@ -5,11 +5,11 @@ import * as types from '../mutation-types'
 const state = {
   templates: [
     {
-      name: 'Welcome Bot',
+      name: 'welcome',
       description: 'Ich leite nur weiter...'
     },
     {
-      name: 'Faq Bot',
+      name: 'faq',
       description: 'Man nennt mich auch LUIS'
     }
   ]
