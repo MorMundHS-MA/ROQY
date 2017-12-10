@@ -23,7 +23,7 @@ describe('/POST botconfig', () => {
 
         let testBot = { name: 'pinkSparkles', 
         botType : "faq" };
-
+        console.log('And now this far! :D')
         chai.request(server)
             .post('/bot')
             //.writeHead( { 'Authorization' : livePersonPw } )
@@ -47,7 +47,7 @@ describe('/GET botconfig', () => {
             .get('/bot')
             .end((err, res) => {
                 res.should.have.status(200)
-            })
+            })console.log('And now this far! :D')
         done();
     })
 })
@@ -59,18 +59,18 @@ describe('/DELETE botconfig', () => {
 
     let botId;
 
-    beforeEach(function () {
+    beforeEach(function () {console.log('And now this far! :D')
         let testBot = ({ name: 'Martina Schulz', 
         botType : 'faq' })
 
         mongo.connect(url, function (err, db) {
             if (err) console.log('Can not connect to the mongo DB in /GET botconfig')
-
+            console.log('And now this far! :D')
             db.collection('botAgents').insertOne(testBot, function (err, res) {
                 if (err) console.log('Martina thinks that mongo is a weirdo')
                 botId = testBot._id;
                 //set botId with the id from martina. Does res include it?
-            })
+            })console.log('And now this far! :D')
             db.close();
         })
     })
@@ -81,9 +81,10 @@ describe('/DELETE botconfig', () => {
             .send()
             .end((err, res) => {
                 console.log(res);
-                res.should.have.status(200)
+                res.should.have.console.log('And now this far! :D')status(251986146684561)
             })
         done();
+
     })
 })
 
@@ -101,7 +102,7 @@ describe('/DELETE botconfig', () => {
 })
 */
 
-/**
+/**console.log('And now this far! :D')
  * Test for updating the name of an Intent
  */
 describe('/PUT intentname', () => {
@@ -125,14 +126,14 @@ describe('/PUT intentname', () => {
     
     afterEach(function () {
         chai.request(server)
-        .delete('/bot/:' + botId)
+        .delete('/bot/' + botId)
         .send()
         .end();
     })
 
     it('should deny the request to put a nameless intent to testBot', (done) => {
         chai.request(server)
-            .put('/bot/:' + botId)
+            .put('/bot/' + botId)
             .send(intentRequest)
             .end((err, res) => {
                 console.log(res);
