@@ -21,17 +21,28 @@ describe('/POST botconfig', () => {
 
     it('should insert a bot', (done) => {
 
-        let testBot = { name: 'pinkSparkles', description: 'Titty streamer on twitch.tv', test: true, privacy: 'public',  botType : 'faq', intents: [] };
+        let testBot = { name: 'pinkSparkles', description: 'Titty streamer on twitch.tv', test: true, privacy: 'public', botType: 'faq', intents: [] };
 
         chai.request(server)
             .post('/bot')
             .set('Authorization', authKey)
             .send(testBot)
             .end((err, res) => {
-                res.should.have.status(200)
-                console.log(res.body)
+                if (err) {
+                    console.log('pinkSparkles is a Zicke and dont wants to get inserted')
+                }
+                else {
+                    res.should.have.status(200)
+                    chai.request(server)
+                        .delete('/bot/' + res.body.extra.botId)
+                        .set('Authorization', authKey)
+                        .send(testBot)
+                        .end((err, res) => {
+                            if (err) console.log('pinkSparkles isnt banned yet!')
+                        })
+                }
                 done();
-            });        
+            });
     })
 })
 
@@ -44,6 +55,7 @@ describe('/GET botconfig', () => {
 
         chai.request(server)
             .get('/bot')
+            .set('Authorization', authKey)
             .end((err, res) => {
                 res.should.have.status(200)
                 done();
@@ -55,33 +67,38 @@ describe('/GET botconfig', () => {
  * Test for the delete method to delete a bot from the database
  */
 describe('/DELETE botconfig', () => {
-
-    let botId;
-
-    beforeEach(function () {console.log('And now this far! :D')
-        let testBot = ({ name: 'Martina Schulz', 
-        botType : 'faq' })
-
-        mongo.connect(url, function (err, db) {
-            if (err) console.log('Can not connect to the mongo DB in /GET botconfig')
-            console.log('And now this far! :D')
-            db.collection('botAgents').insertOne(testBot, function (err, res) {
-                if (err) console.log('Martina thinks that mongo is a weirdo')
-                botId = testBot._id;
-                //set botId with the id from martina. Does res include it?
-            })console.log('And now this far! :D')
-            db.close();
-        })
-    })
     it('should ban Martina out of mongo', (done) => {
+        let botId;
+
+
+        let testBot = ({
+            name: 'Martina Schulz',
+            description: 'I am your personal waifu and fab',
+            test: true,
+            privacy: 'public',
+            botType: 'faq',
+            intents: []
+        })
 
         chai.request(server)
-            .delete('/bot/:' + botId)
-            .send()
+            .post('/bot')
+            .set('Authorization', authKey)
+            .send(testBot)
             .end((err, res) => {
-                res.should.have.status(200)
-                done();
+                if (err) {
+                    console.log('Martina thinks, mongo is a weirdo and cant get inserted.')
+                }
+                botId = res.body.extra.botId;
+                chai.request(server)
+                    .delete('/bot/' + botId)
+                    .set('Authorization', authKey)
+                    .send(testBot)
+                    .end((err, res) => {
+                        res.should.have.status(200)
+                        done();
+                    })
             })
+
     })
 })
 
@@ -112,28 +129,28 @@ describe('/PUT intentname', () => {
     beforeEach(function (done) {
         chai.request(server)
             .post('/bot')
+            .set('Authorization', authKey)
             .send(testBot)
             .end((err, res) => {
-                //TODO: Fix this:
-                //Error right here: Cannot read property 'apply' of undefined
-                console.log('And now this far! :D')
                 botId = res.body.Id;
                 done();
             });
     })
-    
+
     afterEach(function (done) {
         chai.request(server)
-        .delete('/bot/' + botId)
-        .send()
-        .end((err, res) => {
-            done()
-        });
+            .delete('/bot/' + botId)
+            .set('Authorization', authKey)
+            .send()
+            .end((err, res) => {
+                done()
+            });
     })
 
     it('should deny the request to put a nameless intent to testBot', (done) => {
         chai.request(server)
             .put('/bot/' + botId)
+            .set('Authorization', authKey)
             .send(intentRequest)
             .end((err, res) => {
                 res.should.not.have.status(200);
@@ -143,38 +160,54 @@ describe('/PUT intentname', () => {
 })
 
 describe('PUT start/stop', () => {
-    let TestBot = { name : 'startStopBot' }
+    let TestBot = { name: 'startStopBot' }
 })
 
 describe('GET status', () => {
-    let TestBot = { name : 'Statussymbol',
-    botType : 'faq' }
+    let testBot = {
+        name: 'Statussymbol',
+        botType: 'faq'
+    }
     let testBotId;
 
     before(function (done) {
         chai.request(server)
-        .post('/bot')
-        .send(testBot)
-        .end((err, res) => {
-            if (err) {
-                console.log('Bot with name Statussymbol could not be inserted!');
-                fail()
-                done()
-            }
-            else {
-                testBotId = res.body.Id
-            }
-        })
+            .post('/bot')
+            .set('Authorization', authKey)
+            .send(testBot)
+            .end((err, res) => {
+                if (err) {
+                    console.log('Bot with name Statussymbol could not be inserted!');
+                    done()
+                }
+                else {
+                    testBotId = res.body.Id
+                }
+            })
     })
 
     it('should have Statuscode 200 and status stopped.', (done) => {
         chai.request(server)
-        .get('/bot/' + testBotId + '/status')
-        .send()
-        .end((err, res) => {
-            res.should.have.status(200)
-            res.body.status.should.have('stopped')
-            done()
-        })
+            .get('/bot/' + testBotId + '/status')
+            .set('Authorization', authKey)
+            .send()
+            .end((err, res) => {
+                if (err) {
+                    console.log('Status cant got read from DB')
+                }
+                else {
+                    res.should.have.status(200);
+                    chai.request(server)
+                        .delete('/bot/' + testBotId)
+                        .set('Authorization', authKey)
+                        .send(testBot)
+                        .end((err, res) => {
+                            if (err) {
+                                console.log('Statussymbol cant get deleted ')
+                            }
+                        })
+                }
+            })
+        done();
     })
 }) 
