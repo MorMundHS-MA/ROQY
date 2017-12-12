@@ -30,7 +30,8 @@ class FAQBot extends GeneralBot {
                 },
                 onFailure: function(response)
                 {
-                    console.log(response);
+                    console.error("LUIS is not reachable: " + response);
+                    resolve(undefined);
                 }
             })
 

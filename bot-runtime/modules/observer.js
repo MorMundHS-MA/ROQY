@@ -8,7 +8,6 @@ const refreshTime = 5000;
 
 observer.start = function(runtime, botId) {
     function toUpdate(){
-        console.log("Update");
         dbConnector.readFromDB({
             botId:botId
         }).then(res => {
@@ -46,7 +45,7 @@ observer.error = function(message, botId){
             data:res
         });
     })
-}
+};
 
 observer.getSkill = function(botId){
     return new Promise(resolve => {
@@ -56,6 +55,6 @@ observer.getSkill = function(botId){
             resolve(res.skill);
         })
     })
-}
+};
 
 module.exports = observer;
