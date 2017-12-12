@@ -28,7 +28,6 @@ exports.writeToDB = function (request) {
                         console.log('Bot couldnt get inserted! Dont ask me why.');
                         throw err;
                     }
-                    console.log('Bot sucessfull inserted!');
                     resolve(true);
                 });
             }
@@ -52,10 +51,8 @@ exports.writeToDB = function (request) {
                             } else {
                                 db.collection("botAgents").insertOne(request.data, function (err, res) {
                                     if (err) {
-                                        console.log('Bot couldnt get inserted! Dont ask me why.');
                                         throw err;
                                     }
-                                    console.log('Bot sucessfull inserted!');
                                     resolve(true);
                                 });
                             }
@@ -216,7 +213,6 @@ exports.deleteFromDB = function (request) {
                         //delete found bot
                         if (request.intentId === undefined) {
                             db.collection("botAgents").deleteOne({ id: request.botId });
-                            console.log("done");
                             resolve(true); //Gebe ich an dieser Stelle nicht den kompletten bot zurück???
                         }
 
