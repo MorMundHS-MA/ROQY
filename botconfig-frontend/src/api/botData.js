@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-axios.defaults.baseURL = 'http://141.19.142.7:3000'
+axios.defaults.baseURL = process.env.API_URL
 
 export default {
   uploadBot (cb, bot) {

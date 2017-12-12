@@ -1,7 +1,5 @@
 const assert = require('assert');
-const url = 'mongodb://141.19.145.166:27017/mydb'
 
-let mongo = require('mongodb');
 let chai = require('chai');
 let chaiHttp = require('chai-http');
 let should = chai.should();
@@ -102,23 +100,6 @@ describe('/DELETE botconfig', () => {
     })
 })
 
-/**
- * Test for updating the Name from a bot which already exists in the database
- */
-/*describe('/UPDATE botconfig', () => {
-
-    beforeEach(function () {
-        let testBot = {
-            'name': 'Kevin',
-            'botType': 'faq' 
-        }
-    })
-})
-*/
-
-/**console.log('And now this far! :D')
- * Test for updating the name of an Intent
- */
 describe('/PUT intentname', () => {
 
     let testBot = { 'name': 'botMitNamenlosenIntents' };
