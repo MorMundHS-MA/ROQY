@@ -3,7 +3,7 @@
     <md-card style="border-radius:6px;" class="md-with-hover" >
       <div>
         <div class="header">
-          <md-switch style="margin: 10px 0 0 0" class="md-primary"></md-switch>
+          <md-switch style="margin: 10px 0 0 0" class="md-primary" v-on:change="changeBot(botData)" v-model="isRunning"></md-switch>
           <md-menu  md-direction="bottom left">
             <md-button style="padding:0;margin-top:-10px;color: 7F7F7F" class="md-icon-button header-menu-btn" md-menu-trigger>
               <md-icon>more_vert</md-icon>
@@ -19,20 +19,22 @@
               <md-menu-item id="confirm" v-on:click="openDialog(confirm.ref1)">
                 <span >{{$lang.translate.info.delete}}</span>            
               </md-menu-item>
-              <router-link tag="md-menu-item"   :to="{ path: '/config/bot', query: { id: botData._id }}">
-                <span>{{$lang.translate.info.setting}}</span>
-              </router-link>
+              <md-menu-item>
+                <router-link v-if="botData.id"  :to="{ name: 'config', params: {id: botData.id}}">
+                  <span>{{$lang.translate.info.setting}}</span>
+                </router-link>
+              </md-menu-item>
             </md-menu-content>
           </md-menu>
         </div>
       </div>
       <div id="imgwrapper">
-        <img src="../assets/bot.png" :alt="botData.name">
+        <img style="width:180px" :src="botImage" :alt="botData.name">
       </div>
 
       <div class="info-wrapper">
         <h6 style="font-size:16px;font-weight:400;">{{botData.name}}</h6>
-        <span style="font-size:10px;color: purple;display: block;">!!Placeholder!! {{botData.template}}</span>
+        <span :style="{ color: typeColor}" class="typeText" >{{botData.botType}}</span>
         <span>
           {{botData.description}}
         </span>
@@ -59,7 +61,6 @@
       </md-dialog-actions>
     </md-dialog>
 
-
     <md-dialog md-open-from="#renameconfirm" md-close-to="#renameconfirm" ref='dialog2'>
       <md-dialog-title>{{$lang.translate.info.renameTitle}}</md-dialog-title>
 
@@ -74,12 +75,24 @@
         <md-button class="md-primary" :disabled='!isValid' v-on:click="renameItem(botData)">{{$lang.translate.info.rename}}</md-button>
       </md-dialog-actions>
     </md-dialog>
+
+    <md-dialog md-open-from="#marketplace" md-close-to="#marketplace" ref='dialog3'>
+      <md-dialog-title>{{$lang.translate.info.marketplaceInnerBubble}}</md-dialog-title>
+
+      <md-dialog-actions>
+        <md-button class="md-primary" v-on:click="closeDialog(confirm.ref3)">{{$lang.translate.info.cancel}}</md-button>
+        <md-button class="md-primary" v-on:click="uploadBot(botData)">{{$lang.translate.info.upload}}</md-button>
+      </md-dialog-actions>
+    </md-dialog>
+
   </div>
       
 </template>
 
 <script>
 import 'vue-material/dist/vue-material.css'
+import botWelcome from '../assets/bot_orange.svg'
+import botFaq from '../assets/bot_violett.svg'
 
 export default {
   props: ['botData'],
@@ -99,6 +112,17 @@ export default {
       },
       isValid: false,
       aktiv: false
+    }
+  },
+  computed: {
+    isRunning () {
+      return this.botData.status.toUpperCase() === 'RUNNING'
+    },
+    botImage () {
+      return this.botData.botType === 'welcome' ? botWelcome : botFaq
+    },
+    typeColor () {
+      return this.botData.botType === 'welcome' ? 'orange' : 'purple'
     }
   },
   watch: {
@@ -130,14 +154,10 @@ export default {
       this.$refs[ref].close()
     },
     uploadBot (item) {
-      this.$store.dispatch('addNewMarketplace', {
-        name: this.botname,
-        image: '../assets/bot.png',
-        status: 'offline',
-        description: this.description
-      })
-      this.$router.push('/marketplace')
+      console.log(item.id)
+      this.$store.dispatch('uploadBot', item)
       this.closeDialog(this.confirm.ref3)
+      this.$router.push('/marketplace')
     }
   }
 }
@@ -176,5 +196,9 @@ export default {
   }
   #imgwrapper{
     text-align: center;
+  }
+  .typeText {
+    font-size:10px;
+    display: block;
   }
 </style>

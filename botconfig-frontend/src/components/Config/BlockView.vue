@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div class="button-wrapper">
-      <button class="default-btn">new block</button>
-      <button class="default-btn">new group</button>
+    <div class="header-wrapper">
+      <h2>{{$lang.translate.config.favoriteBlocks}}</h2>
+      <h4>{{$lang.translate.config.favoriteHint}}</h4>
     </div>
-    <div class="blockBubble" v-for="(block, blocks) in blocks" :key="block.id">
+    <div draggable="true" @dragstart="setDrag(block.id)" class="blockBubble" v-for="(block, blocks) in blocks" :key="block.id">
       <span>{{block.title}}</span>
     </div>
   </div>
@@ -12,7 +12,12 @@
 
 <script>
 export default {
-  props: ['blocks']
+  props: ['blocks'],
+  methods: {
+    setDrag (id) {
+      this.$emit('favDrag', id)
+    }
+  }
 }
 </script>
 
@@ -21,7 +26,7 @@ export default {
     line-height: 30px;
     border-radius: 15px;
     box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.2), 0px 2px 2px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0, 0.12);
-    display: inline;
+    display: inline-block;
     padding: 7px;
     margin: 5px;
     cursor: grab;
@@ -32,10 +37,30 @@ export default {
     padding: 0;
   }
 
-  .button-wrapper {
+  .header-wrapper {
     width: 100%;
-    display: flex;
-    flex-direction: row-reverse;
+    padding: 5px;
+    margin: 5px;
+  }
+
+  .default-btn {
+    background-color: orange;
+    border-radius: 16px;
+    padding: 5px;
+    margin: 10px;
+    color: white;
+    font-family: Roboto;
+    font-size: 14px;
+  }
+
+  .default-btn {
+    background-color: orange;
+    border-radius: 16px;
+    padding: 5px;
+    margin: 10px;
+    color: white;
+    font-family: Roboto;
+    font-size: 14px;
   }
 
   .default-btn {

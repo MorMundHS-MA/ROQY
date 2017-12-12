@@ -28,8 +28,8 @@ module.exports = {
     setting: 'Setting',
     new_name: 'New Name',
     title: 'Do you want to delete this Bot ?',
-    renameTitle: 'Write the new name of your bot !!!',
-    contentHtml: 'This bot will be on database deleted, if you confirm it, there is no way to back it up.',
+    renameTitle: 'Write the new name of your bot !',
+    contentHtml: 'By confirming the bot can not be restored!',
     ok: 'Delete',
     cancel: 'Cancel',
     running: 'Active',
@@ -54,6 +54,20 @@ module.exports = {
     delete: 'delete'
   },
   config: {
-    unnamedBlock: 'Unnamed Block'
+    unnamedBlock: 'Unnamed Block',
+    favoriteBlocks: 'Favorite Blocks',
+    favoriteHint: 'Drag and Drop your favorite blocks into the bot structure',
+    question: 'If user says something similar to:',
+    answer: 'Bot replies with?',
+    add: 'Add new item...',
+    test: 'Test',
+    save: 'Save',
+    favorite: 'favorite',
+    delete: 'delete'
+  },
+  test: {
+    back: 'go back',
+    forward: 'looks good!',
+    title: 'Testing'
   }
 }

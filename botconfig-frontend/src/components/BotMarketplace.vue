@@ -1,7 +1,23 @@
 <template>
   <div id="marketplace">
+    <headermenu></headermenu>
+
+    <div class="md-toolbar">
+      <span style="margin-right:5px">{{$lang.translate.overview.sortby}}</span>      
+      <md-field class="toolbar-input">
+        <md-select v-model="sortBy">
+            <md-option value="date">{{$lang.translate.overview.date}}</md-option>
+            <md-option value="type">{{$lang.translate.overview.type}}</md-option>
+        </md-select>
+      </md-field>
+      <md-field style="border-radius:16px;" class="toolbar-input">
+         <input v-model="search" :placeholder="$lang.translate.overview.search" style="padding:5px;padding-left:20px;"></input>
+      </md-field>
+    </div>
+
     <div class="row">
-      <div v-for="(marketplacebot, botsforMarketplace) in botsforMarketplace" :key="marketplacebot.name">
+      <div v-for="(bot, bots) in bots" :key="bot.id">
+        <bot-info v-if="matchSearch(bot.name) && isValidBot(bot)" :botData="bot"></bot-info>
         <div class="bot-wrapper">
           <div class="card-horizontal">
           </div>
@@ -17,19 +33,64 @@
 <script>
 import botInfo from './BotInfo.vue'
 import 'vue-material/dist/vue-material.css'
+import headermenu from './Header.vue'
 
 export default {
-  name: 'marketplace',
+  data () {
+    return {
+      search: '',
+      sortBy: ''
+    }
+  },
   computed: {
-    botsforMarketplace () {
-      return this.$store.getters.getMarketplaceBots
+    bots () {
+      let sortBy = this.sortBy
+      return this.$store.getters.getbots.sort(
+        function (a, b) {
+          switch (sortBy) {
+            case 'date':
+              if (a.id > b.id) {
+                return 1
+              }
+              if (a.id < b.id) {
+                return -1
+              }
+              return 0
+            case 'type':
+              if (a.type > b.type) {
+                return 1
+              }
+              if (a.type < b.type) {
+                return -1
+              }
+              return 0
+          }
+        }
+      )
     }
   },
   components: {
-    botInfo
+    botInfo,
+    headermenu
   },
   created () {
-    this.$store.dispatch('getAllmarketplaceBots')
+    this.$store.dispatch('getAllBots')
+  },
+  methods: {
+    matchSearch (input) {
+      if (this.search === '') {
+        return true
+      } else {
+        return input.toUpperCase().includes(this.search.toUpperCase())
+      }
+    },
+    isValidBot (input) {
+      if (input.privacy === 'public') {
+        return true
+      } else {
+        return false
+      }
+    }
   }
 }
 </script>
@@ -56,5 +117,13 @@ export default {
     border-radius:40px;
     font-family:'verdana';
     font-weight:600;
+  }
+  div.md-toolbar {
+    justify-content: flex-end;
+    align-items: center;
+  }
+  .toolbar-input {
+    background-color: white;
+    margin: 10px;
   }
 </style>

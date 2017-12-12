@@ -11,7 +11,7 @@ let password = '';
  * @returns boolean if writing to the Database was sucessfull
  */
 exports.writeToDB = function (request) {
-    return new Promise(function(resolve){
+    return new Promise(function (resolve) {
         MongoClient.connect(url, function (err, db) {
             if (err) throw err;
 
@@ -28,7 +28,6 @@ exports.writeToDB = function (request) {
                         console.log('Bot couldnt get inserted! Dont ask me why.');
                         throw err;
                     }
-                    console.log('Bot sucessfull inserted!');
                     resolve(true);
                 });
             }
@@ -52,10 +51,8 @@ exports.writeToDB = function (request) {
                             } else {
                                 db.collection("botAgents").insertOne(request.data, function (err, res) {
                                     if (err) {
-                                        console.log('Bot couldnt get inserted! Dont ask me why.');
                                         throw err;
                                     }
-                                    console.log('Bot sucessfull inserted!');
                                     resolve(true);
                                 });
                             }
@@ -75,7 +72,7 @@ exports.writeToDB = function (request) {
 
                         //replace old intent with request.data
                         if (intent !== undefined) {
-                            //TODO delte old intent and insert new
+                            //TODO delte old intent and insert newdb.
                             resolve(true);
                         } else {
                             // Intent not found, return false.
@@ -139,7 +136,7 @@ exports.readFromDB = function (request) {
                             if (intent !== undefined) {
                                 resolve({});
 
-                            //return an empty JSON Array    
+                                //return an empty JSON Array    
                             } else {
                                 resolve(intent);
                             }
@@ -151,12 +148,50 @@ exports.readFromDB = function (request) {
     });
 }
 
+exports.writeConfig = function (body, id) {
+    return new Promise(function (resolve) {
+        MongoClient.connect(url, function (err, db) {
+
+            let bot = db.collection('botAgents').update({ id: id }, {
+                $set: {
+                    config: body
+                }
+            }).catch(function (err) {
+                if (err) {
+                    console.log('Update did not work.')
+                    reject();
+                }
+            })
+        })
+        resolve();
+    })
+}
+
+exports.setPrivacy = function (botID, privacy) {
+    return new Promise(function (resolve) {
+        MongoClient.connect(url, function (err, db) {
+
+            let bot = db.collection('botAgents').update({ id: botID }, {
+                $set: {
+                    privacy: privacy
+                }
+            }).catch(function (err) {
+                if (err) {
+                    console.log('Update did not work.')
+                    reject();
+                }
+            })
+        })
+        resolve();
+    })
+}
+
 /**
  * This method is for deleting a bot from the Database
  * @param { *JSON-Object } request
  */
 exports.deleteFromDB = function (request) {
-    return new Promise(function(resolve){
+    return new Promise(function (resolve) {
         MongoClient.connect(url, function (err, db) {
             if (err) throw err;
 
@@ -178,7 +213,6 @@ exports.deleteFromDB = function (request) {
                         //delete found bot
                         if (request.intentId === undefined) {
                             db.collection("botAgents").deleteOne({ id: request.botId });
-                            console.log("done");
                             resolve(true); //Gebe ich an dieser Stelle nicht den kompletten bot zurück???
                         }
 
@@ -194,21 +228,23 @@ exports.deleteFromDB = function (request) {
                                     }
                                 }
 
-                                if(intend === undefined) {
+                                if (intend === undefined) {
                                     resolve(false);
                                 }
 
                                 //delete found intent
                                 else {
                                     db.collection.update({},
-                                        {$unset: {
-                                            "id" : request.botId,
-                                            "intents" : [
-                                                {
-                                                    "intendId" : request.intendId
-                                                }
-                                            ]
-                                        }});
+                                        {
+                                            $unset: {
+                                                "id": request.botId,
+                                                "intents": [
+                                                    {
+                                                        "intendId": request.intendId
+                                                    }
+                                                ]
+                                            }
+                                        });
                                     resolve(true);
                                 }
                             });

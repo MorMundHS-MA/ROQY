@@ -655,7 +655,6 @@ router.put('/bot/:id', function(req, clientResponse){
             }
         });
     })
-
 });
 
 /**
@@ -678,6 +677,21 @@ router.get('/bot/:id', function(req, clientResponse){
             responseToClient(clientResponse, 404, true, messages.botNotFound)
         }        
     })
+})
+/**
+ * Config
+ * This endpoint is for getting a request to save config-files into the database.
+ */
+router.put('/bot/:id/config', function(req, clientResponse){
+    clientResponse.header("Access-Control-Allow-Origin", "*");
+    let auth = req.header("Authorization");
+    if(auth === undefined){
+        responseToClient(clientResponse, 401, true, messages.unauthorized);
+    }
+    let id = req.params.id;
+    let body = req.body;
+    dbcon.writeConfig(body, id);
+    responseToClient(clientResponse, 200, false, messages.botUpdated);
 })
 
 /**
@@ -705,6 +719,7 @@ router.get('/bot/:id/status', function(req, clientResponse){
 });
 
 router.put('/bot/:id/privacy', function(req, clientResponse){
+    clientResponse.header("Access-Control-Allow-Origin", "*");
     let auth = req.header("Authorization");
     let id = req.params.id;
     if(auth === undefined){
@@ -716,22 +731,12 @@ router.put('/bot/:id/privacy', function(req, clientResponse){
         responseToClient(clientResponse, 406, true, messages.privacyNotAcceptable);
         return;
     }
-    dbcon.readFromDB({
-        botId:id
-    }).then(res => {
-        if(res !== {}) {
-            res.privacy = privacy;
-            dbcon.writeToDB({
-                botId: id,
-                data: res
-            }).then(success => {
-                if(success){
-                    responseToClient(clientResponse, 200, false, messages.privacyUpdated);
-                }else{
-                    responseToClient(clientResponse, 500, true, messages.botNotFound);
-                }
-            })
-        }
+    dbcon.setPrivacy(id, privacy)
+    .then(function () {
+        responseToClient(clientResponse, 200, false, messages.privacyUpdated);
+    })
+    .catch(function () {
+        responseToClient(clientResponse, 500, true, messages.botNotFound);
     })
 });
 
@@ -1003,6 +1008,13 @@ router.options("/bot", function(req, clientResponse){
 });
 router.options("/bot/:id", function(req, clientResponse){
     clientResponse.header("Access-Control-Allow-Methods", "DELETE, PUT, OPTIONS");
+    clientResponse.header("Access-Control-Allow-Origin", "*");
+    clientResponse.header("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+    clientResponse.header("Acces-Control-Max-Age", 86400);
+    clientResponse.end();
+});
+router.options("/bot/:id/config", function(req, clientResponse){
+    clientResponse.header("Access-Control-Allow-Methods", "PUT, OPTIONS");
     clientResponse.header("Access-Control-Allow-Origin", "*");
     clientResponse.header("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
     clientResponse.header("Acces-Control-Max-Age", 86400);

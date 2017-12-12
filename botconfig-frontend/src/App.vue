@@ -20,10 +20,7 @@ export default {
     setTimeout(() => {
       let user = JSON.parse(this.$localStorage.get('user'))
       this.$store.dispatch('logIn', user)
-    }, 200)
-    this.$store.dispatch('getAllBots')
-    this.$store.dispatch('getAllmarketplaceBots')
-    // this.$store.dispatch('getTemplates')
+    }, 10)
   },
   computed: {
     check () {
@@ -39,6 +36,7 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   margin: 0 ;
+  min-width: 463px;
 }
 
 </style>

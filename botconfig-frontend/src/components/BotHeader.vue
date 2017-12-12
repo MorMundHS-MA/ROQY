@@ -14,13 +14,6 @@
       </div>
       <span @click="logout()" style="margin-left:10px">{{$lang.translate.header.bot_login}}</span>
     </md-toolbar>
-    <md-toolbar class=" md-dense " style="background-color:white; color: #ff720b;">
-      <div id="route">
-          <router-link tag="md-button" to="/bots" active-class="active">{{$lang.translate.header.my_bots}}</router-link>
-          <router-link tag="md-button" to="/template" active-class="active">{{$lang.translate.header.bot_template}}</router-link>
-          <router-link tag="md-button" to="/marketplace" active-class="active">{{$lang.translate.header.bot_marketplace}}</router-link>
-      </div>
-    </md-toolbar>
     <router-view />
   </div>
 </template>
@@ -43,7 +36,7 @@ export default {
       setTimeout(() => {
         this.$store.dispatch('logOut')
         this.$router.push('/')
-      }, 1000)
+      }, 100)
       this.clearLocalStorage()
     },
     clearLocalStorage () {

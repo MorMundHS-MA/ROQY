@@ -1,61 +1,61 @@
 <template>
-<div id="creator" >
-  <div class="margin">
-    <div class="header">
-      <h2>{{$lang.translate.creator.title}}</h2>
-    </div>
-    <div class="content">
-      <div class="left">
-        <div class="margin">
-        <span>{{$lang.translate.creator.name}} *</span>
-        </div>
-        <div class="margin" style="margin-top:20px">
-          <span>{{$lang.translate.creator.description}} *</span>
-        </div>
+  <div id="creator" >
+    <div class="margin">
+      <div class="header">
+        <h2>{{$lang.translate.creator.title}}</h2>
       </div>
-      <div class="right-input">
-        <div class="margin">
-          <input v-model="botname" type="name" required/>
-        </div>
-        <div class="margin">
-          <textarea v-model="description"  type="name" rows="4" cols="70"></textarea>
-        </div>
-      </div>
-      <div>
+      <div class="content">
+        <div class="left">
           <div class="margin">
-            <span>{{$lang.translate.creator.template}} *</span>
+          <span>{{$lang.translate.creator.name}} *</span>
           </div>
-          <div class="row">
-            <div v-for="(template, templates) in templates" :key="template.name">
-                <div class="card-wraper">
-                  <div class="card" @click="selectTemplate(template)" :class="{'selected': isSelected(template)}">
-                  <img src="../assets/bot.png" :alt="template.name">
-                  <div class="container">
-                    <h4><b>{{template.name}}</b></h4>
-                    <p>{{template.description}}</p>
-                  </div>
-
-                </div>
-                </div>
-            </div>
+          <div class="margin" style="margin-top:20px">
+            <span>{{$lang.translate.creator.description}} *</span>
           </div>
-      </div>
-      <div id="footer">
-        <div>
-          <button class="button" @click="createBot()">{{$lang.translate.creator.create}}</button>
         </div>
+        <div class="right-input">
+          <div class="margin">
+            <input v-model="botname" type="name" required/>
+          </div>
+          <div class="margin">
+            <textarea v-model="description"  type="name" rows="4" cols="70"></textarea>
+          </div>
+        </div>
+        <div>
+            <div class="margin">
+              <span>{{$lang.translate.creator.template}} *</span>
+            </div>
+            <div class="row">
+              <div v-for="(template, templates) in templates" :key="template.name">
+                  <div class="card-wraper">
+                    <div class="card" @click="selectTemplate(template)" :class="{'selected': isSelected(template)}">
+                    <img :src="getTemplateImage(template.name)" :alt="template.name">
+                    <div class="container">
+                      <h4><b>{{template.name}}</b></h4>
+                      <p>{{template.description}}</p>
+                    </div>
+
+                  </div>
+                  </div>
+              </div>
+            </div>
+        </div>
+        <div id="footer">
+          <div>
+            <button class="button" @click="createBot()">{{$lang.translate.creator.create}}</button>
+          </div>
+        </div>
+      </div>    
       </div>
-    </div>    
+    </div>
     </div>
   </div>
-  </div>
-</div>
-
-
 </template>
 
 <script>
 import botConfig from './BotConfig.vue'
+import botWelcome from '../assets/bot_orange.svg'
+import botFaq from '../assets/bot_violett.svg'
 export default {
   name: 'creator',
   data () {
@@ -99,9 +99,8 @@ export default {
       if (this.allValid) {
         this.$store.dispatch('addNewBot', {
           name: this.botname,
-          image: '../assets/bot.png',
-          status: 'offline',
-          description: this.description
+          description: this.description,
+          template: this.template.name
         })
         this.$router.push('/bots')
       }
@@ -125,6 +124,9 @@ export default {
       if (this.selected) {
         return this.template === template
       }
+    },
+    getTemplateImage (template) {
+      return template === 'welcome' ? botWelcome : botFaq
     }
   },
   components: {
