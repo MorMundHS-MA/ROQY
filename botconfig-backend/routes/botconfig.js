@@ -18,6 +18,7 @@ const messages = {
     "botDeleted": "The bot has been deleted successfully!",
     "botHasBeenCreated": "The bot has been created successfully.",
     "botsFound": "All bots has been returned.",
+    "botFound": "The bot has been returned",
     "errorWhileCreating": "Error while creating the bot, please try again.",
     "botHasBeenStarted":"The bot has been successfully started!",
     "botHasBeenStopped":"The bot has been successfully stopped!",
@@ -37,7 +38,9 @@ const messages = {
 };
 
 const maxCallsOnLUIS = 5;
-const waitTimeForLUIS = 2000/maxCallsOnLUIS;
+
+const waitTimeForLUIS = 5000/maxCallsOnLUIS;
+
 
 const LUISKEY = "ed2ff1a97f924b8e8a1402e6700a8bf4";
 let LUISClient;
@@ -466,6 +469,50 @@ function createLivepersonUser(bot, auth){
 
     })
 }
+function deleteLivepersonUser(bot, auth){
+    return new Promise(resolve => {
+        const livePersonLoginDomain = "https://lo.agentvep.liveperson.net/api/account/" + auth + "/login?v=1.3";
+        const livePersonAccountDomain = "https://lo.ac.liveperson.net/api/account/" + auth + "/configuration/le-users/users";
+        const livePersonSkillDomain = "https://lo.ac.liveperson.net/api/account/" + auth + "/configuration/le-users/skills";
+        const authPayload = {
+            "username":"BotMaster",
+            "password":"masterOfBots"
+        };
+        let options = {
+            "uri":livePersonLoginDomain,
+            "method":"POST",
+            "body":authPayload,
+            "headers":{
+                "Content-Type":"application/json"
+            },
+            "json":true
+        };
+        requestPromise(options)
+            .then(response => {
+                options.headers.Authorization = "Bearer " + response.bearer;
+                options.uri = livePersonAccountDomain;
+                options.method = "GET";
+            }).then(() => requestPromise(options))
+            .then(response => {
+                let accountId = undefined;
+                for(let i = 0; i<response.length && accountId === undefined; i++){
+                    if(response[i].loginName === bot.name){
+                        accountId = response[i].id;
+                    }
+                }
+                options.method = "DELETE";
+                options.body = [accountId];
+            })
+            .then(() => requestPromise(options))
+            .then(response => {
+                delete options.body;
+                options.uri = livePersonSkillDomain + "/" +  bot.skill;
+            }).then(requestPromise(options))
+            .then(response => {
+                resolve(response);
+            });
+    })
+}
 
 
 router.get('/bot/public', function(req, clientResponse){
@@ -589,8 +636,44 @@ router.put('/bot/:id', function(req, clientResponse){
             }
         });
     })
-
 });
+
+/**
+ * Returns a bot by ID 
+ */
+router.get('/bot/:id', function(req, clientResponse){
+    let auth = req.header("Authorization");
+    clientResponse.header("Access-Control-Allow-Origin", "*");
+    if(auth === undefined){
+        responseToClient(clientResponse, 401, true, messages.unauthorized);
+        return;
+    }
+    let id = req.params.id;
+    dbcon.readFromDB({
+        botId:id
+    }).then(res => {
+        if (Object.getOwnPropertyNames(res).length !== 0) {
+            responseToClient(clientResponse, 200, false, messages.botFound, res)
+        } else {
+            responseToClient(clientResponse, 404, true, messages.botNotFound)
+        }        
+    })
+})
+/**
+ * Config
+ * This endpoint is for getting a request to save config-files into the database.
+ */
+router.put('/bot/:id/config', function(req, clientResponse){
+    clientResponse.header("Access-Control-Allow-Origin", "*");
+    let auth = req.header("Authorization");
+    if(auth === undefined){
+        responseToClient(clientResponse, 401, true, messages.unauthorized);
+    }
+    let id = req.params.id;
+    let body = req.body;
+    dbcon.writeConfig(body, id);
+    responseToClient(clientResponse, 200, false, messages.botUpdated);
+})
 
 /**
  * Status
@@ -617,6 +700,7 @@ router.get('/bot/:id/status', function(req, clientResponse){
 });
 
 router.put('/bot/:id/privacy', function(req, clientResponse){
+    clientResponse.header("Access-Control-Allow-Origin", "*");
     let auth = req.header("Authorization");
     let id = req.params.id;
     if(auth === undefined){
@@ -628,22 +712,12 @@ router.put('/bot/:id/privacy', function(req, clientResponse){
         responseToClient(clientResponse, 406, true, messages.privacyNotAcceptable);
         return;
     }
-    dbcon.readFromDB({
-        botId:id
-    }).then(res => {
-        if(res !== {}) {
-            res.privacy = privacy;
-            dbcon.writeToDB({
-                botId: id,
-                data: res
-            }).then(success => {
-                if(success){
-                    responseToClient(clientResponse, 200, false, messages.privacyUpdated);
-                }else{
-                    responseToClient(clientResponse, 500, true, messages.botNotFound);
-                }
-            })
-        }
+    dbcon.setPrivacy(id, privacy)
+    .then(function () {
+        responseToClient(clientResponse, 200, false, messages.privacyUpdated);
+    })
+    .catch(function () {
+        responseToClient(clientResponse, 500, true, messages.botNotFound);
     })
 });
 
@@ -815,6 +889,13 @@ router.options("/bot", function(req, clientResponse){
 });
 router.options("/bot/:id", function(req, clientResponse){
     clientResponse.header("Access-Control-Allow-Methods", "DELETE, PUT, OPTIONS");
+    clientResponse.header("Access-Control-Allow-Origin", "*");
+    clientResponse.header("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+    clientResponse.header("Acces-Control-Max-Age", 86400);
+    clientResponse.end();
+});
+router.options("/bot/:id/config", function(req, clientResponse){
+    clientResponse.header("Access-Control-Allow-Methods", "PUT, OPTIONS");
     clientResponse.header("Access-Control-Allow-Origin", "*");
     clientResponse.header("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
     clientResponse.header("Acces-Control-Max-Age", 86400);

@@ -4,7 +4,7 @@ import * as types from '../mutation-types'
 // initial state
 const state = {
   bots: [],
-  bot: {}
+  bot: null
 }
 
 const getters = {
@@ -23,6 +23,11 @@ const getters = {
 }
 
 const actions = {
+  uploadBot ({commit}, bot) {
+    data.uploadBot(bot => {
+      commit(types.RECEIVE_BOTS, { bot })
+    }, bot)
+  },
   getAllBots ({commit}) {
     data.getBots(bots => {
       commit(types.RECEIVE_BOTS, { bots })
@@ -50,14 +55,17 @@ const actions = {
             () => commit(types.CHANGE_STATE_TO_STOP, { bot })
         )
   },
-  getBot ({commit}, bot) {
-    data.getBot(bot => {
-      commit(types.RECEIVE_BOT, { bot })
-    }, bot)
+  getBotById ({commit}, id) {
+    data.getBot((bot) => {
+      commit(types.RECEIVE_BOT_BY_ID, { bot })
+    }, id)
   }
 }
 
 const mutations = {
+  [types.UPLOAD_BOT] (state, { bot }) {
+    state.bots.push(bot)
+  },
   [types.RECEIVE_BOTS] (state, { bots }) {
     state.bots = bots
   },
@@ -76,11 +84,14 @@ const mutations = {
   [types.CHANGE_STATE_TO_STOP] (state, { bot }) {
     state.bots[state.bots.indexOf(bot)].status = 'Stopped'
   },
-  [types.RECEIVE_BOT] (state, { bot }) {
+  [types.RECEIVE_BOT_BY_ID] (state, { bot }) {
+    console.log(bot)
     state.bot = bot
+  },
+  resetBot (state) {
+    state.bot = null
   }
 }
-
 export default {
   state,
   getters,

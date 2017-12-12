@@ -1,98 +1,72 @@
 <template>
-
-<md-layout md-align="center">
- <md-layout md-column md-flex="70" md-flex-medium="70" md-flex-small="60" md-flex-xsmall="90"  >
-   <md-stepper @completed="create" href="/">
-    <md-step :md-label="$lang.translate.creator.step1" :md-editable="true"  :md-continue="allValid" 
-    :md-button-continue="$lang.translate.creator.next" :md-button-back="$lang.translate.creator.back">
-
-      <h2 class="inputwrapper" style="text-align:center">{{$lang.translate.creator.title}}</h2>
-      
-      <div class="inputwrapper">
-        <div class="textarea"><label><b>{{$lang.translate.creator.name}}</b></label></div>
-        <input id="entername" class="marginleft" type="name" v-model="botname" required/>
+  <div id="creator" >
+    <div class="margin">
+      <div class="header">
+        <h2>{{$lang.translate.creator.title}}</h2>
       </div>
-      
-      <div class="inputwrapper">
-        <div class="textarea"><label><b>{{$lang.translate.creator.description}}</b></label></div>
-        <textarea id="enterdescription" class="textarea marginleft" type="name" v-model="description" :placeholder="$lang.translate.creator.char" required></textarea>
-      </div>
-      
-      <div class="inputwrapper">
-        <div class="textarea"><label><b>{{$lang.translate.creator.template}}</b></label></div>
-      </div>
-
-      <div class="inputwrapper">
-
-          <md-layout class="row" style="margin:20px;">
-          <md-layout md-flex-xsmall="100" md-flex-small="100" md-flex-medium="33" md-flex-large="25"  md-flex-xlarge="20"
-          class="row" v-for="(template, templates) in templates" :key="template.name">
-          <md-card md-with-hover v-on:click="selectTemplate(template)">
-
-          <div id="imgwrapper">
-            <img src="../assets/bot.png" :alt="template.name">
+      <div class="content">
+        <div class="left">
+          <div class="margin">
+          <span>{{$lang.translate.creator.name}} *</span>
           </div>
-          
-          <md-card-header-text>
-            <div class="md-subhead"><b>{{template.name}}</b></div>
-          </md-card-header-text>
+          <div class="margin" style="margin-top:20px">
+            <span>{{$lang.translate.creator.description}} *</span>
+          </div>
+        </div>
+        <div class="right-input">
+          <div class="margin">
+            <input v-model="botname" type="name" required/>
+          </div>
+          <div class="margin">
+            <textarea v-model="description"  type="name" rows="4" cols="70"></textarea>
+          </div>
+        </div>
+        <div>
+            <div class="margin">
+              <span>{{$lang.translate.creator.template}} *</span>
+            </div>
+            <div class="row">
+              <div v-for="(template, templates) in templates" :key="template.name">
+                  <div class="card-wraper">
+                    <div class="card" @click="selectTemplate(template)" :class="{'selected': isSelected(template)}">
+                    <img :src="getTemplateImage(template.name)" :alt="template.name">
+                    <div class="container">
+                      <h4><b>{{template.name}}</b></h4>
+                      <p>{{template.description}}</p>
+                    </div>
 
-          <md-card-content>
-            {{template.description}}
-          </md-card-content>
-  
-          </md-card>
-          </md-layout>
-          </md-layout>
-      
+                  </div>
+                  </div>
+              </div>
+            </div>
+        </div>
+        <div id="footer">
+          <div>
+            <button class="button" @click="createBot()">{{$lang.translate.creator.create}}</button>
+          </div>
+        </div>
+      </div>    
       </div>
-  
-    <md-input-container>
-      <label for="templates">{{$lang.translate.creator.question2}}</label>
-        <md-select name="option=" id="option="  v-model="item" :selected="item" required>
-        <md-option v-for="(option, index) in templates"
-            :key="index"
-            :value="option.name">
-            {{option.name}}
-        </md-option>
-      </md-select>
-    </md-input-container>
-
-    </md-step>
-
-    <md-step md-label="Config" :md-editable="true" :md-continue="true" md-button-continue="Save" >
-      <botConfig>
-      </botConfig>
-    </md-step>
-
-    <md-step :md-label="$lang.translate.creator.step3" :md-editable="true" :md-continue="true" 
-    :md-button-continue="$lang.translate.creator.create" :md-button-back="$lang.translate.creator.back">
-        <h6>{{$lang.translate.creator.question1}}</h6>
-
-      <h3>{{$lang.translate.creator.question1}}</h3>
-      <br><br>
-      
-    </md-step>
-  
-    </md-stepper> 
-  </md-layout>
-</md-layout>
-
+    </div>
+    </div>
+  </div>
 </template>
 
 <script>
 import botConfig from './BotConfig.vue'
-
+import botWelcome from '../assets/bot_orange.svg'
+import botFaq from '../assets/bot_violett.svg'
 export default {
+  name: 'creator',
   data () {
     return {
       botname: '',
       description: '',
+      template: null,
       botnameValid: false,
       descriptionValid: false,
-      allValid: false,
-      item: '',
-      selected: false
+      selected: false,
+      allValid: false
     }
   },
   computed: {
@@ -108,7 +82,7 @@ export default {
       this.validInput()
     },
     description () {
-      if (this.description !== '' && this.description.length <= 100) {
+      if (this.description !== '' && this.description.length <= 160) {
         this.descriptionValid = true
       }
       this.validInput()
@@ -121,17 +95,18 @@ export default {
     }
   },
   methods: {
-    create () {
-      this.$store.dispatch('addNewBot', {
-        name: this.botname,
-        image: '../assets/bot.png',
-        status: 'offline',
-        description: this.description
-      })
-      this.$router.push('/')
+    createBot () {
+      if (this.allValid) {
+        this.$store.dispatch('addNewBot', {
+          name: this.botname,
+          description: this.description,
+          template: this.template.name
+        })
+        this.$router.push('/bots')
+      }
     },
     validInput () {
-      if (this.botnameValid === true && this.descriptionValid === true && this.selected === true) {
+      if (this.botnameValid && this.descriptionValid && this.selected) {
         this.allValid = true
       }
     },
@@ -141,10 +116,17 @@ export default {
       this.item = ''
     },
     selectTemplate (template) {
-      this.item = template
+      this.template = template
       this.selected = true
-      console.log(template)
       this.validInput()
+    },
+    isSelected (template) {
+      if (this.selected) {
+        return this.template === template
+      }
+    },
+    getTemplateImage (template) {
+      return template === 'welcome' ? botWelcome : botFaq
     }
   },
   components: {
@@ -153,49 +135,120 @@ export default {
 }
 </script>
 <style scoped>
-  #entername{
-    border: 2px solid #D3D3D3;
-    border-radius: 5px;
-    padding: 2px;
-    margin-left: 90px;
+  #creator {
+    width: 60%;
+    margin: auto;
   }
-  #enterdescription{
-    border: 2px solid #D3D3D3;
-    border-radius: 5px;
+  .header {
+   width: 30%;
+   margin-left: auto;
+   margin-right: auto;
+   margin-top: 7%;
+   margin-bottom: 5%
+  }
+  header h2 {
+   min-width: 170px;
+  }
+  input, textarea{
+    border:1px solid black;
+    border-radius: 3px;
+  }
+  input {
+    width: 40%;
+    height: 30px;
+    padding: 1.5px;
+  }
+  textarea {
+    width: 70%;
     height: 100px;
-    width: 400px;
   }
-  .inputwrapper{
-    display: block;
-    margin-top: 30px;
-    clear: left;
+  .content {
+    max-width: 90%;
+    margin: 0 auto;
   }
-  .textarea{
+  .right-input {
+    margin-left: 25%;
+  }
+  .margin {
+    margin-top: 4%;
+  }
+  row {
+    width:100%;
+    text-align: center;
+    margin: 0 auto;
+    overflow: hidden;
+  }
+  .card-wraper {
+    display: inline;
+    min-width: 25%;
+    max-height: 250px;
+    min-height: 250px;
+    max-width: 25%;
+  }
+  .card {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    border-radius: 3px;
+    transition: 0.3s;
+    min-width: 23%;
+    max-height: 210px;
+    min-height: 210px;
+    max-width: 23%;
+    padding-top: .5%;
+    margin: .5%;
+    background-color: white;
+    cursor: pointer;
+    word-wrap:break-word;
     float: left;
   }
-  .marginleft{
-    margin-left: 50px;
+  .selected {
+    border: 3px solid orange;
   }
-  .md-card{
-    min-width: 60px;
-    min-height: 160px;
-    max-width: 160px;
-    max-height: 260px;
-    word-wrap:break-word;
-    margin: 20px;
+  .container {
+    margin-top: 5%;
+    padding: 2px 10px;
   }
-  .md-card-content{
-    word-wrap:break-word;
+  img {
+    width: 80px;
+    height: 80px;
+    margin-top: 10%;
+    margin-right: auto;
+    margin-left: auto;
+    display: block;
   }
-  .md-title{
-    text-align: left;
-    margin: 10px;
+  #footer {
+    width: 100%;
+    padding: .5%;
+    display: flex;
+    flex-flow: row-reverse wrap;
+    margin-bottom: 5%;
   }
-  img{
-    width: 148px;
-    height: 148px;
-  }
-  #imgwrapper{
+
+  #footer .button {
+    background-color: orange;
+    border: none;
+    border-radius: 10px;
+    color: black;
+    padding: 8px 15px;
     text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    width: 90px;
+  }
+  @media only screen and (max-width: 800px) {
+    .card-wraper {
+      display: inline;
+      min-width: 33%;
+      max-height: 250px;
+      min-height: 250px;
+      max-width: 33%;
+    }
+    .card {
+      min-width: 32%;
+      max-height: 220px;
+      min-height: 220px;
+      max-width: 32%;
+    }
   }
 </style>

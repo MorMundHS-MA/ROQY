@@ -1,25 +1,16 @@
 import data from '../../api/templateData'
 import * as types from '../mutation-types'
-import foto from '../../assets/bot.png'
 
 // initial state
 const state = {
   templates: [
     {
-      name: 'Welcome-Bot',
-      image: foto,
+      name: 'welcome',
       description: 'Ich leite nur weiter...'
-
     },
     {
-      name: 'FAQ-Bot',
-      image: foto,
+      name: 'faq',
       description: 'Man nennt mich auch LUIS'
-    },
-    {
-      name: 'Ravenclaw-Bot',
-      image: foto,
-      description: 'Ich kann einfach alles!'
     }
   ]
 }
@@ -36,6 +27,9 @@ const mutations = {
 
   [types.RECEIVE_TEMPLATES] (state, { templates }) {
     state.templates = templates
+  },
+  [types.DELETE_TEMPLATE] (state, { template }) {
+    state.templates.splice(state.templates.indexOf(template), 1)
   }
 }
 
@@ -49,6 +43,9 @@ const actions = {
     data.addNewTemplate(teamplate => {
       commit(types.ADD_NEW_TEMPALTE, { template })
     }, template)
+  },
+  deleteTemplate ({commit}, template) {
+    commit(types.DELETE_TEMPLATE, { template })
   }
 }
 

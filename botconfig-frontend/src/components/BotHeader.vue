@@ -6,7 +6,6 @@
       <!--TODO "md-title" dient nur als Platzhalter zwischen Logo und DE|EN.
           Platzhalter entfernen und Logo + Sprachauswahl richtig einordnen!-->
       <h1 class="md-title"></h1>
-      
       <div class="lg">
         <div>
             <span @click="changeLang('de')" class="de" >DE</span>
@@ -14,13 +13,6 @@
         </div>
       </div>
       <span @click="logout()" style="margin-left:10px">{{$lang.translate.header.bot_login}}</span>
-    </md-toolbar>
-    <md-toolbar class=" md-dense " style="background-color:white; color: #ff720b;">
-      <div id="route">
-          <router-link tag="md-button" to="/bots" active-class="active">{{$lang.translate.header.my_bots}}</router-link>
-          <router-link tag="md-button" to="/template" active-class="active">{{$lang.translate.header.bot_template}}</router-link>
-          <router-link tag="md-button" to="/marketplace" active-class="active">{{$lang.translate.header.bot_marketplace}}</router-link>
-      </div>
     </md-toolbar>
     <router-view />
   </div>
@@ -41,9 +33,18 @@ export default {
       this.$lang.setLang(lg)
     },
     logout () {
-      this.$store.dispatch('logOut')
-      this.$router.push('/')
+      setTimeout(() => {
+        this.$store.dispatch('logOut')
+        this.$router.push('/')
+      }, 100)
+      this.clearLocalStorage()
+    },
+    clearLocalStorage () {
+      this.$localStorage.remove('user')
     }
+  },
+  created () {
+    this.$router.push('/bots')
   }
 }
 </script>

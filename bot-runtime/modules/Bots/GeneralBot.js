@@ -140,16 +140,19 @@ class GeneralBot extends Agent {
                     }
                 }
             });
-
+            let keyToUse = {sequence:-999999};
             // publish read, and echo
             Object.keys(respond).forEach(key => {
                 var contentEvent = respond[key];
+                if(contentEvent.sequence > keyToUse.sequence){
+                    keyToUse = contentEvent;
+                }
                 this.publishEvent({
                     dialogId: contentEvent.dialogId,
                     event: {type: "AcceptStatusEvent", status: "READ", sequenceList: [contentEvent.sequence]}
                 });
-                this.emit(this.CONTENT_NOTIFICATION, contentEvent);
             });
+            this.emit(this.CONTENT_NOTIFICATION, keyToUse);
         });
 
         // Tracing
