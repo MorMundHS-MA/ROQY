@@ -16,6 +16,18 @@ chai.use(chaiHttp);
 beforeEach(function () {
     server = require('../app');
 })
+
+/* testBot-Template 
+testBot = {
+    name : '',
+    description : '',
+    test : true,
+    privacy : 'public',
+    botType : 'faq',
+    intents : []
+}
+*/
+
 /**
  * Test for the post method to insert a bot
  */
@@ -162,7 +174,50 @@ describe('/PUT intentname', () => {
 })
 
 describe('PUT start/stop', () => {
-    let TestBot = { name: 'startStopBot' }
+    let testBot = {
+        name : 'StartStopBot',
+        description : 'Im a testobject to test the start-stop-technology',
+        test : true,
+        privacy : 'public',
+        botType : 'faq',
+        intents : []
+    }
+    let testBotId;
+    before(function (done) {
+        chai.request(server)
+        .post('/bot')
+        .set('Authorization', authKey)
+        .send(testBot)
+        .end((err, res) => {
+            if (err) {
+                fail('StartStopBot can get saved into database!')
+            }
+            else {
+                testBotId = res.body.extra.botId;
+                it('should show as status test for StartStopBot.', (done) => {
+                    chai.request(server)
+                    .get('/bot/' + testBotId + '/status')
+                    .send()
+                    .end((err, res) => {
+                        res.should.have.status(200)
+                        //TODO: The body from this bot inside the response should have test as status.
+                    })
+                })
+                done()
+            }
+        })
+    })
+
+    after(function (done) {
+        chai.request(server)
+        .delete('/bot/' + botId)
+        .send()
+        .end((err, res) => {
+            if (err) {
+                console.log('StartStopBot cant get deleted!')
+            }
+        })
+    })
 })
 
 describe('POST /auth', () => {
