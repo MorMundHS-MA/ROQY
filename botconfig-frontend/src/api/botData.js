@@ -4,6 +4,7 @@ axios.defaults.baseURL = process.env.API_URL
 
 export default {
   uploadBot (cb, bot) {
+    console.log(bot.id)
     axios.put('/bot/' + bot.id + '/privacy', {
       privacy: 'public'
     },
@@ -37,7 +38,7 @@ export default {
       'test': 'true',
       'botType': bot.template,
       'privacy': 'private',
-      'config': null
+      'config': bot.config || null
     },
       {
         headers: {

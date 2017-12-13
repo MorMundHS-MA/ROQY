@@ -24,8 +24,8 @@ const getters = {
 
 const actions = {
   uploadBot ({commit}, bot) {
-    data.uploadBot(bot => {
-      commit(types.RECEIVE_BOTS, { bot })
+    data.uploadBot(bots => {
+      commit(types.RECEIVE_BOTS, { bots })
     }, bot)
   },
   getAllBots ({commit}) {

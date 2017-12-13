@@ -2,7 +2,7 @@
 <template>
   <div>
     <md-toolbar class="md-dense" style="color: white; background-color: #414040;">
-      <img class="logo" src="../assets/ROQY.png" alt="ROQY">
+      <router-link to='/bots'><img class="logo" src="../assets/ROQY.png" alt="ROQY"></router-link>
       <!--TODO "md-title" dient nur als Platzhalter zwischen Logo und DE|EN.
           Platzhalter entfernen und Logo + Sprachauswahl richtig einordnen!-->
       <h1 class="md-title"></h1>
@@ -53,7 +53,7 @@ export default {
     }
   },
   created () {
-    this.$router.push('/bots')
+    this.$router.push('/template')
   }
 }
 </script>
