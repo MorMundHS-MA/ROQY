@@ -1,5 +1,5 @@
 let MongoClient = require('mongodb').MongoClient;
-let url = 'mongodb://141.19.145.166:27017/mydb';
+let url = 'mongodb://localhost:27017/mydb';
 
 let username = '';
 let password = '';

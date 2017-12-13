@@ -4,8 +4,10 @@ const url = 'mongodb://141.19.145.166:27017/mydb'
 let mongo = require('mongodb');
 let chai = require('chai');
 let chaiHttp = require('chai-http');
+const chaiJson = require('chai-json');
+const fs = require('fs');
 let should = chai.should();
-
+const backend = require('../routes/botconfig')
 let server;
 const authKey = 'ed2ff1a97f924b8e8a1402e6700a8bf4';
 
@@ -163,6 +165,23 @@ describe('PUT start/stop', () => {
     let TestBot = { name: 'startStopBot' }
 })
 
+describe('POST /auth', () => {
+    it('should get an valid auth', (done) => {
+        chai.request(server)
+            .post('/auth')
+            .send({
+                "username":"Hallo",
+                "password":"Welt"
+            })
+            .end((err, res) => {
+            if(err)done(err);
+            res.should.have.status(200);
+            assert.equal(res.body.extra.Authorization, 23625217);
+            done();
+            });
+    })
+})
+
 describe('GET status', () => {
     let testBot = {
         name: 'Statussymbol',
@@ -197,6 +216,7 @@ describe('GET status', () => {
                 }
                 else {
                     res.should.have.status(200);
+                    console.log(testBotId);
                     chai.request(server)
                         .delete('/bot/' + testBotId)
                         .set('Authorization', authKey)
@@ -204,10 +224,33 @@ describe('GET status', () => {
                         .end((err, res) => {
                             if (err) {
                                 console.log('Statussymbol cant get deleted ')
+                                done(err);
                             }
                         })
                 }
             })
         done();
     })
-}) 
+})
+
+describe('parse config to intents', () => {
+    it('should come the correct config', (done) => {
+        let parseConfigExpected = JSON.parse(fs.readFileSync(__dirname + '/pre-built-jsons/parseConfigExpected.json', 'utf8'));
+        let parseConfigPayload = JSON.parse(fs.readFileSync(__dirname + '/pre-built-jsons/parseConfigPayload.json', 'utf8'));
+        backend.parseConfigTointents(parseConfigPayload)
+        assert.deepEqual(parseConfigPayload, parseConfigExpected);
+        done();
+    });
+
+    it('should come the correct config with empty intents', (done) => {
+        let parseConfigExpected = JSON.parse(fs.readFileSync(__dirname + '/pre-built-jsons/parseConfigExpected.json', 'utf8'));
+        let parseConfigPayload = JSON.parse(fs.readFileSync(__dirname + '/pre-built-jsons/parseConfigPayload.json', 'utf8'));
+        parseConfigExpected.intents = [];
+        parseConfigExpected.config = null;
+        parseConfigExpected.originIntentState.nextIntents = [];
+        parseConfigPayload.config = null;
+        backend.parseConfigTointents(parseConfigPayload)
+        assert.deepEqual(parseConfigPayload, parseConfigExpected);
+        done();
+    });
+});
