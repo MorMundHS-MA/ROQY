@@ -112,14 +112,15 @@ export default {
             console.log(error)
           })
   },
-  getBot (cb, id) {
-    axios.get('/bot/' + id, { headers: { Authorization: 'ed2ff1a97f924b8e8a1402e6700a8bf4' } })
-    .then(function (response) {
-      cb(response.data.extra)
-    })
-    .catch(function (error) {
-      console.log(error)
+  getBot (id) {
+    return new Promise((resolve, reject) => {
+      axios.get('/bot/' + id, { headers: { Authorization: 'ed2ff1a97f924b8e8a1402e6700a8bf4' } })
+        .then((res) => {
+          resolve(res.data.extra)
+        })
+        .catch((err) => {
+          reject(err)
+        })
     })
   }
-
 }

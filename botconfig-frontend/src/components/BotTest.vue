@@ -1,6 +1,5 @@
 <template>
   <div id="test">
-
     <div id="test-header">
       <div style="margin-right:20px;">
         <button class="button-top" @click="goback()">{{$lang.translate.test.back}}</button>
@@ -12,7 +11,7 @@
       <h2>{{$lang.translate.test.title}}</h2>
     </div>
 
-    <div id="test-card">
+    <div v-if="loaded" id="test-card">
       <div class="card-header">
             <img src="../assets/bot_orange.svg">
             <h3 id="title">{{bot.name}}</h3>
@@ -37,6 +36,8 @@
 </template>
 
 <script>
+import api from '../api/botData'
+
 export default {
   name: 'test',
   props: ['id'],
@@ -45,24 +46,12 @@ export default {
       message: null,
       messages: [],
       bot: null,
-      currentNode: null
+      currentNode: null,
+      loaded: false
     }
   },
   created () {
-    this.$store.dispatch('getBotById', this.id)
-    let bot = null
-
-    const getBot = setInterval(() => {
-      bot = this.$store.getters.getBot
-      if (bot !== null || bot !== undefined) {
-        this.bot = bot
-        stopMe()
-      }
-      console.log(bot)
-    }, 100)
-    function stopMe () {
-      clearInterval(getBot)
-    }
+    this.loadBot()
   },
   methods: {
     addMessage () {
@@ -125,6 +114,17 @@ export default {
     },
     goforward () {
       this.$router.push('/bots')
+    },
+    loadBot () {
+      api.getBot(this.id)
+      .then((data) => {
+        this.loaded = true
+        this.bot = data
+      })
+      .catch((err) => {
+        console.error(err)
+        alert('Could not load bot from server please try again.')
+      })
     }
   }
 }
@@ -142,9 +142,6 @@ export default {
 #test-title {
   text-align: center;
   font-size: 25px;
-}
-#test-title>h2 {
-  
 }
 #test-card {
   width: 40%;

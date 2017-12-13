@@ -1,37 +1,43 @@
 <template>
   <div id="conf-wrapper">
-    <div id="leftside">
-      <div id="group-wrapper">
-        <tree-view 
-        :row="index" 
-        v-for="(group,index) in subGroups" 
-        :rowSelect="rowSelect" 
-        :key="group.block" 
-        v-on:selection-changed="selectSubTree(index,$event)" 
-        v-on:addNew="addNewBlock(index)" 
-        :group="group.children" 
-        :blocks="blocks" 
-        :selected="group.selection" 
-        @drop="favDrop(index)" 
-        class="wrapper"></tree-view>
+    <div id="content-wrapper" v-if="loaded">
+      <div id="leftside">
+        <div id="group-wrapper">
+          <tree-view 
+          :row="index" 
+          v-for="(group,index) in subGroups" 
+          :rowSelect="rowSelect" 
+          :key="group.block" 
+          v-on:selection-changed="selectSubTree(index,$event)" 
+          v-on:addNew="addNewBlock(index)" 
+          :group="group.children" 
+          :blocks="blocks" 
+          :selected="group.selection" 
+          @drop="favDrop(index)" 
+          class="wrapper"></tree-view>
+        </div>
+        <div class="block-wrapper wrapper">
+          <block-view 
+          v-on:favDrag="favStartDrag($event)" 
+          :blocks="favorites">
+          </block-view>
+        </div>
       </div>
-      <div class="block-wrapper wrapper">
-        <block-view 
-        v-on:favDrag="favStartDrag($event)" 
-        :blocks="favorites"></block-view>
+      <div class="block-config-wrapper wrapper">
+        <block-config 
+        v-on:setTitle="setBlockTitle(selectedBlock.id, $event)" 
+        v-on:newQuestion="blockAddQuestion(selectedBlock.id, $event)" 
+        v-on:setAnswer="setAnswer(selectedBlock.id,$event)" 
+        v-on:deleteQuestion="blockRemoveQuestion(selectedBlock.id,$event)" 
+        v-on:favorite="favoriteBlock(selectedBlock.id)" 
+        v-on:delete="deleteSelected()" 
+        v-on:saveData="saveData()" 
+        v-on:testBot="testBot()" 
+        :block="selectedBlock"></block-config>
       </div>
     </div>
-    <div class="block-config-wrapper wrapper">
-      <block-config 
-      v-on:setTitle="setBlockTitle(selectedBlock.id, $event)" 
-      v-on:newQuestion="blockAddQuestion(selectedBlock.id, $event)" 
-      v-on:setAnswer="setAnswer(selectedBlock.id,$event)" 
-      v-on:deleteQuestion="blockRemoveQuestion(selectedBlock.id,$event)" 
-      v-on:favorite="favoriteBlock(selectedBlock.id)" 
-      v-on:delete="deleteSelected()" 
-      v-on:saveData="saveData()" 
-      v-on:testBot="testBot()" 
-      :block="selectedBlock"></block-config>
+    <div v-else>
+      <p>LOADING</p>
     </div>
   </div>
 </template>
@@ -41,6 +47,7 @@ import 'vue-material/dist/vue-material.css'
 import blockConfig from './Config/BlockConfig.vue'
 import blockView from './Config/BlockView.vue'
 import treeView from './Config/TreeView.vue'
+import api from '../api/botData'
 import axios from 'axios'
 
 export default {
@@ -52,16 +59,15 @@ export default {
       blockIDCount: 0,
       blocks: [ ],
       groups: [ ],
-      favDrag: null
+      favDrag: null,
+      loaded: false
     }
   },
   components: {
     blockConfig, blockView, treeView
   },
   created () {
-    if (this.id !== undefined) {
-      this.loadBot()
-    }
+    this.loadBot()
   },
   computed: {
     /**
@@ -245,7 +251,6 @@ export default {
      * Load the config data from a json string
      */
     loadConfig (json) {
-      console.log('Loading config')
       this.rowSelect = json.rowSelect
       this.rootSelect = json.rootSelect
       this.blocks = json.blocks
@@ -292,13 +297,13 @@ export default {
         })
     },
     /**
-     * Save config event handler
+     * Save config button event handler
      */
     saveData () {
       this.saveConfig()
     },
     /**
-     * Test bot event handler
+     * Test bot button event handler
      */
     testBot () {
       this.saveConfig(true)
@@ -313,23 +318,15 @@ export default {
       this.favDrag = null
     },
     loadBot () {
-      this.$store.dispatch('getBotById', this.id)
-      let bot = null
-      let retry = 0
-      const getBot = setInterval(() => {
-        if (++retry === 3) {
-          stopMe()
-        }
-        bot = this.$store.getters.getBot
-        if (bot !== null || bot !== undefined) {
-          this.loadConfig(bot.config)
-          stopMe()
-        }
-        console.log(bot)
-      }, 500)
-      function stopMe () {
-        clearInterval(getBot)
-      }
+      api.getBot(this.id)
+      .then((data) => {
+        this.loaded = true
+        this.loadConfig(data.config)
+      })
+      .catch((err) => {
+        console.error(err)
+        alert('Could not load bot from server please try again.')
+      })
     }
   }
 }
@@ -340,6 +337,13 @@ export default {
   display: flex;
   height: 830px;
 }
+
+#content-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+
 #group-wrapper {
   height: 80%;
   padding: 25px;
