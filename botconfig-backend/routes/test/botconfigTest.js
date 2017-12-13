@@ -11,6 +11,18 @@ const authKey = 'ed2ff1a97f924b8e8a1402e6700a8bf4';
 
 chai.use(chaiHttp);
 
+/*
+testBot-template
+testBot = {
+    name : '',
+    description : '',
+    test : true,
+    privace : 'public',
+    botType : 'faq',
+    intents : []
+}
+*/
+
 beforeEach(function () {
     server = require('../app');
 })
@@ -160,12 +172,38 @@ describe('/PUT intentname', () => {
 })
 
 describe('PUT start/stop', () => {
-    let TestBot = { name: 'startStopBot' }
+    let testBot = {
+        name: 'startStopBot',
+        description: 'Im here to test the start-stop-technology',
+        test: true,
+        privace: 'public',
+        botType: 'faq',
+        intents: []
+    }
+
+    let testBotId;
+
+    const running = 'running';
+    const test = 'test';
+
+    before(function (done) {
+        chai.request(server)
+            .post('/bot')
+            .set('Authorization', authKey)
+            .send(testBot)
+            .end((err, res) => {
+                if (err) console.log('startStopBot cant get inserted to the database')
+                testBotId = res.body.extra.botId;
+            })
+    })
 })
 
 describe('GET status', () => {
     let testBot = {
         name: 'Statussymbol',
+        description: '',
+        privacy: 'private',
+        test:true,
         botType: 'faq'
     }
     let testBotId;
@@ -178,10 +216,11 @@ describe('GET status', () => {
             .end((err, res) => {
                 if (err) {
                     console.log('Bot with name Statussymbol could not be inserted!');
-                    done()
+                    fail();
                 }
                 else {
                     testBotId = res.body.Id
+                    done()
                 }
             })
     })
