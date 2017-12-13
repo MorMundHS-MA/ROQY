@@ -222,7 +222,7 @@ input {
   margin-right: 3%;
 }
 .message-right {
-  background-color: #4f8ff7;
+  background-color: ##58B8DD;
   max-width: 45%;
   border-radius: 10px;
   padding: 6px 7px;
@@ -231,7 +231,7 @@ input {
   overflow-wrap: break-word;
 }
 .message-left {
-  background-color: #f7a54f;
+  background-color: #F8BC16;
   max-width: 45%;
   border-radius: 20px;
   padding: 6px 7px;
