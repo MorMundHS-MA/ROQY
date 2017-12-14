@@ -8,11 +8,11 @@
       <h1 class="md-title"></h1>
       <div class="lg">
         <div>
-            <span @click="changeLang('de')" class="de" >DE</span>
-            <span @click="changeLang('en')">EN</span> 
+            <span @click="changeLang('de')" class="de header-text" >DE</span>
+            <span @click="changeLang('en')" class="header-text">EN</span> 
         </div>
       </div>
-      <span @click="logout()" style="margin-left:10px">{{$lang.translate.header.bot_login}}</span>
+      <span @click="logout()" class="header-text" style="margin-left:10px">{{$lang.translate.header.bot_login}}</span>
     </md-toolbar>
     <router-view />
   </div>
@@ -98,5 +98,8 @@ span.de {
   text-align:left;
   margin: 0%;
   padding:0%;
+}
+.header-text{
+  color:white;
 }
 </style>

@@ -174,6 +174,7 @@ export default {
     margin-right: 15px;
     margin-left: 15px;
     padding: 2px;
+    border-radius: 5px;
   }
   .md-card-content{
     word-wrap:break-word;
