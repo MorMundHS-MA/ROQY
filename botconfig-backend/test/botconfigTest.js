@@ -155,7 +155,8 @@ describe('/PUT intentname', () => {
 })
 
 describe('PUT start/stop', () => {
-    let testBot = {
+
+let testBot = {
         name : 'StartStopBot',
         description : 'Im a testobject to test the start-stop-technology',
         test : true,
