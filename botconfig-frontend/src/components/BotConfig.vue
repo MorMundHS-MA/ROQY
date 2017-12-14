@@ -1,4 +1,11 @@
 <template>
+<div>
+  <div id="config-header" class="wrapper">
+    <div style="margin-right:20px;">
+      <button v-on:click="testBot()" class="button-top">{{$lang.translate.config.test}}</button>
+      <button v-on:click="saveData()" class="button-top">{{$lang.translate.config.save}}</button>
+    </div>
+  </div>
   <div id="conf-wrapper">
     <div id="content-wrapper" v-if="loaded">
       <div id="leftside">
@@ -16,14 +23,14 @@
           @drop="favDrop(index)" 
           class="wrapper default-shadow"></tree-view>
         </div>
-        <div class="block-wrapper wrapper">
+        <div class="block-wrapper ">
           <block-view 
           v-on:favDrag="favStartDrag($event)" 
           :blocks="favorites">
           </block-view>
         </div>
       </div>
-      <div class="block-config-wrapper wrapper">
+      <div class="block-config-wrapper ">
         <block-config 
         v-on:setTitle="setBlockTitle(selectedBlock.id, $event)" 
         v-on:newQuestion="blockAddQuestion(selectedBlock.id, $event)" 
@@ -39,6 +46,7 @@
     <div v-else>
       <p>LOADING</p>
     </div>
+  </div>
   </div>
 </template>
 
@@ -294,7 +302,6 @@ export default {
             this.$router.push('/bots')
           }
           this.$store.commit('resetBot')
-          console.log('here' + this.$store.getters.getbot)
         })
         .catch(() => {
           alert('Failed to upload your bot. Please try again.')
@@ -347,6 +354,24 @@ export default {
 </script>
 
 <style scoped>
+#config-header {
+  width: 100%;
+  padding: 3px;
+  display: flex;
+  flex-direction: row-reverse;
+}
+.button-top {
+  background-color: orange;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 15px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  cursor: pointer;
+  margin-top: 2px;
+  margin-right: 3px;
+}
 #conf-wrapper {
   display: flex;
   height: 830px;
@@ -389,19 +414,16 @@ export default {
 .block-config-wrapper {
   height: 100%;
   flex: 1;
+  border-left: .5px solid #d4d6d8;
 }
 
 .block-wrapper {
-  height: 20%;
+  height: 19.4%;
+  border-top: 2px solid #d4d6d8;
 }
 
 #leftside {
   width: 66%;
   height: 100%;
-}
-
-.block-config-wrapper {
-  height: 100%;
-  flex: 1;
 }
 </style>
