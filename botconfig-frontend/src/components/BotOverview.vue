@@ -62,7 +62,6 @@ export default {
                 return -1
               }
               return 0
-
             case 'type':
               if (a.type > b.type) {
                 return 1

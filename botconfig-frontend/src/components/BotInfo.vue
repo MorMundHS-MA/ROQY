@@ -22,7 +22,7 @@
               <md-menu-item id="confirm" v-on:click="openDialog(confirm.ref1)">
                 <span >{{$lang.translate.info.delete}}</span>            
               </md-menu-item>
-              <md-menu-item v-if="isConfigurable(botData)">
+              <md-menu-item v-if="isConfigurable">
                 <router-link :to="{ name: 'config', params: {id: botData.id}}">
                   <span>{{$lang.translate.info.setting}}</span>
                 </router-link>
@@ -56,7 +56,7 @@
 
       <md-dialog-actions>
         <md-button class="md-primary" v-on:click="closeDialog(confirm.ref1)"> {{$lang.translate.info.cancel}}</md-button>
-        <md-button class="md-primary" v-on:click="deleteItem(botData)">{{$lang.translate.info.ok}}</md-button>
+        <md-button class="md-primary" v-on:click="deleteItem()">{{$lang.translate.info.ok}}</md-button>
       </md-dialog-actions>
     </md-dialog>
 
@@ -71,7 +71,7 @@
 
       <md-dialog-actions>
         <md-button class="md-primary" v-on:click="closeDialog(confirm.ref2)">{{$lang.translate.info.cancel}}</md-button>
-        <md-button class="md-primary" :disabled='!isValid' v-on:click="renameItem(botData)">{{$lang.translate.info.rename}}</md-button>
+        <md-button class="md-primary" :disabled='!isValid' v-on:click="renameItem()">{{$lang.translate.info.rename}}</md-button>
       </md-dialog-actions>
     </md-dialog>
 
@@ -80,7 +80,7 @@
 
       <md-dialog-actions>
         <md-button class="md-primary" v-on:click="closeDialog(confirm.ref3)">{{$lang.translate.info.cancel}}</md-button>
-        <md-button class="md-primary" v-on:click="uploadBot(botData)">{{$lang.translate.info.upload}}</md-button>
+        <md-button class="md-primary" v-on:click="uploadBot()">{{$lang.translate.info.upload}}</md-button>
       </md-dialog-actions>
     </md-dialog>
 
@@ -89,7 +89,7 @@
 
       <md-dialog-actions>
         <md-button class="md-primary" v-on:click="closeDialog(confirm.ref4)">{{$lang.translate.info.cancel}}</md-button>
-        <md-button class="md-primary" v-on:click="uploadBot(botData)">{{$lang.translate.marketplace.download}}</md-button>
+        <md-button class="md-primary" v-on:click="uploadBot()">{{$lang.translate.marketplace.download}}</md-button>
       </md-dialog-actions>
     </md-dialog>
 
@@ -142,6 +142,12 @@ export default {
     */
     typeColor () {
       return this.botData.botType === 'welcome' ? 'orange' : 'purple'
+    },
+    isConfigurable () {
+      if (this.botData.id !== undefined && this.botData.status !== 'running') {
+        return true
+      }
+      return false
     }
   },
   watch: {
@@ -158,25 +164,22 @@ export default {
   methods: {
     /**
     * Method to delete the selected Bot
-    * @param item Bot that is selected
     */
-    deleteItem (item) {
-      this.$store.dispatch('deleteBot', item)
+    deleteItem () {
+      this.$store.dispatch('deleteBot', this.botData)
       this.closeDialog(this.confirm.ref1)
     },
     /**
     * Method to turn on/off the selected Bot
-    * @param item Bot that is selected
     */
-    changeBot (item) {
-      this.$store.dispatch('changeStatus', item)
+    changeBot () {
+      this.$store.dispatch('changeStatus', this.botData)
     },
     /**
     * Method to rename the selected Bot
-    * @param item Bot that is selected
     */
-    renameItem (item) {
-      this.$store.dispatch('renameBot', [item, {
+    renameItem () {
+      this.$store.dispatch('renameBot', [this.botData, {
         name: this.newName}])
       this.closeDialog(this.confirm.ref2)
       this.newName = ''
@@ -199,11 +202,10 @@ export default {
     /**
     * Method to upload the selected Bot to the marketplace by
     * changing current privacy to public
-    * @param item selected Bot
     */
-    uploadBot (item) {
+    uploadBot () {
       this.closeDialog(this.confirm.ref3)
-      api.uploadBot(item)
+      api.uploadBot(this.botData)
       .then((response) => {
         this.$router.push('/marketplace')
       })
@@ -211,15 +213,9 @@ export default {
         alert(error.message)
       })
     },
-    downloadBot (bot) {
-      this.$store.dispatch('addNewbot', bot)
+    downloadBot () {
+      this.$store.dispatch('addNewbot', this.botData)
       this.closeDialog(this.confirm.ref4)
-    },
-    isConfigurable (bot) {
-      if (bot.id !== undefined && bot.status !== 'running') {
-        return true
-      }
-      return false
     }
   }
 }
