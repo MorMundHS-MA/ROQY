@@ -44,6 +44,9 @@
           <div>
             <button class="button" @click="createBot()">{{$lang.translate.creator.create}}</button>
           </div>
+          <div id="firstButton">
+            <button class="button" @click="routeBack()">{{$lang.translate.creator.back}}</button>
+          </div>
         </div>
       </div>    
       </div>
@@ -70,23 +73,35 @@ export default {
     }
   },
   computed: {
+    /**
+    * Returns all Templates saved in store
+    */
     templates () {
       return this.$store.getters.getTemplates
     }
   },
   watch: {
+    /**
+    * Returns true if bot.name input field is not empty else false
+    */
     botname () {
       if (this.botname !== '') {
         this.botnameValid = true
       }
       this.validInput()
     },
+    /**
+    * Returns true if bot.description is not empty and length of text is not over 160 letters
+    */
     description () {
       if (this.description !== '' && this.description.length <= 160) {
         this.descriptionValid = true
       }
       this.validInput()
     },
+    /**
+    * Returns true if Bot-Template is selected else start method validInput
+    */
     item () {
       if (this.item !== '') {
         this.selected = true
@@ -95,6 +110,10 @@ export default {
     }
   },
   methods: {
+    /**
+    * Bot will be pushed to the store
+    * @param allValid true if all input fields filled else false
+    */
     createBot () {
       if (this.allValid) {
         this.$store.dispatch('addNewBot', {
@@ -105,16 +124,31 @@ export default {
         this.$router.push('/bots')
       }
     },
+    /**
+    * routes user back to /bots
+    */
+    routeBack () {
+      this.$router.push('/bots')
+    },
+    /**
+    * Sets this.allValid true if all input field filled
+    */
     validInput () {
       if (this.botnameValid && this.descriptionValid && this.selected) {
         this.allValid = true
       }
     },
+    /**
+    * Method to clear input fields after creating/leaving the path
+    */
     reset () {
       this.botname = ''
       this.description = ''
       this.item = ''
     },
+    /**
+    * @param selected True if Template is selected
+    */
     selectTemplate (template) {
       this.template = template
       this.selected = true
@@ -125,6 +159,10 @@ export default {
         return this.template === template
       }
     },
+    /**
+    * If selected Bot is welcome then use Welcome-Bot Image else Faq-Bot image
+    * @param template Current Bot Template
+    */
     getTemplateImage (template) {
       return template === 'welcome' ? botWelcome : botFaq
     }
@@ -236,6 +274,11 @@ export default {
     cursor: pointer;
     width: 90px;
   }
+
+  #firstButton {
+    margin-right: 2%;
+  }
+
   @media only screen and (max-width: 800px) {
     .card-wraper {
       display: inline;

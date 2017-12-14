@@ -38,6 +38,9 @@ export default {
     }
   }),
   methods: {
+    /**
+    * Method to check if input of user and password is filled
+    */
     sendUser () {
       if (this.form.username !== '' && this.form.password !== '') {
         this.$store.dispatch('logIn', {
@@ -48,6 +51,9 @@ export default {
         this.saveUserLocalStorage()
       }
     },
+    /**
+    * Method to clear username and password
+    */
     clearForm () {
       this.form.username = ''
       this.form.password = ''

@@ -1,3 +1,6 @@
+/**
+ * File to save english translation of each components.
+ */
 module.exports = {
   header: {
     bot_config: 'Bot Configuration',
