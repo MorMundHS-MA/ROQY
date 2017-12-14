@@ -176,7 +176,6 @@ export default {
   #creator {
     width: 60%;
     margin: auto;
-    background-color: white;
   }
   .header {
    width: 30%;
