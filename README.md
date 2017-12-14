@@ -14,5 +14,7 @@ Hier sind die Daten für das Frontend des Botconfigurators zu finden. Dieser ist
 ### Weitere Infos zur Architektur
 Für weitere Infos zur Architektur [hier](https://wiki.sep-ravenclaw.de/) schauen!
 
-## Quickstart Guide zum starten des Backends
-Kann [hier](https://github.com/Lumean97/SEP-Ravenclaw/tree/master/botconfig-backend) eingesehen werden.
+## Quickstart Guide zum starten von ROQY
+1. Repository Klonen
+2. ```docker-compose up```
+3. [http://localhost:8000](http://localhost:8000)

@@ -1,5 +1,6 @@
 let MongoClient = require('mongodb').MongoClient;
-let url = 'mongodb://localhost:27017/mydb';
+let url = process.env.MONGO_URI || 'mongodb://localhost:27017/mydb';
+
 
 let username = '';
 let password = '';
@@ -14,11 +15,6 @@ exports.writeToDB = function (request) {
     return new Promise(function (resolve) {
         MongoClient.connect(url, function (err, db) {
             if (err) throw err;
-
-            //To create a new Bot
-            db.createCollection("botAgents", function (err, res) {
-                if (err) throw err;
-            });
 
             //create new entry with request.data
             //To create an complete new bot, if no botID is set
