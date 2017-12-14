@@ -22,8 +22,8 @@
               <md-menu-item id="confirm" v-on:click="openDialog(confirm.ref1)">
                 <span >{{$lang.translate.info.delete}}</span>            
               </md-menu-item>
-              <md-menu-item>
-                <router-link v-if="botData.id"  :to="{ name: 'config', params: {id: botData.id}}">
+              <md-menu-item v-if="isConfigurable(botData)">
+                <router-link :to="{ name: 'config', params: {id: botData.id}}">
                   <span>{{$lang.translate.info.setting}}</span>
                 </router-link>
               </md-menu-item>
@@ -101,6 +101,7 @@
 import 'vue-material/dist/vue-material.css'
 import botWelcome from '../assets/bot_orange.svg'
 import botFaq from '../assets/bot_violett.svg'
+import api from '../api/botData'
 
 export default {
   props: ['botData', 'parent'],
@@ -201,13 +202,24 @@ export default {
     * @param item selected Bot
     */
     uploadBot (item) {
-      this.$store.dispatch('uploadBot', item)
       this.closeDialog(this.confirm.ref3)
-      this.$router.push('/marketplace')
+      api.uploadBot(item)
+      .then((response) => {
+        this.$router.push('/marketplace')
+      })
+      .catch((error) => {
+        alert(error.message)
+      })
     },
     downloadBot (bot) {
       this.$store.dispatch('addNewbot', bot)
       this.closeDialog(this.confirm.ref4)
+    },
+    isConfigurable (bot) {
+      if (bot.id !== undefined && bot.status !== 'running') {
+        return true
+      }
+      return false
     }
   }
 }
@@ -255,4 +267,5 @@ export default {
   .md-dialog {
     padding: 20px;
   }
+  
 </style>

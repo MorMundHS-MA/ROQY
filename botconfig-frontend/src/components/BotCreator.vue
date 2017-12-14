@@ -59,6 +59,7 @@
 import botConfig from './BotConfig.vue'
 import botWelcome from '../assets/bot_orange.svg'
 import botFaq from '../assets/bot_violett.svg'
+import api from '../api/botData'
 export default {
   name: 'creator',
   data () {
@@ -116,12 +117,18 @@ export default {
     */
     createBot () {
       if (this.allValid) {
-        this.$store.dispatch('addNewBot', {
+        api.addNewBot({
           name: this.botname,
           description: this.description,
           template: this.template.name
         })
-        this.$router.push('/bots')
+        .then((response) => {
+          this.$router.push('/bots')
+        })
+        .catch((err) => {
+          console.log(err.message)
+          alert('dont ask me why')
+        })
       }
     },
     /**
@@ -150,9 +157,23 @@ export default {
     * @param selected True if Template is selected
     */
     selectTemplate (template) {
-      this.template = template
-      this.selected = true
-      this.validInput()
+      let welcome = this.$store.getters.getbots.find((bot) => {
+        return bot.botType === 'welcome'
+      })
+      if (welcome === undefined) {
+        this.template = template
+        this.selected = true
+        this.validInput()
+      } else {
+        if (template.name === 'faq') {
+          this.template = template
+          this.selected = true
+          this.validInput()
+        } else {
+          this.selected = false
+          this.template = null
+        }
+      }
     },
     isSelected (template) {
       if (this.selected) {
@@ -163,6 +184,15 @@ export default {
     * If selected Bot is welcome then use Welcome-Bot Image else Faq-Bot image
     * @param template Current Bot Template
     */
+    isAvaible (template) {
+      let welcome = this.$store.getters.getbots.find((bot) => {
+        return bot.botType === 'welcome'
+      })
+      if (welcome === undefined) {
+        return true
+      }
+      return false
+    },
     getTemplateImage (template) {
       return template === 'welcome' ? botWelcome : botFaq
     }

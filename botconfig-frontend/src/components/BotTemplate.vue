@@ -23,7 +23,7 @@
           <div id="imgwrapper">
             <img :src="getTemplateImage(template.name)" :alt="template.name">
           </div>
-
+          <!--          
           <div class="auswahlmenü">
             <md-menu clas md-direction="bottom left">
             <md-button class="md-icon-button header-menu-btn" md-menu-trigger>
@@ -36,7 +36,7 @@
             </md-menu-content>
             </md-menu>
           </div>
-
+          -->
           <div id="right-text">
             <div id="template-name">{{template.name}}</div>
             <div id="template-title">{{template.name}}</div>
@@ -46,7 +46,7 @@
       </md-card>
     </md-layout>
   </md-layout>
-
+  <!--
   <md-dialog md-open-from="#confirm" md-close-to="#confirm" ref='dialog1'>
     <md-dialog-title>{{$lang.translate.info.title}}</md-dialog-title>
     <md-dialog-content>{{$lang.translate.info.contentHtml}}</md-dialog-content>
@@ -55,7 +55,7 @@
       <md-button class="md-primary" @click="deleteItem()" >{{$lang.translate.info.ok}}</md-button>
     </md-dialog-actions>
   </md-dialog>
-
+  -->
   </div>
 
 </template>
