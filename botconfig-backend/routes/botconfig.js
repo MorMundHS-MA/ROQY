@@ -926,6 +926,23 @@ function updateIntents(intents, botId){
 
 }
 
+function addToIntents(intents, children, blocks, intentIDCount) {
+    let nextIntents = [];
+    for (const group of children) {
+        let block = blocks.get(group.block);   
+        let intent = {
+            id: intentIDCount.count++,
+            name: block.title,
+            answer: block.answer,
+            questions: block.questions,
+            nextIntents: group.children.length > 0 ? addToIntents(intents, group.children, blocks, intentIDCount) : []
+        }
+        nextIntents.push(intent.id);
+    }
+
+    return nextIntents;
+}
+
 router.parseConfigTointents = function(bot){
     let config = bot.config;
 
@@ -937,31 +954,11 @@ router.parseConfigTointents = function(bot){
     if(config === null){
         return;
     }
-    for(let i = 0; i<config.groups.length; i++){
-        bot.originIntentState.nextIntents.push(config.groups[i].block);
-    }
 
-    for(let i = 0; i<config.blocks.length; i++){
-        bot.intents.push({
-            id: config.blocks[i].id,
-            name: config.blocks[i].title,
-            answer: config.blocks[i].answer,
-            questions: config.blocks[i].questions,
-            nextIntents: []
-        });
-    }
-
-    for(let i = 0; i<config.groups.length; i++){
-        let block = config.groups[i];
-
-        (function parseLol(block, bot){
-            let currentBlock = bot.intents[block.block];
-            for(let j = 0; j<block.children.length; j++){
-                currentBlock.nextIntents.push(block.children[j].block);
-                parseLol(block.children[j], bot);
-            }
-        })(block, bot);
-    }
+    blockMap = new Map(config.blocks.map(obj => [ obj.id, obj ]));
+    bot.originIntentState.nextIntents = addToIntents(bot.intents, config.groups, blockMap, {count: 0});
+    console.log(bot)
+    console.log('what')
 };
 
 /**
