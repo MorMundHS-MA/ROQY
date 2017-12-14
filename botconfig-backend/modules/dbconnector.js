@@ -1,5 +1,6 @@
 let MongoClient = require('mongodb').MongoClient;
-let url = process.env.MONGO_URI;
+let url = process.env.MONGO_URI || 'mongodb://localhost:27017/mydb';
+
 
 let username = '';
 let password = '';
@@ -151,6 +152,8 @@ exports.writeConfig = function (body, id) {
                 $set: {
                     config: body
                 }
+            }).then(() => {
+                resolve();
             }).catch(function (err) {
                 if (err) {
                     console.log('Update did not work.')
@@ -158,7 +161,6 @@ exports.writeConfig = function (body, id) {
                 }
             })
         })
-        resolve();
     })
 }
 
@@ -170,6 +172,8 @@ exports.setPrivacy = function (botID, privacy) {
                 $set: {
                     privacy: privacy
                 }
+            }).then(() => {
+                resolve();
             }).catch(function (err) {
                 if (err) {
                     console.log('Update did not work.')
@@ -177,7 +181,6 @@ exports.setPrivacy = function (botID, privacy) {
                 }
             })
         })
-        resolve();
     })
 }
 
@@ -211,39 +214,7 @@ exports.deleteFromDB = function (request) {
                             resolve(true); //Gebe ich an dieser Stelle nicht den kompletten bot zurück???
                         }
 
-                        //Find the specific intent with request.intendId inside the found bot
-                        else {
-                            db.collection("botAgents").findOne({ id: request.botId }, function (err, res) {
 
-                                let intent = undefined;
-                                for (let i = 0; i < res.intents.length; i++) {
-                                    if (res.intents[i] === request.intentId) {
-                                        intent = res.intents[i];
-                                        break;
-                                    }
-                                }
-
-                                if (intend === undefined) {
-                                    resolve(false);
-                                }
-
-                                //delete found intent
-                                else {
-                                    db.collection.update({},
-                                        {
-                                            $unset: {
-                                                "id": request.botId,
-                                                "intents": [
-                                                    {
-                                                        "intendId": request.intendId
-                                                    }
-                                                ]
-                                            }
-                                        });
-                                    resolve(true);
-                                }
-                            });
-                        }
                     }
                 });
             }

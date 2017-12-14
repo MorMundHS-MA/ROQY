@@ -1,4 +1,6 @@
 */node_modules/*
 */.idea/*
 */.vscode/*
+*/coverage/*
+*/.nyc_output/*
 /data/

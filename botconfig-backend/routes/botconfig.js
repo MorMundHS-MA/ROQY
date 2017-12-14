@@ -164,6 +164,7 @@ router.post('/bot', function (req, clientResponse) {
     console.log("Create Bots");
     let appId = "";
     let userData = req.body;
+    userData.status = "stopped";
     userData.account = auth;
     if(userData.description === undefined){
         responseToClient(clientResponse, 406, true, messages.noDescrption);
@@ -411,12 +412,12 @@ router.post("/test", function(req, res){
     }
 })
 
-function createLivepersonUser(bot, auth){
+function createLivepersonUser(bot, accountId){
     return new Promise(resolve => {
         let skillId= -1;
-        const livePersonLoginDomain = "https://lo.agentvep.liveperson.net/api/account/" + auth + "/login?v=1.3";
-        const livePersonAccountDomain = "https://lo.ac.liveperson.net/api/account/" + auth + "/configuration/le-users/users";
-        const livePersonSkillDomain = "https://lo.ac.liveperson.net/api/account/" + auth + "/configuration/le-users/skills"
+        const livePersonLoginDomain = "https://lo.agentvep.liveperson.net/api/account/" + accountId + "/login?v=1.3";
+        const livePersonAccountDomain = "https://lo.ac.liveperson.net/api/account/" + accountId + "/configuration/le-users/users";
+        const livePersonSkillDomain = "https://lo.ac.liveperson.net/api/account/" + accountId + "/configuration/le-users/skills"
         const createUserPayload = {
             "loginName": bot.name,
             "fullName": bot.name,
@@ -488,11 +489,11 @@ function createLivepersonUser(bot, auth){
 
     })
 }
-function deleteLivepersonUser(bot, auth){
+function deleteLivepersonUser(bot, accountId){
     return new Promise(resolve => {
-        const livePersonLoginDomain = "https://lo.agentvep.liveperson.net/api/account/" + auth + "/login?v=1.3";
-        const livePersonAccountDomain = "https://lo.ac.liveperson.net/api/account/" + auth + "/configuration/le-users/users";
-        const livePersonSkillDomain = "https://lo.ac.liveperson.net/api/account/" + auth + "/configuration/le-users/skills";
+        const livePersonLoginDomain = "https://lo.agentvep.liveperson.net/api/account/" + accountId + "/login?v=1.3";
+        const livePersonAccountDomain = "https://lo.ac.liveperson.net/api/account/" + accountId + "/configuration/le-users/users";
+        const livePersonSkillDomain = "https://lo.ac.liveperson.net/api/account/" + accountId + "/configuration/le-users/skills";
         const authPayload = {
             "username":"BotMaster",
             "password":"masterOfBots"
@@ -576,6 +577,7 @@ router.delete("/bot/:id", function (req, clientResponse) {
         json: true
     };
     let userData = req.body;
+    let bot = undefined;
     if(userData.test !== undefined){
         dbcon.deleteFromDB({
             botId:id
@@ -594,15 +596,21 @@ router.delete("/bot/:id", function (req, clientResponse) {
 
             else {
                 requestPromise(options).then(res => {
-                    dbcon.deleteFromDB({
+                    dbcon.readFromDB({
                         botId: id
-                    }).then(success => {
-                        if(success){
-                            responseToClient(clientResponse, 200, false, messages.botDeleted);
-                        }else{
-                            responseToClient(clientResponse, 404, true, messages.botNotFound);
-                        }
-                    });
+                    }).then(response => {
+                        bot = response;
+                        dbcon.deleteFromDB({
+                            botId: id
+                        }).then(success => {
+                            if(success){
+                                deleteLivepersonUser(bot, auth);
+                                responseToClient(clientResponse, 200, false, messages.botDeleted);
+                            }else{
+                                responseToClient(clientResponse, 404, true, messages.botNotFound);
+                            }
+                        });
+                    })
                 }).catch(err => {
                     responseToClient(clientResponse, 400, true, err.message);
                 })
@@ -691,6 +699,7 @@ router.put('/bot/:id/config', function(req, clientResponse){
     let id = req.params.id;
     let body = req.body;
     dbcon.writeConfig(body, id);
+
     responseToClient(clientResponse, 200, false, messages.botUpdated);
 })
 
@@ -828,7 +837,7 @@ function updateIntents(intents, botId){
             "Ocp-Apim-Subscription-Key": APPKEY,
             "Content-Type": "application/json"
         },
-        json:"true"
+        json:true
     }
     let existLength = 0;
     return requestPromise(options)
@@ -842,9 +851,9 @@ function updateIntents(intents, botId){
                     requestPromise(options);
                 }, i*waitTimeForLUIS);
             }
-        }).delay((existLength+1)*waitTimeForLUIS)
+        }).delay((existLength+5)*waitTimeForLUIS)
         .then(() => {
-        console.log("Int");
+
             options.method = "POST";
             options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + botId + "/versions/1.0/intents/";
             for(let i = 0; i<intents.length; i++){
@@ -852,13 +861,11 @@ function updateIntents(intents, botId){
                     options.body = {
                         "name": intents[i].name
                     };
-                    console.log(JSON.stringify(options));
-                    requestPromise(options).then(res => console.log(JSON.stringify(res)));
-                }, i*waitTimeForLUIS);
+                    requestPromise(options)
+                }, (i+5)*waitTimeForLUIS);
             }
         }).delay((intents.length+1)*waitTimeForLUIS)
         .then(() => {
-            console.log("Quest");
             options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + botId + "/versions/1.0/examples";
             options.body = [];
             for(let i = 0; i<intents.length; i++){
@@ -873,7 +880,6 @@ function updateIntents(intents, botId){
             requestPromise(options);
     }).delay(waitTimeForLUIS*2)
         .then(() => {
-        console.log("Train")
             options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + botId + "/versions/1.0/train";
             options.body = {};
             requestPromise(options);
@@ -897,16 +903,17 @@ function updateIntents(intents, botId){
                         }
                         if (trainingDone) {
                             done = true;
-                            console.log("Training done");
                             clearInterval(waitUntilIntentsCreatedIntervall);
-                            options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + appId + "/publish";
+                            options.uri = "https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/" + botId + "/publish";
                             options.method = "POST";
                             options.body = {
                                 "versionId": "1.0",
                                 "isStaging": false,
                                 "region": "westus"
-                            }
-                            resolve(res);
+                            };
+                            requestPromise(options).then(res => {
+                                resolve(true);
+                            })
                         }
                     })
             }, waitTimeForLUIS)
@@ -919,6 +926,43 @@ function updateIntents(intents, botId){
 
 }
 
+router.parseConfigTointents = function(bot){
+    let config = bot.config;
+
+    bot.originIntentState = {
+        id: -1,
+        answer: "Placeholder Welcome Message",
+        nextIntents: []
+    };
+    if(config === null){
+        return;
+    }
+    for(let i = 0; i<config.groups.length; i++){
+        bot.originIntentState.nextIntents.push(config.groups[i].block);
+    }
+
+    for(let i = 0; i<config.blocks.length; i++){
+        bot.intents.push({
+            id: config.blocks[i].id,
+            name: config.blocks[i].title,
+            answer: config.blocks[i].answer,
+            questions: config.blocks[i].questions,
+            nextIntents: []
+        });
+    }
+
+    for(let i = 0; i<config.groups.length; i++){
+        let block = config.groups[i];
+
+        (function parseLol(block, bot){
+            let currentBlock = bot.intents[block.block];
+            for(let j = 0; j<block.children.length; j++){
+                currentBlock.nextIntents.push(block.children[j].block);
+                parseLol(block.children[j], bot);
+            }
+        })(block, bot);
+    }
+};
 
 /**
  * Query
