@@ -11,6 +11,17 @@ const authKey = 'ed2ff1a97f924b8e8a1402e6700a8bf4';
 
 chai.use(chaiHttp);
 
+/*testBot-Template for copy-pasta
+    testBot = {
+        name : 'StartStopBot',
+        description : 'Im a testobject to test the start-stop-technology',
+        test : true,
+        privacy : 'public',
+        botType : 'faq',
+        intents : []
+    }
+*/
+
 beforeEach(function () {
     server = require('../app');
 })
