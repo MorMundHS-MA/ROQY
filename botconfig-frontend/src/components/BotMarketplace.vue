@@ -43,9 +43,16 @@ export default {
     }
   },
   computed: {
+    /**
+    * Returns all Bots saved in store
+    */
     bots () {
       let sortBy = this.sortBy
       return this.$store.getters.getbots.sort(
+        /**
+        * Returns sorted Bots depending on each criteria
+        * @param a,b Bots we receive from the store
+        */
         function (a, b) {
           switch (sortBy) {
             case 'date':
@@ -77,6 +84,10 @@ export default {
     this.$store.dispatch('getAllBots')
   },
   methods: {
+    /**
+    * Method to search for a spezific Bot
+    * @param input Name we are searching for
+    */
     matchSearch (input) {
       if (this.search === '') {
         return true
@@ -84,6 +95,10 @@ export default {
         return input.toUpperCase().includes(this.search.toUpperCase())
       }
     },
+    /**
+    * Method to list all public Bots
+    * @param input Bots from the store
+    */
     isValidBot (input) {
       if (input.privacy === 'public') {
         return true

@@ -29,9 +29,15 @@ export default {
     }
   },
   methods: {
+    /**
+    * @param lg language that will be selected
+    */
     changeLang (lg) {
       this.$lang.setLang(lg)
     },
+    /**
+    * Method will route user to the / path and starts Method clearLocalStorage
+    */
     logout () {
       setTimeout(() => {
         this.$store.dispatch('logOut')
@@ -39,6 +45,9 @@ export default {
       }, 100)
       this.clearLocalStorage()
     },
+    /**
+    * Method to clear authorizations from user
+    */
     clearLocalStorage () {
       this.$localStorage.remove('user')
     }

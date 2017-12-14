@@ -115,17 +115,30 @@ export default {
     }
   },
   computed: {
+    /**
+    * change bot.status text to uppercase
+    */
     isRunning () {
       return this.botData.status.toUpperCase() === 'RUNNING'
     },
+    /**
+    * If selected Bot is welcome then use Welcome-Bot Image else Faq-Bot image
+    */
     botImage () {
       return this.botData.botType === 'welcome' ? botWelcome : botFaq
     },
+    /**
+    * If selected Bot is welcome then use orange color for botType else purple
+    */
     typeColor () {
       return this.botData.botType === 'welcome' ? 'orange' : 'purple'
     }
   },
   watch: {
+    /**
+    * Method to check if newName input is filled
+    * @param newName input field from Rename Dialog, check if input is not empty
+    */
     newName () {
       if (this.newName.length !== 0) {
         this.isValid = true
@@ -133,13 +146,25 @@ export default {
     }
   },
   methods: {
+    /**
+    * Method to delete the selected Bot
+    * @param item Bot that is selected
+    */
     deleteItem (item) {
       this.$store.dispatch('deleteBot', item)
       this.closeDialog(this.confirm.ref1)
     },
+    /**
+    * Method to turn on/off the selected Bot
+    * @param item Bot that is selected
+    */
     changeBot (item) {
       this.$store.dispatch('changeStatus', item)
     },
+    /**
+    * Method to rename the selected Bot
+    * @param item Bot that is selected
+    */
     renameItem (item) {
       this.$store.dispatch('renameBot', [item, {
         name: this.newName}])
@@ -147,12 +172,25 @@ export default {
       this.newName = ''
       this.isValid = false
     },
+    /**
+    * Method to open pop up window
+    * @param ref dialog that should be open
+    */
     openDialog (ref) {
       this.$refs[ref].open()
     },
+    /**
+    * Method to close open pop up window
+    * @param ref dialog that should be open
+    */
     closeDialog (ref) {
       this.$refs[ref].close()
     },
+    /**
+    * Method to upload the selected Bot to the marketplace by
+    * changing current privacy to public
+    * @param item selected Bot
+    */
     uploadBot (item) {
       console.log(item.id)
       this.$store.dispatch('uploadBot', item)

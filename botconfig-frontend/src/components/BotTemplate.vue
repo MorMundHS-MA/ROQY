@@ -75,9 +75,16 @@ export default {
     }
   },
   computed: {
+    /**
+    * Returns all Bots saved in store
+    */
     templates () {
       let sortBy = this.sortBy
       return this.$store.getters.getTemplates.sort(
+        /**
+        * Returns sorted Bots depending on each criteria
+        * @param a,b Bots we receive from the store
+        */
         function (a, b) {
           switch (sortBy) {
             case 'date':
@@ -106,18 +113,34 @@ export default {
     headermenu
   },
   methods: {
+    /**
+    * Method to delete the selected Template
+    */
     deleteItem () {
       this.$store.dispatch('deleteTemplate', this.selectedTemplate)
       this.closeDialog(this.ref1)
     },
+    /**
+    * Method to open pop up window
+    * @param ref dialog that should be open
+    * @param template Selected Template
+    */
     openDialog (ref, template) {
       this.$refs[ref].open()
       this.selectedTemplate = template
     },
+    /**
+    * Method to close open pop up window
+    * @param ref dialog that should be open
+    */
     closeDialog (ref) {
       this.$refs[ref].close()
       this.selectedTemplate = null
     },
+    /**
+    * Method to search for a spezific Bot
+    * @param input Name we are searching for
+    */
     matchSearch (input) {
       if (this.search === '') {
         return true
@@ -125,6 +148,10 @@ export default {
         return input.toUpperCase().includes(this.search.toUpperCase())
       }
     },
+    /**
+    * If selected Bot is welcome then use Welcome-Bot Image else Faq-Bot image
+    * @param template Current Bot Template
+    */
     getTemplateImage (template) {
       return template === 'welcome' ? botWelcome : botFaq
     }
