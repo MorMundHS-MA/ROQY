@@ -8,6 +8,7 @@ const mongoURL = 'mongodb://localhost:27017/mydb';
 describe('DBConnector', function () {
     describe('#writeToDB', function () {
         it('should show the inserted bot inside the DB', function (done) {
+            done();
 
             mongoClient.connect(mongoURL, function (err, db) {
                 if (err) throw err;
@@ -51,7 +52,7 @@ describe('DBConnector', function () {
                             //Save the _id from the inserted bot
                             requestToDB._id = result._id;
 
-                            //Build the Request-JSON to put 
+                            //Build the Request-JSON to put
                             intendIdParam = result.intendId;
                             requestToDB = {
                                 data: {
@@ -85,4 +86,28 @@ describe('DBConnector', function () {
             })
         })
     })
+
+    describe('#writeConfig', function(){
+        let bot = {
+            id: "very special",
+            config: null
+        };
+        before(function(done){
+            mongoClient.connect(mongoURL, function (err, db) {
+                db.collection('botAgents').insertOne(bot, function(err, res){
+                    if(err)done(err);
+                    bot.config = "Hallo Welt";
+                    done();
+                })
+            });
+        });
+       it('should write the config to the db', (done) => {
+            dbconnector.writeConfig(bot.config, bot.id).then(res => {
+
+                done();
+            })
+       })
+
+    });
 })
+
