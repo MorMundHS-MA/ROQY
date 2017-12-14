@@ -221,8 +221,12 @@ describe('POST /auth', () => {
 
 describe('GET status', () => {
     let testBot = {
-        name: 'Statussymbol',
-        botType: 'faq'
+        name : 'Statussymbol',
+        description : '',
+        test : true,
+        privacy : 'public',
+        botType : 'faq',
+        intents : []
     }
     let testBotId;
 
@@ -234,10 +238,11 @@ describe('GET status', () => {
             .end((err, res) => {
                 if (err) {
                     console.log('Bot with name Statussymbol could not be inserted!');
-                    done()
+                    done(err);
                 }
                 else {
-                    testBotId = res.body.Id
+                    testBotId = res.body.extra.botId;
+                    done();
                 }
             })
     })

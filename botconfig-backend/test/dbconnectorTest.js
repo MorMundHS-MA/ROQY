@@ -18,7 +18,6 @@ describe('DBConnector', function () {
                     //To get the inserted bot right off the database and save it in result
                     db.collection('botAgents').findOne({ name : 'Fußfetischist'}, function (err, result) {
                         if (err) console.log('The inserted Bot can not be found or could not be inserted!')
-                        console.log(result)
 
                         //Check if the bot which got inserted by the connector is in the database
                         assert.equal(result.name, requestToDB.data.name)
@@ -49,7 +48,6 @@ describe('DBConnector', function () {
             dbconnector.writeConfig(bot.config, bot.id).then(res => {
                 mongoClient.connect(mongoURL, function (err, db) {
                     db.collection('botAgents').findOne({id: bot.id}, function (err, res) {
-                        console.log(res);
                         assert.deepEqual(res.config, bot.config);
                         clean({id:bot.id});
                         done();
@@ -79,8 +77,7 @@ describe('DBConnector', function () {
             dbconnector.setPrivacy(bot.id, bot.privacy).then(res => {
                 mongoClient.connect(mongoURL, function (err, db) {
                     db.collection('botAgents').findOne({id: bot.id}, function (err, res) {
-                        console.log(res);
-                        console.log(bot);
+
                         assert.equal(res.privacy, bot.privacy);
                         clean({id:bot.id});
                         done();

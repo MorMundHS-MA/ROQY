@@ -152,6 +152,8 @@ exports.writeConfig = function (body, id) {
                 $set: {
                     config: body
                 }
+            }).then(() => {
+                resolve();
             }).catch(function (err) {
                 if (err) {
                     console.log('Update did not work.')
@@ -159,7 +161,6 @@ exports.writeConfig = function (body, id) {
                 }
             })
         })
-        resolve();
     })
 }
 
@@ -171,6 +172,8 @@ exports.setPrivacy = function (botID, privacy) {
                 $set: {
                     privacy: privacy
                 }
+            }).then(() => {
+                resolve();
             }).catch(function (err) {
                 if (err) {
                     console.log('Update did not work.')
@@ -178,7 +181,6 @@ exports.setPrivacy = function (botID, privacy) {
                 }
             })
         })
-        resolve();
     })
 }
 
