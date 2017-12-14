@@ -14,7 +14,7 @@
           :blocks="blocks" 
           :selected="group.selection" 
           @drop="favDrop(index)" 
-          class="wrapper"></tree-view>
+          class="wrapper default-shadow"></tree-view>
         </div>
         <div class="block-wrapper wrapper">
           <block-view 
@@ -361,8 +361,8 @@ export default {
 
 .wrapper {
   background-color: white;
-  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.2), 0px 2px 2px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0, 0.12)
 }
+
 .group-wrapper {
   height: 80%;
 }
@@ -383,11 +383,6 @@ export default {
 #leftside {
   width: 66%;
   height: 100%;
-}
-
-.wrapper {
-  background-color: white;
-  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.2), 0px 2px 2px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0, 0.12)
 }
 
 .block-config-wrapper {

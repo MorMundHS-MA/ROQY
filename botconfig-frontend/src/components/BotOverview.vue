@@ -19,7 +19,7 @@
         <bot-info v-if="matchSearch(bot.name)" :botData="bot"></bot-info>
       </md-layout>
       <md-layout style="flex:unset;">
-        <div class="inline-newbot">
+        <div class="inline-newbot default-shadow">
           <router-link tag="div" to="/newBot" class="inline-newbot-btn">
             <span class="inline-newbot-plus">+</span>
           </router-link>
@@ -125,6 +125,7 @@ export default {
     display: inline-flex;
     align-items: center;
     background-color: white;
+    margin: 14px;
   }
   
  .inline-newbot-btn {
