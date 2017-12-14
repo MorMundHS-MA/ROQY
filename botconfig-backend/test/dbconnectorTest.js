@@ -4,16 +4,16 @@ const mongoClient = require('mongodb').MongoClient;
 const mongoURL = 'mongodb://localhost:27017/mydb';
 
 
-
 describe('DBConnector', function () {
     describe('#writeToDB', function () {
         it('should show the inserted bot inside the DB', function (done) {
             done();
-
+            console.log("return now");
+            return;
             mongoClient.connect(mongoURL, function (err, db) {
                 if (err) throw err;
                 //Inputparameter for data and for the searchrequest
-                var requestToDB = { name: 'Fußfetischist' }
+                var requestToDB = {name: 'Fußfetischist'}
 
                 //Make a create bot Request
                 dbconnector.writeToDB(requestToDB).then(res => {
@@ -87,27 +87,72 @@ describe('DBConnector', function () {
         })
     })
 
-    describe('#writeConfig', function(){
+    describe('#writeConfig', function () {
         let bot = {
             id: "very special",
             config: null
         };
-        before(function(done){
+        before(function (done) {
             mongoClient.connect(mongoURL, function (err, db) {
-                db.collection('botAgents').insertOne(bot, function(err, res){
-                    if(err)done(err);
+                db.collection('botAgents').insertOne(bot, function (err, res) {
+                    if (err) done(err);
                     bot.config = "Hallo Welt";
                     done();
                 })
             });
         });
-       it('should write the config to the db', (done) => {
-            dbconnector.writeConfig(bot.config, bot.id).then(res => {
+        it('should write the config to the db', (done) => {
 
-                done();
+            dbconnector.writeConfig(bot.config, bot.id).then(res => {
+                mongoClient.connect(mongoURL, function (err, db) {
+                    db.collection('botAgents').findOne({id: bot.id}, function (err, res) {
+                        console.log(res);
+                        assert.deepEqual(res.config, bot.config);
+                        clean({id:bot.id});
+                        done();
+                    });
+                });
             })
-       })
+        })
 
     });
-})
+
+    describe('#setPrivacy', function () {
+        let bot = {
+            id: "very special privacy",
+            privacy: "public"
+        };
+        before(function (done) {
+            mongoClient.connect(mongoURL, function (err, db) {
+                db.collection('botAgents').insertOne(bot, function (err, res) {
+                    if (err) done(err);
+                    bot.privacy = "private";
+                    done();
+                })
+            });
+        });
+        it('should write the config to the db', (done) => {
+            console.log(bot.privacy);
+            dbconnector.setPrivacy(bot.id, bot.privacy).then(res => {
+                mongoClient.connect(mongoURL, function (err, db) {
+                    db.collection('botAgents').findOne({id: bot.id}, function (err, res) {
+                        console.log(res);
+                        console.log(bot);
+                        assert.equal(res.privacy, bot.privacy);
+                        clean({id:bot.id});
+                        done();
+                    });
+                });
+            })
+        })
+
+    });
+
+});
+
+function clean(payload){
+    mongoClient.connect(mongoURL, function (err, db) {
+        db.collection('botAgents').deleteOne(payload);
+    })
+}
 
