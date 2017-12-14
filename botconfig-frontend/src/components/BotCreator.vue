@@ -2,7 +2,7 @@
   <div id="creator" >
     <div class="margin">
       <div class="header">
-        <h2><U>{{$lang.translate.creator.title}}</U></h2>
+        <h2>{{$lang.translate.creator.title}}</h2>
       </div>
       <div class="content">
         <div class="left">
@@ -174,8 +174,7 @@ export default {
 </script>
 <style scoped>
   #creator {
-    padding: 1px;
-    width: 80%;
+    width: 60%;
     margin: auto;
     background-color: white;
     box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.2), 0px 2px 2px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0, 0.12)
