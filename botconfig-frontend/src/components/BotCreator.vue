@@ -120,7 +120,7 @@ export default {
         api.addNewBot({
           name: this.botname,
           description: this.description,
-          template: this.template.name
+          botType: this.template.name
         })
         .then((response) => {
           this.$router.push('/bots')
