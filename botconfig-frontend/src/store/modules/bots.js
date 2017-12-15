@@ -66,10 +66,10 @@ const mutations = {
     state.bots[state.bots.indexOf(bot)].name = bot[1].name
   },
   [types.CHANGE_STATE_TO_START] (state, { bot }) {
-    state.bots[state.bots.indexOf(bot)].status = 'Running'
+    state.bots[state.bots.indexOf(bot)].status = 'running'
   },
   [types.CHANGE_STATE_TO_STOP] (state, { bot }) {
-    state.bots[state.bots.indexOf(bot)].status = 'Stopped'
+    state.bots[state.bots.indexOf(bot)].status = 'stopped'
   },
   [types.RECEIVE_BOT_BY_ID] (state, { bot }) {
     console.log(bot)
