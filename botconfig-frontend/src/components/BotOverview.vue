@@ -3,23 +3,23 @@
     <headermenu></headermenu>
     <div class="md-toolbar">
       <span style="margin-right:5px">{{$lang.translate.overview.sortby}}</span>      
-      <md-field class="toolbar-input">
+      <md-field style="border-radius:20px;" class="toolbar-input">
         <md-select v-model="sortBy">
             <md-option value="date">{{$lang.translate.overview.date}}</md-option>
             <md-option value="type">{{$lang.translate.overview.type}}</md-option>
         </md-select>
       </md-field>
-      <md-field style="border-radius:16px;" class="toolbar-input">
+      <md-field class="toolbar-input">
          <input v-model="search" :placeholder="$lang.translate.overview.search" style="padding:5px;padding-left:20px;"></input>
       </md-field>
-      <router-link style="color:white;border-radius:46px;" tag="md-button" to="/newBot" class="md-raised md-primary">{{$lang.translate.overview.create}}</router-link>
+      <router-link class="default-btn" tag="button" to="/newBot">{{$lang.translate.overview.create}}</router-link>
     </div>
     <md-layout class="overview-wrapper">
       <md-layout style="flex:unset;" v-for="(bot, bots) in bots" :key="bot.id">
         <bot-info v-if="matchSearch(bot.name)" :botData="bot"></bot-info>
       </md-layout>
       <md-layout style="flex:unset;">
-        <div class="inline-newbot">
+        <div class="inline-newbot default-shadow">
           <router-link tag="div" to="/newBot" class="inline-newbot-btn">
             <span class="inline-newbot-plus">+</span>
           </router-link>
@@ -106,13 +106,6 @@ export default {
     margin: 0 auto;
   }
 
-  .md-warn {
-    border: dashed 1px #FF6600;
-    border-radius:40px;
-    font-family:'verdana';
-    font-weight:600;
-  }
-
   div.md-toolbar {
     justify-content: flex-end;
     align-items: center;
@@ -121,6 +114,7 @@ export default {
   .toolbar-input {
     background-color: white;
     margin: 10px;
+    border-radius:16px;
   }
 
   .inline-newbot {
@@ -130,6 +124,8 @@ export default {
     max-height: 360px;
     display: inline-flex;
     align-items: center;
+    background-color: white;
+    margin: 14px;
   }
   
  .inline-newbot-btn {
@@ -147,5 +143,9 @@ export default {
     cursor: pointer;
     color: white;
     font-weight: 200;
+ }
+
+ button.default-btn {
+   padding: 5px 10px;
  }
 </style>

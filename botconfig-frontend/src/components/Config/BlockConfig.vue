@@ -185,15 +185,4 @@ input :focus {
 .rightSite {
   display: block;
 }
-.default-btn {
-  background-color: orange;
-  border-radius: 16px;
-  padding: 2px 4px;
-  margin-bottom:3px;
-  color: white;
-  font-family: Roboto;
-  font-size: 14px;
-  text-align: center;
-  min-width: 80%;
-}
 </style>

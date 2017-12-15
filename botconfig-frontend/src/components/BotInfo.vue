@@ -236,7 +236,8 @@ export default {
     text-align: center;
   }
   .typeText {
-    font-size:10px;
+    font-size:11px;
     display: block;
+    text-transform: uppercase;
   }
 </style>
