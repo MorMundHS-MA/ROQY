@@ -3,7 +3,7 @@
   <headermenu></headermenu>
     <div class="md-toolbar">
       <span style="margin-right:5px">{{$lang.translate.overview.sortby}}</span>      
-      <md-field class="toolbar-input">
+      <md-field style="border-radius:20px;" class="toolbar-input">
         <md-select v-model="sortBy">
             <md-option value="date">{{$lang.translate.overview.date}}</md-option>
             <md-option value="type">{{$lang.translate.overview.type}}</md-option>
