@@ -937,6 +937,7 @@ function addToIntents(intents, children, blocks, intentIDCount) {
             questions: block.questions,
             nextIntents: group.children.length > 0 ? addToIntents(intents, group.children, blocks, intentIDCount) : []
         }
+        intents.push(intent);
         nextIntents.push(intent.id);
     }
 
@@ -957,8 +958,6 @@ router.parseConfigTointents = function(bot){
 
     blockMap = new Map(config.blocks.map(obj => [ obj.id, obj ]));
     bot.originIntentState.nextIntents = addToIntents(bot.intents, config.groups, blockMap, {count: 0});
-    console.log(bot)
-    console.log('what')
 };
 
 /**
