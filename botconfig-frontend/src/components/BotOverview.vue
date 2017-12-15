@@ -16,7 +16,7 @@
     </div>
     <md-layout class="overview-wrapper">
       <md-layout style="flex:unset;" v-for="(bot, bots) in bots" :key="bot.id">
-        <bot-info v-if="matchSearch(bot.name)" :botData="bot"></bot-info>
+        <bot-info v-if="matchSearch(bot.name)" :botData="bot" :parent="'overview'"></bot-info>
       </md-layout>
       <md-layout style="flex:unset;">
           <router-link tag="div" to="/newBot" class="inline-newbot default-shadow">
