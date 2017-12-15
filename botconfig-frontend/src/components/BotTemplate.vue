@@ -10,7 +10,8 @@
         </md-select>
       </md-field>
       <md-field style="border-radius:16px;" class="toolbar-input">
-         <input v-model="search" :placeholder="$lang.translate.overview.search" style="padding:5px;padding-left:20px;"></input>
+        <input v-model="search" :placeholder="$lang.translate.overview.search" style="padding:5px;padding-left:20px;"></input>
+        <md-icon style="margin-right:10px;">search</md-icon>
       </md-field>
     </div>
 
