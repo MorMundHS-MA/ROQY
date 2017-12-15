@@ -1,7 +1,7 @@
 <template>
   <div id="list-container" >
     <div @click="select(index)" class="block-container" :class="{'selected' : isSelected(index), 'primary' : isPrimarySelection(index)}" v-for="(block, index) in group" :key="block.id">
-      <span class="blockTitle">{{blocks[block.block].title}}</span>
+      <span>{{blocks[block.block].title}}</span>
     </div>
     <div v-if="hasNewButton()" @click="addNew()" class="block-container">
       <span class="newText">New block</span>
@@ -34,10 +34,11 @@ export default {
 
 <style scoped>
   #list-container {
-    height: 500px;
+    height: 100%;
     width: 200px;
     display: inline-block;
     vertical-align: top;
+    overflow-y: auto;
   }
   .block-container {
     height: 40px;
@@ -60,9 +61,5 @@ export default {
 
   .newText {
     color: orange;
-  }
-  
-  .blockTitle {
-    color: #414040;
   }
 </style>

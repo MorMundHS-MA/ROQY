@@ -348,10 +348,11 @@ export default {
   height: 80%;
   padding: 25px;
   overflow-x: auto;
+  white-space: nowrap;
 }
 
 .block-wrapper {
-  height: 20%;
+  height: auto;
 }
 
 #leftside {
