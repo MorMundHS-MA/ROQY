@@ -38,7 +38,7 @@ export default {
         'description': bot.description,
         'intents': [],
         'test': 'true',
-        'botType': bot.template,
+        'botType': bot.botType,
         'privacy': 'private',
         'config': bot.config || null
       },
@@ -49,6 +49,7 @@ export default {
         })
       .then(function (response) {
         resolve(response.data.extra)
+        console.log('here')
       })
       .catch(function (error) {
         console.log(error)

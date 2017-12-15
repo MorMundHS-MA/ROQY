@@ -28,7 +28,7 @@
             <div class="row">
               <div v-for="(template, templates) in templates" :key="template.name">
                   <div class="card-wraper">
-                    <div class="card" @click="selectTemplate(template)" :class="{'selected': isSelected(template)}">
+                    <div class="card" @click="selectTemplate(template)" :class="{'selected': isSelected(template), 'isAvaible': isAvaible(template)}">
                     <img :src="getTemplateImage(template.name)" :alt="template.name">
                     <div class="container">
                       <h4><b>{{template.name}}</b></h4>
@@ -189,9 +189,14 @@ export default {
         return bot.botType === 'welcome'
       })
       if (welcome === undefined) {
-        return true
+        return false
+      } else {
+        if (template.name === 'faq') {
+          return false
+        } else {
+          return true
+        }
       }
-      return false
     },
     getTemplateImage (template) {
       return template === 'welcome' ? botWelcome : botFaq
@@ -270,6 +275,10 @@ export default {
   }
   .selected {
     border: 3px solid orange;
+  }
+  .isAvaible {
+    background-color: #d4d6d8;
+    opacity: .5%;
   }
   .container {
     margin-top: 5%;

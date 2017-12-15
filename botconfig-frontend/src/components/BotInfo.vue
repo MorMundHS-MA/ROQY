@@ -89,7 +89,7 @@
 
       <md-dialog-actions>
         <md-button class="md-primary" v-on:click="closeDialog(confirm.ref4)">{{$lang.translate.info.cancel}}</md-button>
-        <md-button class="md-primary" v-on:click="uploadBot()">{{$lang.translate.marketplace.download}}</md-button>
+        <md-button class="md-primary" v-on:click="downloadBot()">{{$lang.translate.marketplace.download}}</md-button>
       </md-dialog-actions>
     </md-dialog>
 
@@ -214,7 +214,16 @@ export default {
       })
     },
     downloadBot () {
-      this.$store.dispatch('addNewbot', this.botData)
+      api.addNewBot(
+        this.botData
+      )
+      .then((response) => {
+        this.$router.push('/bots')
+      })
+      .catch((err) => {
+        console.log(err.message)
+        alert('dont ask me why')
+      })
       this.closeDialog(this.confirm.ref4)
     }
   }
