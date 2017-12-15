@@ -72,5 +72,9 @@ module.exports = {
     back: 'go back',
     forward: 'looks good!',
     title: 'Testing'
+  },
+  marketplace: {
+    download: 'Download',
+    title: 'Do you want to download this bot?'
   }
 }
