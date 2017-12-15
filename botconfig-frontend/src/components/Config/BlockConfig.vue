@@ -160,6 +160,7 @@ export default {
   border-radius: 4px;
   padding: 2%;
   margin-top: 1.5%;
+  min-width: 250px;
   min-height: 300px;
   max-height: 300px;
   overflow: auto;
