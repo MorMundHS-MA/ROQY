@@ -53,15 +53,16 @@
 
       <md-dialog-actions>
         <md-button class="md-primary" v-on:click="closeDialog(confirm.ref1)"> {{$lang.translate.info.cancel}}</md-button>
-        <md-button class="md-primary" v-on:click="deleteItem()">{{$lang.translate.info.ok}}</md-button>
+        <md-button class="md-primary" v-on:click="deleteBot()">{{$lang.translate.info.ok}}</md-button>
       </md-dialog-actions>
     </md-dialog>
 
     <md-dialog md-open-from="#renameconfirm" md-close-to="#renameconfirm" ref='dialog2'>
       <md-dialog-title>{{$lang.translate.info.renameTitle}}</md-dialog-title>
 
-      <md-dialog-content><md-input-container>
-        <label{{$lang.translate.creater.new_name}}</label>
+      <md-dialog-content>
+        <md-input-container>
+          <label>{{$lang.translate.creator.new_name}}</label>
           <md-input v-model="newName" placeholder="New Name"   required></md-input>
         </md-input-container>
       </md-dialog-content>
@@ -162,7 +163,11 @@ export default {
     /**
     * Method to delete the selected Bot
     */
-    deleteItem () {
+    deleteBot () {
+      if (!this.isConfigurable) {
+        alert(this.$lang.translate.info.cantDeleteRunning)
+        return
+      }
       this.$store.dispatch('deleteBot', this.botData)
       this.closeDialog(this.confirm.ref1)
     },
@@ -266,7 +271,8 @@ export default {
     display: block;
     text-transform: uppercase;
   }
-  .md-dialog {
+
+  md-dialog {
     padding: 20px;
   }
   

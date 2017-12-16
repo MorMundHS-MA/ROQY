@@ -39,7 +39,8 @@ module.exports = {
     stopped: 'Inactive',
     marketplace: 'Upload',
     marketplaceInnerBubble: 'Do you really want to upload this bot?',
-    upload: 'Upload'
+    upload: 'Upload',
+    cantDeleteRunning: 'Running bots can\'t be deleted! Stop the bot first to delete it.'
   },
   overview: {
     create: 'create new bot',

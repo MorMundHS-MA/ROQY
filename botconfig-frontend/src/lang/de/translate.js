@@ -39,7 +39,8 @@ module.exports = {
     stopped: 'Inaktiv',
     marketplace: 'Hochladen',
     marketplaceInnerBubble: 'Soll der Bot hochgelagen werden?',
-    upload: 'Hochladen'
+    upload: 'Hochladen',
+    cantDeleteRunning: 'Laufende Bots können nicht gelöscht werden! Stoppen sie ihren Bot bevor sie ihn löschen.'
   },
   overview: {
     create: 'Bot erstellen',
