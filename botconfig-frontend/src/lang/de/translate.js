@@ -59,7 +59,8 @@ module.exports = {
   },
   config: {
     unnamedBlock: 'Unbennanter Block',
-    favoriteBlocks: 'Block Favoriten',
+    favoriteBlocks: 'Block Favoriten (Sind momentan leider nicht verfügbar.)',
+    favoriteHint: 'Ziehe deine Lieblingsblocks in die Botstruktur',
     question: 'Wenn der Benutzer fragt:',
     answer: 'Bot antwortet mit?',
     add: 'Item hinzufügen...',
