@@ -114,12 +114,6 @@ export default {
       return favs
     },
     /**
-     * Workaround for translate not working in tests. Used to stub the translation.
-     */
-    defaultTitle () {
-      return this.$lang.translate.config.unnamedBlock
-    },
-    /**
      * Return the currently selected block or null if there is no selected block
      */
     selectedBlock () {
@@ -159,7 +153,7 @@ export default {
     * Adds a new block to row defined by groupID and returns its new id
     */
     addNewBlock (groupID) {
-      let block = {title: this.defaultTitle, id: this.blockIDCount++, isFavorite: false, questions: [], answer: ''}
+      let block = {title: this.$lang.translate.config.unnamedBlock, id: this.blockIDCount++, isFavorite: false, questions: [], answer: ''}
       this.blocks.push(block)
       if (groupID === 0) {
         this.groups.push({'block': block.id, 'selection': -1, 'children': []})
