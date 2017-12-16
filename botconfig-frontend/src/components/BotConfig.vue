@@ -49,6 +49,7 @@ import blockView from './Config/BlockView.vue'
 import treeView from './Config/TreeView.vue'
 import api from '../api/botData'
 import axios from 'axios'
+import templates from './Config/templates'
 
 export default {
   props: ['id'],
@@ -251,6 +252,9 @@ export default {
      * Load the config data from a json string
      */
     loadConfig (json) {
+      if (json === undefined || json === null) {
+        return
+      }
       this.rowSelect = json.rowSelect
       this.rootSelect = json.rootSelect
       this.blocks = json.blocks
@@ -321,7 +325,17 @@ export default {
       api.getBot(this.id)
       .then((data) => {
         this.loaded = true
-        this.loadConfig(data.config)
+        if (data.config !== null) {
+          this.loadConfig(data.config)
+        } else {
+          // TODO : Templates should be loaded from backend instead
+          console.log(templates.faq)
+          if (data.botType === 'welcome') {
+            this.loadConfig(templates.welcome)
+          } else if (data.botType === 'faq') {
+            this.loadConfig(templates.faq)
+          }
+        }
       })
       .catch((err) => {
         console.error(err)
