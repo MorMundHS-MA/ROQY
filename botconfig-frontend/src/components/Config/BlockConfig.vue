@@ -2,11 +2,11 @@
   <div v-if="isBlockSelected" id="blockConfig">
 
     <div id="header">
-      <div>
-        <button v-on:click="favoriteBot()" class="default-btn">{{$lang.translate.config.favorite}}</button>
-         <button v-on:click="deleteBot()" class="default-btn">{{$lang.translate.config.delete}}</button>
-      </div>
-      <input v-model="title">
+      <span v-on:click="toggleFavorite()" v-if="isFavorite" class="favIcon" style="color:orange;">★</span>
+      <span v-on:click="toggleFavorite()" v-else  class="favIcon">☆</span>
+      <input ref="titleInput" id="titleInput" v-model="title">
+      <span v-on:click="focusInput()" style="font-size:24px;margin-right:5%;">✎</span>
+      <button v-on:click="deleteBlock()" class="default-btn">delete block</button>
     </div>
 
     <div class='wrapper'>
@@ -73,16 +73,22 @@ export default {
     testBot () {
       this.$emit('testBot')
     },
-    favoriteBot () {
+    toggleFavorite () {
       this.$emit('favorite')
     },
-    deleteBot () {
+    deleteBlock () {
       this.$emit('delete')
+    },
+    focusInput () {
+      this.$refs.titleInput.focus()
     }
   },
   computed: {
     isBlockSelected () {
       return this.block !== undefined && this.block !== null
+    },
+    isFavorite () {
+      return this.block !== undefined && this.block !== null && this.block.isFavorite
     },
     answer: {
       get () {
@@ -112,10 +118,8 @@ export default {
 #header {
   width: 100%;
   padding: 2%;
-  background-color: #cccccc;
+  background-color: #eeeeee;
   margin: 0;
-  display: flex;
-  flex-direction: row-reverse;
 }
 #header>h2 {
   margin-top: 2.5%;
@@ -164,10 +168,8 @@ export default {
 ol {
   padding-left: 10%;
 }
-input {
-  min-width: 40%;
-  max-width: 100%;
-  margin-top: 5%;
+#titleInput {
+  font-size: 24px;
 }
 .chips {
   border-bottom: 2px solid #d4d6d8;
@@ -183,5 +185,9 @@ input :focus {
 }
 .rightSite {
   display: block;
+}
+.favIcon {
+  font-size: 30px;
+  margin-right: 5%;
 }
 </style>

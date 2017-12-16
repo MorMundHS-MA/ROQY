@@ -36,7 +36,7 @@
         v-on:newQuestion="blockAddQuestion(selectedBlock.id, $event)" 
         v-on:setAnswer="setAnswer(selectedBlock.id,$event)" 
         v-on:deleteQuestion="blockRemoveQuestion(selectedBlock.id,$event)" 
-        v-on:favorite="favoriteBlock(selectedBlock.id)" 
+        v-on:favorite="blockToggleFavorite(selectedBlock.id)" 
         v-on:delete="deleteSelected()" 
         v-on:saveData="saveData()" 
         v-on:testBot="testBot()" 
@@ -200,10 +200,10 @@ export default {
     /*
      * Adds the block to favorites
      */
-    favoriteBlock (blockID, setFavorite = true) {
+    blockToggleFavorite (blockID) {
       let block = this.getBlock(blockID)
       if (block !== null) {
-        block.isFavorite = setFavorite
+        block.isFavorite = !block.isFavorite
       }
     },
     /**
