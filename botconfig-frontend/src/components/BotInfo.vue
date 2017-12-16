@@ -34,7 +34,7 @@
         </div>
       </div>
       <div id="imgwrapper">
-        <img style="width:180px" :src="botImage" :alt="botData.name">
+        <img style="width:180px;" :style="{ opacity: isRunning ? 1 : 0.4 }" :src="botImage" :alt="botData.name">
       </div>
 
       <div class="info-wrapper">
