@@ -127,7 +127,7 @@ export default {
         })
         .catch((err) => {
           console.log(err.message)
-          alert('dont ask me why')
+          alert('Failed to create this bot please try again.')
         })
       }
     },
