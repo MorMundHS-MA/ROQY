@@ -296,9 +296,9 @@ function getNextIntents(nextIntents, intentMap) {
 
 
 describe('parse config to intents', () => {
-    it('should return the correct config', (done) => {
+    it('should return the correct config', () => {
         let parseConfigPayload = JSON.parse(fs.readFileSync(__dirname + '/pre-built-jsons/parseConfigPayload.json', 'utf8'));
-        backend.parseConfigTointents(parseConfigPayload)
+        backend.parseConfigTointents(parseConfigPayload);
         parseConfigPayload.intents.should.have.lengthOf(11);
         let intentMap = new Map(parseConfigPayload.intents.map(obj => [obj.id, obj]));
         let initIntents = getNextIntents(parseConfigPayload.originIntentState.nextIntents, intentMap);
@@ -320,7 +320,12 @@ describe('parse config to intents', () => {
         nextIntent.name.should.equal('Test');
         nextIntent.questions.should.have.members(['Wer', 'Wie', 'Was']);
         nextIntent.answer.should.equal('Warum');
+    })
 
-        done();
-    });
+    it('should set the welcome message correctly', () => {
+        let parseConfigPayload = JSON.parse(fs.readFileSync(__dirname + '/pre-built-jsons/welcomeTest.json', 'utf8'));
+        backend.parseConfigTointents(parseConfigPayload);
+        parseConfigPayload.intents.should.have.lengthOf(3);
+        parseConfigPayload.originIntentState.answer.should.equal('Correct welcome message');
+    })
 });

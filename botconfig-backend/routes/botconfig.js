@@ -946,17 +946,26 @@ function addToIntents(intents, children, blocks, intentIDCount) {
 
 router.parseConfigTointents = function(bot){
     let config = bot.config;
-
-    bot.originIntentState = {
-        id: -1,
-        answer: "Placeholder Welcome Message",
-        nextIntents: []
-    };
+    let welcomeMsg = '';
     if(config === null){
         return;
     }
 
-    blockMap = new Map(config.blocks.map(obj => [ obj.id, obj ]));
+    let blockMap = new Map(config.blocks.map(obj => [ obj.id, obj ]));
+    // Try to find a welcome message block
+    for (const group of config.groups) {
+        let block = blockMap.get(group.block);
+        if (block.title.toUpperCase() === 'WELCOME MESSAGE') {
+            welcomeMsg = block.answer;
+        }
+    }
+
+    bot.originIntentState = {
+        id: -1,
+        answer: welcomeMsg,
+        nextIntents: []
+    };
+
     bot.originIntentState.nextIntents = addToIntents(bot.intents, config.groups, blockMap, {count: 0});
 };
 
