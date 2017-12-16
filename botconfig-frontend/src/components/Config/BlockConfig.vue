@@ -10,7 +10,7 @@
         <button v-on:click="testBot()" class="default-btn">{{$lang.translate.config.test}}</button>
         <button v-on:click="saveData()" class="default-btn">{{$lang.translate.config.save}}</button>
       </div>
-      <input v-model="title"></input>
+      <input v-model="title">
     </div>
 
     <div class='wrapper'>
@@ -39,9 +39,7 @@
         <h4 >{{$lang.translate.config.answer}}</h4>
       </div>
       
-      <div class='block-wrapper'>
-        <textarea v-model="answer" cols="30" rows="10"></textarea>
-      </div>
+      <textarea v-model="answer" cols="30" rows="10" class="block-wrapper"></textarea>
       </div>
     </div>
   </div>
