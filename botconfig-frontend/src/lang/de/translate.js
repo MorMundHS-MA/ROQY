@@ -67,7 +67,8 @@ module.exports = {
     test: 'Test',
     save: 'Speichern',
     favorite: 'Favoriten',
-    delete: 'Löschen'
+    delete: 'Löschen',
+    forward: 'An anderen Agent weiterleiten : '
   },
   test: {
     back: 'zurück',

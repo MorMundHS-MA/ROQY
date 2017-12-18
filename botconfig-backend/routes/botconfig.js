@@ -937,6 +937,11 @@ function addToIntents(intents, children, blocks, intentIDCount) {
             questions: block.questions,
             nextIntents: group.children.length > 0 ? addToIntents(intents, group.children, blocks, intentIDCount) : []
         }
+
+        if (block.forwardTo !== null && block.forwardTo !== '') {
+            intent.forwardTo = block.forwardTo
+        }
+
         intents.push(intent);
         nextIntents.push(intent.id);
     }

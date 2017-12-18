@@ -43,6 +43,8 @@
       <textarea v-model="answer" cols="30" rows="10" class="block-wrapper"></textarea>
       </div>
     </div>
+    <span style="cursor: default;margin-left: 10%;">{{$lang.translate.config.forward}}</span>
+    <input id="forwardTo" v-model="forward"/>
   </div>
 
 </template>
@@ -109,6 +111,14 @@ export default {
       },
       set (title) {
         this.$emit('setTitle', title)
+      }
+    },
+    forward: {
+      get () {
+        return this.block.forwardTo
+      },
+      set (forwarding) {
+        this.$emit('setForwardTo', forwarding)
       }
     }
   }
@@ -194,5 +204,8 @@ input :focus {
 .favIcon {
   font-size: 30px;
   margin-right: 5%;
+}
+#forwardTo {
+  border: #cccccc solid 1px;
 }
 </style>

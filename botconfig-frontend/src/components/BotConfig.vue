@@ -32,8 +32,9 @@
         <block-config 
         v-on:setTitle="setBlockTitle(selectedBlock.id, $event)" 
         v-on:newQuestion="blockAddQuestion(selectedBlock.id, $event)" 
-        v-on:setAnswer="setAnswer(selectedBlock.id,$event)" 
-        v-on:deleteQuestion="blockRemoveQuestion(selectedBlock.id,$event)" 
+        v-on:setAnswer="setAnswer(selectedBlock.id, $event)" 
+        v-on:setForward="setForward(selectedBlock.id, $event)"
+        v-on:deleteQuestion="blockRemoveQuestion(selectedBlock.id, $event)" 
         v-on:favorite="blockToggleFavorite(selectedBlock.id)" 
         v-on:delete="deleteSelected()" 
         v-on:saveData="saveData()" 
@@ -150,7 +151,7 @@ export default {
     * Adds a new block to row defined by groupID and returns its new id
     */
     addNewBlock (groupID) {
-      let block = {title: this.$lang.translate.config.unnamedBlock, id: this.blockIDCount++, isFavorite: false, questions: [], answer: ''}
+      let block = {title: this.$lang.translate.config.unnamedBlock, id: this.blockIDCount++, isFavorite: false, questions: [], answer: '', forwardTo: ''}
       this.blocks.push(block)
       if (groupID === 0) {
         this.groups.push({'block': block.id, 'selection': -1, 'children': []})
@@ -213,6 +214,24 @@ export default {
       }
     },
     /**
+     * Changes the answer of a block
+     */
+    setAnswer (blockID, answer) {
+      let block = this.getBlock(blockID)
+      if (block !== null) {
+        block.answer = answer
+      }
+    },
+    /**
+     * Changes a blocks forwarding information.
+     */
+    setForward (blockID, forwarding) {
+      let block = this.getBlock(blockID)
+      if (block !== null) {
+        block.forwardTo = forwarding
+      }
+    },
+    /**
      * Adds a new question to the block
      */
     blockAddQuestion (blockID, question) {
@@ -236,15 +255,6 @@ export default {
         if (i !== -1) {
           block.questions.splice(i, 1)
         }
-      }
-    },
-    /**
-     * Changes the answer of the current block
-     */
-    setAnswer (blockID, answer) {
-      let block = this.getBlock(blockID)
-      if (block !== null) {
-        block.answer = answer
       }
     },
     /**
