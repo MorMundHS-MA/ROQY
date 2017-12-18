@@ -277,8 +277,7 @@ export default {
     border: 3px solid orange;
   }
   .isAvailable {
-    background-color: #d4d6d8;
-    opacity: .5%;
+    opacity: .5;
   }
   .container {
     margin-top: 5%;
