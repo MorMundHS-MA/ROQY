@@ -5,8 +5,8 @@
       <span v-on:click="toggleFavorite()" v-if="isFavorite" class="favIcon" style="color:orange;">★</span>
       <span v-on:click="toggleFavorite()" v-else  class="favIcon">☆</span>
       <input ref="titleInput" id="titleInput" v-model="title">
-      <span v-on:click="focusInput()" style="font-size:24px;margin-right:5%;">✎</span>
-      <button v-on:click="deleteBlock()" class="default-btn">delete block</button>
+      <span v-on:click="focusInput()" style="font-size:24px;margin-right:5%;position: relative;top: 1px;">✎</span>
+      <button v-on:click="deleteBlock()" style="position: relative;top: -4px;"><md-icon>delete</md-icon></button>
     </div>
 
     <div class='wrapper'>
@@ -15,7 +15,7 @@
         <h4>{{$lang.translate.config.question}}</h4>
       </div>
       
-      <div class='row'>
+      <div class='row' v-on:click="focusChip()">
         <div class='block-wrapper'>
           <div class='block' v-for="(question,index) in block.questions" :key="index">
               <span>{{question}}</span>
@@ -24,9 +24,8 @@
               </md-button>
           </div>
           <div>
-              <input class="chips"
+              <input class="chips" ref="chip"
               v-model='question'
-              :placeholder='$lang.translate.config.add' 
               name='newBlock'
               v-on:blur='addNewQuestion()'
               @keyup.enter='addNewQuestion()'/>
@@ -88,6 +87,9 @@ export default {
     },
     focusInput () {
       this.$refs.titleInput.focus()
+    },
+    focusChip () {
+      this.$refs.chip.focus()
     }
   },
   computed: {
@@ -132,7 +134,7 @@ export default {
 }
 #header {
   width: 100%;
-  padding: 2%;
+  padding: 10px;
   background-color: #eeeeee;
   margin: 0;
 }
@@ -184,10 +186,10 @@ ol {
   padding-left: 10%;
 }
 #titleInput {
-  font-size: 24px;
+  font-size: 22px;
+  width: auto;
 }
 .chips {
-  border-bottom: 2px solid #d4d6d8;
 }
 input :focus {
   border: none;
@@ -202,10 +204,12 @@ input :focus {
   display: block;
 }
 .favIcon {
-  font-size: 30px;
-  margin-right: 5%;
+  font-size: 28px;
+  position: relative;
+  top: 2px;
 }
 #forwardTo {
   border: #cccccc solid 1px;
+  width: 100px;
 }
 </style>

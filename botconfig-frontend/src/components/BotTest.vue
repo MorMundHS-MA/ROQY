@@ -117,9 +117,8 @@ export default {
             return block.answer
           }
         }
-
-        return this.$lang.translate.test.default
       }
+      return this.$lang.translate.test.default
     },
     goback () {
       this.$router.push({name: 'config', params: {id: this.id}})

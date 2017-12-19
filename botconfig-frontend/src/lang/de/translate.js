@@ -73,7 +73,7 @@ module.exports = {
   test: {
     back: 'zurück',
     forward: 'weiter',
-    title: 'Schreib mit mir ... ',
+    title: 'Schreib mir ... ',
     default: 'Was laberscht du???'
   },
   marketplace: {

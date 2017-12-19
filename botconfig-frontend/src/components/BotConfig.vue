@@ -9,7 +9,8 @@
   <div id="conf-wrapper">
     <div id="content-wrapper" v-if="loaded">
       <div id="leftside">
-        <div id="group-wrapper">
+        <p style="margin-bottom: 10px; margin-top: 10px; margin-left: 25px; font-size: 20px;">Bot Structure</p>
+        <div id="group-wrapper">          
           <tree-view 
           :row="index" 
           v-for="(group,index) in subGroups" 
@@ -377,7 +378,7 @@ export default {
 
 #group-wrapper {
   height: 80%;
-  padding: 25px;
+  padding: 0 25px 25px 25px;
   overflow-x: auto;
   white-space: nowrap;
 }
@@ -387,7 +388,7 @@ export default {
 }
 
 #leftside {
-  width: 66%;
+  width:80%;
   height: 100%;
 }
 
@@ -397,10 +398,6 @@ export default {
 
 .group-wrapper {
   height: 80%;
-}
-#group-wrapper {
-  height: 80%;
-  padding: 25px;
 }
 
 .block-config-wrapper {
@@ -412,10 +409,5 @@ export default {
 .block-wrapper {
   height: 19.4%;
   border-top: 2px solid #d4d6d8;
-}
-
-#leftside {
-  width: 66%;
-  height: 100%;
 }
 </style>
