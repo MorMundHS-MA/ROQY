@@ -112,7 +112,7 @@ export default {
       for (const child of this.currentNode) {
         let block = this.getBlockById(child.block)
         for (const question of block.questions) {
-          if (question.toLowerCase() === usrMsg.toLowerCase()) {
+          if (question.trim().toLowerCase() === usrMsg.trim().toLowerCase()) {
             this.currentNode = child.children
             return block.answer
           }
@@ -234,7 +234,7 @@ input {
 .message-right {
   background-color: #58B8DD;
   max-width: 45%;
-  border-radius: 10px;
+  border-radius: 20px;
   padding: 6px 7px;
   margin-bottom: 6px;
   margin-left: auto;

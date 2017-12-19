@@ -122,10 +122,7 @@ div.md-toolbar {
   background-color: white;
   margin: 10px;
 }
-.row {
-  margin-left: 20px;
-  margin-right: 20px;
-}
+
 .card-wrapper{
   display: inline;
   margin: 14px;
