@@ -59,7 +59,7 @@ module.exports = {
   },
   config: {
     unnamedBlock: 'Unbennanter Block',
-    favoriteBlocks: 'Block Favoriten (Sind momentan leider nicht verfügbar.)',
+    favoriteBlocks: 'Block Favoriten',
     favoriteHint: 'Ziehe deine Lieblingsblocks in die Botstruktur',
     question: 'Wenn der Benutzer fragt:',
     answer: 'Bot antwortet mit?',
@@ -68,12 +68,13 @@ module.exports = {
     save: 'Speichern',
     favorite: 'Favoriten',
     delete: 'Löschen',
-    forward: 'An anderen Agent weiterleiten : '
+    forward: 'An anderen Agent weiterleiten Testen: '
   },
   test: {
     back: 'zurück',
     forward: 'weiter',
-    title: 'Testen'
+    title: 'Schreib mit mir ... ',
+    default: 'Was laberscht du???'
   },
   marketplace: {
     download: 'Herunterladen',

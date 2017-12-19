@@ -59,7 +59,7 @@ module.exports = {
   },
   config: {
     unnamedBlock: 'Unnamed Block',
-    favoriteBlocks: 'Favorite Blocks (Are currently not available. Sorry about that. )',
+    favoriteBlocks: 'Favorite Blocks',
     favoriteHint: 'Drag and Drop your favorite blocks into the bot structure',
     question: 'If user says something similar to:',
     answer: 'Bot replies with?',
@@ -73,7 +73,8 @@ module.exports = {
   test: {
     back: 'go back',
     forward: 'looks good!',
-    title: 'Testing'
+    title: 'Chat with me ...',
+    default: 'Sorry I couldn\'t undestand you.'
   },
   marketplace: {
     download: 'Download',

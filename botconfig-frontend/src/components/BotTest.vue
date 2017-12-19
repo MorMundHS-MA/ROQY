@@ -117,6 +117,8 @@ export default {
             return block.answer
           }
         }
+
+        return this.$lang.translate.test.default
       }
     },
     goback () {
