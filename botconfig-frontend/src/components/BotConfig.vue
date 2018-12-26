@@ -56,7 +56,6 @@ import blockConfig from './Config/BlockConfig.vue'
 import blockView from './Config/BlockView.vue'
 import treeView from './Config/TreeView.vue'
 import api from '../api/botData'
-import axios from 'axios'
 import templates from './Config/templates'
 
 export default {
@@ -291,12 +290,7 @@ export default {
           groups: this.groups
         }
 
-      axios.put(
-        '/bot/' + this.id + '/config/',
-        saveObj,
-        {
-          headers: {Authorization: 'ed2ff1a97f924b8e8a1402e6700a8bf4'}
-        })
+      api.saveBot(this.id, saveObj)
         .then(() => {
           if (gotoTest) {
             this.$router.push({name: 'test', params: {id: this.id}})

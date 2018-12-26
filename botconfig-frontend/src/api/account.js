@@ -1,8 +1,8 @@
 import axios from 'axios'
-
+import local from './local/account'
 axios.defaults.baseURL = process.env.API_URL
 
-export default {
+const api = {
   logIn (account, cb) {
     if (account !== null) {
       axios.post('/auth', {
@@ -18,3 +18,5 @@ export default {
     }
   }
 }
+
+export default process.env.API_URL === 'local' ? local : api

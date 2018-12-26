@@ -1,8 +1,8 @@
 import axios from 'axios'
-
+import local from './local/botData'
 axios.defaults.baseURL = process.env.API_URL
 
-export default {
+const api = {
   uploadBot (bot) {
     return new Promise((resolve, reject) => {
       axios.put('/bot/' + bot.id + '/privacy', {
@@ -126,5 +126,15 @@ export default {
           reject(err)
         })
     })
+  },
+  saveBot (id, saveObj) {
+    return axios.put(
+      '/bot/' + id + '/config/',
+      saveObj,
+      {
+        headers: {Authorization: 'ed2ff1a97f924b8e8a1402e6700a8bf4'}
+      })
   }
 }
+
+export default process.env.API_URL === 'local' ? local : api
