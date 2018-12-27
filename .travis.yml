@@ -1,11 +1,15 @@
 language: node_js
-cache: yarn
+cache:
+  yarn: true
+  directories:
+    - botconfig-frontend/node_modules
 node_js:
   - "node"
   - "11"
 
 script:
   - cd botconfig-frontend/
+  - yarn
   - yarn build-demo
 
 deploy:
