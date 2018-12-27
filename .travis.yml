@@ -1,0 +1,18 @@
+language: node_js
+cache: yarn
+node_js:
+  - "node"
+  - "11"
+
+script:
+  - cd botconfig-frontend/
+  - yarn build-demo
+
+deploy:
+  provider: pages
+  skip-cleanup: true
+  local-dir: botconfig-frontend/
+  github-token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
+  keep-history: true
+  on:
+    branch: master
