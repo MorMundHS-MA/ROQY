@@ -4,7 +4,6 @@ cache:
   directories:
     - botconfig-frontend/node_modules
 node_js:
-  - "node"
   - "10"
 
 script:
