@@ -5,7 +5,7 @@ cache:
     - botconfig-frontend/node_modules
 node_js:
   - "node"
-  - "11"
+  - "10"
 
 script:
   - cd botconfig-frontend/
